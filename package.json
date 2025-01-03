@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "DFChecker",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -15,6 +15,7 @@
     "react": "18.3.1",
     "react-native": "0.76.5",
     "react-native-image-crop-picker": "^0.41.6",
+    "react-native-paper": "^5.12.5",
     "react-native-safe-area-context": "^5.0.0",
     "react-native-screens": "^4.4.0",
     "react-native-vector-icons": "^10.2.0"

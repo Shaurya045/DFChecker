@@ -5,7 +5,13 @@ import Icon from 'react-native-vector-icons/Entypo';
 import MediaPopup from './MediaPopUp';
 import ImagePicker from 'react-native-image-crop-picker';
 
-const HomeScreen = () => {
+// Navigation
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
+
+type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+const HomeScreen = ({navigation}: HomeProps) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [image, setImage] = useState('');
 
@@ -46,7 +52,7 @@ const HomeScreen = () => {
       <View style={styles.greetingContainer}>
         <TouchableOpacity style={styles.greetingButton}>
           <View style={styles.greetingContent}>
-            <Text style={styles.greetingText}>Hello Abdulaziz</Text>
+            <Text style={styles.greetingText}>Hello Shaurya</Text>
             <View style={styles.userIcon}>
               <View style={styles.userIconCircle} />
               <View style={styles.userIconBody} />
@@ -57,25 +63,30 @@ const HomeScreen = () => {
 
       {/* Camera Section */}
       <View style={styles.cameraSection}>
-        <Text style={styles.instructionText}>To check,</Text>
-        <Text style={styles.instructionText}>click on the icon.</Text>
+        {/* <Text style={styles.instructionText}>To check</Text> */}
+        <Text style={styles.instructionText}>Take Diabetic Foot Test</Text>
         <View style={styles.arrowContainer}>
           <View style={styles.arrow} />
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => setIsPopupVisible(true)}
           style={styles.cameraButton}>
           <Icon name="camera" size={40} color={colors.white} />
+        </TouchableOpacity> */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Qes')}
+          style={styles.buttonStyle}>
+          <Text style={styles.buttonText}>Take Test</Text>
         </TouchableOpacity>
       </View>
 
       {/* Media Pop Up */}
-      <MediaPopup
+      {/* <MediaPopup
         isVisible={isPopupVisible}
         onClose={() => setIsPopupVisible(false)}
         onTakePhoto={handleTakePhoto}
         onChooseFromGallery={handleChooseFromGallery}
-      />
+      /> */}
     </View>
   );
 };
@@ -103,7 +114,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   greetingButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: colors.primary,
     borderRadius: 15,
     padding: 15,
   },
@@ -159,7 +170,7 @@ const styles = StyleSheet.create({
   arrow: {
     width: 30,
     height: 30,
-    borderColor: '#2196F3',
+    borderColor: colors.primary,
     borderWidth: 4,
     borderTopWidth: 0,
     borderLeftWidth: 0,
@@ -180,6 +191,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  buttonStyle: {
+    backgroundColor: colors.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+    textAlign: 'center',
+    borderRadius: 15,
+  },
+  buttonText: {
+    color: colors.white,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    fontSize: 20,
+    fontWeight: 'semibold',
   },
 });
 

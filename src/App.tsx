@@ -16,11 +16,13 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import WelcomeScreen from './components/WelcomeScreen';
+import Questions from './components/Questions';
 
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
   Welcome: undefined;
+  Qes: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -63,6 +65,13 @@ function App(): React.JSX.Element {
             component={HomeScreen}
             options={{
               title: 'Home Screen',
+            }}
+          />
+          <Stack.Screen
+            name="Qes"
+            component={Questions}
+            options={{
+              title: 'Question Screen',
             }}
           />
         </Stack.Navigator>
