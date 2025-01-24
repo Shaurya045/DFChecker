@@ -1,9 +1,15 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  BackHandler,
+} from 'react-native';
 import {colors} from '../utils/colors';
-import Icon from 'react-native-vector-icons/Entypo';
-import MediaPopup from './MediaPopUp';
-import ImagePicker from 'react-native-image-crop-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -12,34 +18,64 @@ import {RootStackParamList} from '../App';
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({navigation}: HomeProps) => {
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [image, setImage] = useState('');
+  const [profile, setProfile] = useState({});
+  const getUserProfile = async () => {
+    try {
+      // Retrieve the token from AsyncStorage
+      const token = await AsyncStorage.getItem('token');
 
-  const handleTakePhoto = () => {
-    // Implement photo capture logic here
-    ImagePicker.openCamera({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(img => {
-      console.log(image);
-      setImage(img.path);
-      setIsPopupVisible(false);
-    });
+      if (!token) {
+        console.error('No token found. Please log in.');
+        return null;
+      }
+
+      const response = await fetch(`http://192.168.137.124:3000/api/profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const userData = data.data;
+        setProfile(userData);
+        console.log('User Profile:', userData);
+      } else {
+        console.error('Failed to fetch profile:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
   };
 
-  const handleChooseFromGallery = () => {
-    // Implement gallery selection logic here
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(img => {
-      console.log(image);
-      setImage(img.path);
-      setIsPopupVisible(false);
-    });
+  const handleBackPress = () => {
+    Alert.alert('Exit App', 'Are you sure you want to exit?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'Exit',
+        onPress: () => BackHandler.exitApp(),
+      },
+    ]);
+    return true;
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getUserProfile();
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      };
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
@@ -50,9 +86,11 @@ const HomeScreen = ({navigation}: HomeProps) => {
 
       {/* Greeting Section */}
       <View style={styles.greetingContainer}>
-        <TouchableOpacity style={styles.greetingButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Profile')}
+          style={styles.greetingButton}>
           <View style={styles.greetingContent}>
-            <Text style={styles.greetingText}>Hello Shaurya</Text>
+            <Text style={styles.greetingText}>Hello {profile.name}</Text>
             <View style={styles.userIcon}>
               <View style={styles.userIconCircle} />
               <View style={styles.userIconBody} />
@@ -61,32 +99,17 @@ const HomeScreen = ({navigation}: HomeProps) => {
         </TouchableOpacity>
       </View>
 
-      {/* Camera Section */}
       <View style={styles.cameraSection}>
-        {/* <Text style={styles.instructionText}>To check</Text> */}
         <Text style={styles.instructionText}>Take Diabetic Foot Test</Text>
         <View style={styles.arrowContainer}>
           <View style={styles.arrow} />
         </View>
-        {/* <TouchableOpacity
-          onPress={() => setIsPopupVisible(true)}
-          style={styles.cameraButton}>
-          <Icon name="camera" size={40} color={colors.white} />
-        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => navigation.navigate('Qes')}
           style={styles.buttonStyle}>
           <Text style={styles.buttonText}>Take Test</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Media Pop Up */}
-      {/* <MediaPopup
-        isVisible={isPopupVisible}
-        onClose={() => setIsPopupVisible(false)}
-        onTakePhoto={handleTakePhoto}
-        onChooseFromGallery={handleChooseFromGallery}
-      /> */}
     </View>
   );
 };

@@ -8,54 +8,74 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../utils/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 
-type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type RegisterProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
-const LoginScreen = ({navigation}: LoginProps) => {
+const Register = ({navigation}: RegisterProps) => {
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const isFormValid = email.length >= 9 && password.length >= 6;
+  const isFormValid =
+    name.length >= 3 && email.length >= 9 && password.length >= 6;
 
   const handleSubmit = async () => {
     const userData = {
+      name,
       email,
       password,
     };
     if (isFormValid) {
       try {
-        const response = await fetch(`http://192.168.137.124:3000/api/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `http://192.168.137.124:3000/api/register`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
           },
-          body: JSON.stringify(userData),
-        });
+        );
 
         const data = await response.json();
 
         if (data.success) {
-          await AsyncStorage.setItem('token', data.token);
-          Alert.alert('Login successfull!!!');
-          navigation.navigate('Home');
+          Alert.alert('Registration successfull!!!');
+          navigation.navigate('Login');
         } else {
-          Alert.alert('Login failed!!!');
+          Alert.alert('Registration failed!!!');
         }
       } catch (error) {
-        console.error('Error Logging in:', error);
+        console.error('Error registering user:', error);
       }
     } else {
       Alert.alert('Please fill all the fields');
     }
   };
 
+  // useEffect(() => {
+  //   if (username.length >= 3 && password.length >= 6) {
+  //     setAgree(true);
+  //   }
+  // }, [username, password]);
+
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.mainHeader}>LOGIN</Text>
+      <Text style={styles.mainHeader}>Register</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.labels}>Enter Your Name</Text>
+        <TextInput
+          style={styles.inputStyle}
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={name}
+          onChangeText={text => setName(text)}
+        />
+      </View>
       <View style={styles.inputContainer}>
         <Text style={styles.labels}>Enter Your Email</Text>
         <TextInput
@@ -80,8 +100,8 @@ const LoginScreen = ({navigation}: LoginProps) => {
       <TouchableOpacity
         style={[
           styles.buttonStyle,
-          {backgroundColor: isFormValid ? colors.primary : 'grey'},
           {
+            backgroundColor: isFormValid ? colors.primary : 'grey',
             marginTop: 50,
           },
         ]}
@@ -89,15 +109,15 @@ const LoginScreen = ({navigation}: LoginProps) => {
         onPress={() => handleSubmit()}
         accessible
         accessibilityLabel="Login button">
-        <Text style={styles.buttonText}>LOGIN</Text>
+        <Text style={styles.buttonText}>REGISTER</Text>
       </TouchableOpacity>
       <Text style={[styles.description, {marginTop: 20}]}>
-        Don't have an account?
+        Already have an account?
       </Text>
       <TouchableOpacity
         style={[styles.buttonStyle, {backgroundColor: colors.primary}]}
-        onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.buttonText}>REGISTER</Text>
+        onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
     </View>
   );
@@ -161,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Register;

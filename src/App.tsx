@@ -1,9 +1,6 @@
 import React from 'react';
 // import type {PropsWithChildren} from 'react';
-import {
-  StatusBar,
-  useColorScheme,
-} from 'react-native';
+import {StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -17,11 +14,15 @@ import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import WelcomeScreen from './components/WelcomeScreen';
 import Questions from './components/Questions';
+import Register from './components/Register';
+import ProfileScreen from './components/ProfileScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
+  Register: undefined;
   Welcome: undefined;
+  Profile: undefined;
   Qes: undefined;
 };
 
@@ -61,10 +62,24 @@ function App(): React.JSX.Element {
             }}
           />
           <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              title: 'Register Screen',
+            }}
+          />
+          <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={{
               title: 'Home Screen',
+            }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              title: 'Profile Screen',
             }}
           />
           <Stack.Screen

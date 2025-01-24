@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,19 @@ import {initialQuestions} from '../utils/questions';
 import {colors} from '../utils/colors';
 import MediaPopup from './MediaPopUp';
 import ImagePicker from 'react-native-image-crop-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {high, wide} = Dimensions.get('window');
 
-const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
+const BasicQuestions = ({
+  answers,
+  handleAnswer,
+  setCurrentStep,
+  popUp,
+  setPopUp,
+}) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [image, setImage] = useState('');
+  const [foot, setFoot] = useState('');
   const [footImage, setFootImage] = useState<{
     left: string | null;
     right: string | null;
@@ -26,11 +33,17 @@ const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
   const handleTakePhoto = () => {
     ImagePicker.openCamera({
       width: 300,
-      height: 400,
+      height: 300,
       cropping: true,
+      avoidEmptySpaceAroundImage: true,
+      freeStyleCropEnabled: true,
     }).then(img => {
-      console.log(image);
-      setImage(img.path);
+      // console.log(img);
+      if (foot === 'Left') {
+        setFootImage({...footImage, left: img});
+      } else {
+        setFootImage({...footImage, right: img});
+      }
       setIsPopupVisible(false);
     });
   };
@@ -38,14 +51,103 @@ const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
   const handleChooseFromGallery = () => {
     ImagePicker.openPicker({
       width: 300,
-      height: 400,
+      height: 300,
       cropping: true,
+      avoidEmptySpaceAroundImage: true,
+      freeStyleCropEnabled: true,
     }).then(img => {
-      console.log(image);
-      setImage(img.path);
+      // console.log(img);
+      if (foot === 'Left') {
+        setFootImage({...footImage, left: img});
+      } else {
+        setFootImage({...footImage, right: img});
+      }
       setIsPopupVisible(false);
     });
   };
+
+  const submitImage = async () => {
+    if (!footImage.left || !footImage.right) {
+      console.error('Both images are required.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('imageL', {
+      uri: footImage.left.path,
+      name: 'left-foot.jpg',
+      type: footImage.left.mime,
+    });
+    formData.append('imageR', {
+      uri: footImage.right.path,
+      name: 'right-foot.jpg',
+      type: footImage.right.mime,
+    });
+
+    try {
+      // Retrieve the token from AsyncStorage
+      const token = await AsyncStorage.getItem('token');
+
+      if (!token) {
+        console.error('No token found. Please log in.');
+        return null;
+      }
+      let response = await fetch(
+        'http://192.168.137.124:3000/api/upload-images',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        },
+      );
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error('Error uploading images:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch images from the backend
+    const fetchImages = async () => {
+      try {
+        // Retrieve the token from AsyncStorage
+        const token = await AsyncStorage.getItem('token');
+
+        if (!token) {
+          console.error('No token found. Please log in.');
+          return null;
+        }
+        let response = await fetch('http://192.168.137.124:3000/api/list', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        let data = await response.json();
+        // console.log(data.data.imageL); // Log the data received
+        if (data.data.imageL) {
+          setFootImage({
+            ...footImage,
+            left: data.data.imageL,
+            right: data.data.imageR,
+          });
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch images');
+        }
+      } catch (error) {
+        console.error('Error fetching images:', error.message);
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   const renderQuestion = (question: any) => {
     if (question.condition && !question.condition(answers)) {
@@ -69,7 +171,7 @@ const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
                     styles.buttonText,
                     answers[question.id] === true && styles.selectedButtonText,
                   ]}>
-                  Yes
+                  Y
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -83,7 +185,7 @@ const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
                     styles.buttonText,
                     answers[question.id] === false && styles.selectedButtonText,
                   ]}>
-                  No
+                  N
                 </Text>
               </TouchableOpacity>
             </View>
@@ -108,39 +210,86 @@ const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
 
   return (
     <>
+      <View
+        style={{
+          width: '100%',
+          backgroundColor: colors.primary,
+          borderRadius: 10,
+          marginBottom: 30,
+        }}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 20,
+            fontWeight: 'semibold',
+            textAlign: 'center',
+            padding: 8,
+          }}>
+          Pre Screening Questions
+        </Text>
+      </View>
       {initialQuestions.map(renderQuestion)}
 
       {answers.ulcer && (
-        <View style={styles.cameraContainer}>
-          <TouchableOpacity
-            style={styles.cameraButton}
-            onPress={() => setIsPopupVisible(true)}>
-            <Text style={[styles.buttonText, {color: 'white'}]}>
-              Take Photo of Left Foot
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.cameraButton}
-            onPress={() => setIsPopupVisible(true)}>
-            <Text style={[styles.buttonText, {color: 'white'}]}>
-              Take Photo of Right Foot
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        <>
+          <View style={styles.cameraContainer}>
+            <TouchableOpacity
+              style={styles.cameraButton}
+              onPress={() => {
+                setIsPopupVisible(true);
+                setFoot('Left');
+              }}>
+              <Text style={[styles.buttonText, {color: 'white'}]}>
+                Take Photo of Left Foot
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cameraButton}
+              onPress={() => {
+                setIsPopupVisible(true);
+                setFoot('Right');
+              }}>
+              <Text style={[styles.buttonText, {color: 'white'}]}>
+                Take Photo of Right Foot
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.imgContainer}>
+            {footImage.left && (
+              <View style={styles.imageContainer}>
+                <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
+                  Left Foot Image:
+                </Text>
+                <Image
+                  source={{
+                    uri:
+                      footImage.left.path != null
+                        ? footImage.left.path
+                        : footImage.left,
+                  }}
+                  style={styles.footImage}
+                />
+              </View>
+            )}
 
-      {footImage.left && (
-        <View style={styles.imageContainer}>
-          <Text>Left Foot Image:</Text>
-          <Image source={{uri: footImage.left}} style={styles.footImage} />
-        </View>
-      )}
-
-      {footImage.right && (
-        <View style={styles.imageContainer}>
-          <Text>Right Foot Image:</Text>
-          <Image source={{uri: footImage.right}} style={styles.footImage} />
-        </View>
+            {footImage.right && (
+              <View style={styles.imageContainer}>
+                <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
+                  Right Foot Image:
+                </Text>
+                <Image
+                  source={{
+                    uri:
+                      footImage.right.path != null
+                        ? footImage.right.path
+                        : footImage.right,
+                  }}
+                  style={styles.footImage}
+                />
+              </View>
+            )}
+          </View>
+        </>
       )}
 
       <MediaPopup
@@ -152,7 +301,11 @@ const BasicQuestions = ({answers, handleAnswer, setCurrentStep}) => {
 
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => setCurrentStep('rightFoot')}>
+        onPress={() => {
+          setCurrentStep('skin');
+          setPopUp(true);
+          submitImage();
+        }}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
     </>
@@ -172,22 +325,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   questionContainer: {
+    flexDirection: 'row',
     marginBottom: 20,
+    justifyContent: 'space-between',
   },
   question: {
-    fontSize: 18,
+    fontSize: 17,
     marginBottom: 10,
+    maxWidth: '60%',
   },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    gap: 20,
   },
   button: {
     backgroundColor: '#e0e0e0',
-    padding: 10,
-    borderRadius: 5,
-    width: '45%',
+    padding: 0,
+    borderRadius: '50%',
+    width: 30,
+    height: 30,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   selectedButton: {
     backgroundColor: colors.primary,
@@ -203,6 +361,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
+    width: '40%',
     borderColor: 'gray',
     borderWidth: 1,
     paddingHorizontal: 10,
@@ -239,13 +398,19 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
+  imgContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
+    width: wide,
+  },
   imageContainer: {
-    marginBottom: 20,
+    marginBottom: 5,
     alignItems: 'center',
   },
   footImage: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     resizeMode: 'contain',
   },
   sectionTitle: {

@@ -1,14 +1,41 @@
 import React, {useState} from 'react';
 import {Text, StyleSheet, ScrollView} from 'react-native';
 import BasicQuestions from './BasicQuestions';
-import RightFootQuestions from './RightFootQuestions';
-import LeftFootQuestions from './LeftFootQuestions';
+import SkinQuestion from './SkinQuestion';
+import NailQuestion from './NailQuestion';
+import DeformityQestion from './DeformityQestion';
+import FootwearQuestion from './FootwearQuestion';
+import TempColdQuestion from './TempColdQuestion';
+import TempHotQuestion from './TempHotQuestion';
+import MotionQuestion from './MotionQuestion';
+import SensationQuestion from './SensationQuestion';
+import SensationIPswich from './SensationIPswich';
+import PedalQuestion from './PedalQuestion';
+import RuborQuestion from './RuborQuestion';
+import ErythemaQuestion from './ErythemaQuestion';
+import Monofilament from './Monofilament';
+import MonofilamentQuestion from './MonofilamentQuestion';
 
 const QuestionScreen = () => {
   const [currentStep, setCurrentStep] = useState<
-    'initial' | 'rightFoot' | 'leftFoot'
+    | 'initial'
+    | 'nail'
+    | 'deformity'
+    | 'skin'
+    | 'footwear'
+    | 'tempCold'
+    | 'tempHot'
+    | 'motion'
+    | 'sensation'
+    | 'monofilament'
+    | 'monofilamentQ'
+    | 'ipSwich'
+    | 'pedal'
+    | 'rubor'
+    | 'erythema'
   >('initial');
   const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [popUp, setPopUp] = useState(false);
 
   const handleAnswer = (id: string, value: any) => {
     setAnswers(prev => ({...prev, [id]: value}));
@@ -22,20 +49,134 @@ const QuestionScreen = () => {
           answers={answers}
           handleAnswer={handleAnswer}
           setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
         />
       ) : null}
-      {currentStep === 'rightFoot' ? (
-        <RightFootQuestions
+      {currentStep === 'skin' ? (
+        <SkinQuestion
           answers={answers}
           handleAnswer={handleAnswer}
           setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
         />
       ) : null}
-      {currentStep === 'leftFoot' ? (
-        <LeftFootQuestions
+      {currentStep === 'nail' ? (
+        <NailQuestion
           answers={answers}
           handleAnswer={handleAnswer}
           setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'deformity' ? (
+        <DeformityQestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'footwear' ? (
+        <FootwearQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'tempCold' ? (
+        <TempColdQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'tempHot' ? (
+        <TempHotQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'motion' ? (
+        <MotionQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'sensation' ? (
+        <SensationQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'monofilament' ? (
+        <Monofilament
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'monofilamentQ' ? (
+        <MonofilamentQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'ipSwich' ? (
+        <SensationIPswich
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'pedal' ? (
+        <PedalQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'rubor' ? (
+        <RuborQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
+        />
+      ) : null}
+      {currentStep === 'erythema' ? (
+        <ErythemaQuestion
+          answers={answers}
+          handleAnswer={handleAnswer}
+          setCurrentStep={setCurrentStep}
+          popUp={popUp}
+          setPopUp={setPopUp}
         />
       ) : null}
     </ScrollView>
