@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../utils/colors';
+import {url} from '../utils/constants';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -30,16 +31,13 @@ const Register = ({navigation}: RegisterProps) => {
     };
     if (isFormValid) {
       try {
-        const response = await fetch(
-          `http://192.168.137.124:3000/api/register`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
+        const response = await fetch(`${url}/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
+          body: JSON.stringify(userData),
+        });
 
         const data = await response.json();
 

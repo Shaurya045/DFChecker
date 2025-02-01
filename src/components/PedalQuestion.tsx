@@ -21,6 +21,7 @@ const PedalQuestion = ({
   answers,
   handleAnswer,
   setCurrentStep,
+  ipSwich,
   popUp,
   setPopUp,
 }) => {
@@ -139,7 +140,9 @@ const PedalQuestion = ({
       ))}
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => setCurrentStep('sensationIP')}>
+        onPress={() =>
+          ipSwich ? setCurrentStep('ipSwich') : setCurrentStep('monofilamentQ')
+        }>
         <Text style={styles.nextButtonText}>Previous</Text>
       </TouchableOpacity>
 

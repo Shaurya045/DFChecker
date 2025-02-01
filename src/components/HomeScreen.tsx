@@ -10,6 +10,7 @@ import {
 import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
+import {url} from '../utils/constants';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -29,7 +30,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
         return null;
       }
 
-      const response = await fetch(`http://192.168.137.124:3000/api/profile`, {
+      const response = await fetch(`${url}/profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

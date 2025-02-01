@@ -13,6 +13,7 @@ import {colors} from '../utils/colors';
 import MediaPopup from './MediaPopUp';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {url} from '../utils/constants';
 
 const {high, wide} = Dimensions.get('window');
 
@@ -92,17 +93,14 @@ const BasicQuestions = ({
         console.error('No token found. Please log in.');
         return null;
       }
-      let response = await fetch(
-        'http://192.168.137.124:3000/api/upload-images',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
+      let response = await fetch(`${url}/upload-images`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: formData,
+      });
 
       const result = await response.json();
       console.log(result);
@@ -122,7 +120,7 @@ const BasicQuestions = ({
           console.error('No token found. Please log in.');
           return null;
         }
-        let response = await fetch('http://192.168.137.124:3000/api/list', {
+        let response = await fetch(`${url}/list`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,

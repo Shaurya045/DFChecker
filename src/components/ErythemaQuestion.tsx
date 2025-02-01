@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
-import Icon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {url} from '../utils/constants';
 
 const questions = [
   {
@@ -23,7 +24,37 @@ const ErythemaQuestion = ({
   setCurrentStep,
   popUp,
   setPopUp,
+  navigation,
 }) => {
+  const submitFormData = async () => {
+    const data = answers;
+    try {
+      const token = await AsyncStorage.getItem('token');
+
+      if (!token) {
+        console.error('No token found. Please log in.');
+        return null;
+      }
+      let response = await fetch(`${url}/submit-form`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({data: data}), // Send the form data in the body
+      }); // Parse the response as JSON
+      const result = await response.json();
+
+      if (response.ok) {
+        // console.log('Form submitted successfully:', result.form);
+        navigation.replace('Report');
+      } else {
+        console.error('Error submitting form:', result.message);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
   return (
     <>
       <Modal
@@ -140,7 +171,7 @@ const ErythemaQuestion = ({
 
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => console.log('Submit', answers)}>
+        onPress={() => submitFormData()}>
         <Text style={styles.nextButtonText}>Submit</Text>
       </TouchableOpacity>
     </>

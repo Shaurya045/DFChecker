@@ -16,7 +16,13 @@ import ErythemaQuestion from './ErythemaQuestion';
 import Monofilament from './Monofilament';
 import MonofilamentQuestion from './MonofilamentQuestion';
 
-const QuestionScreen = () => {
+// Navigation
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
+
+type QesProps = NativeStackScreenProps<RootStackParamList, 'Qes'>;
+
+const QuestionScreen = ({navigation}: QesProps) => {
   const [currentStep, setCurrentStep] = useState<
     | 'initial'
     | 'nail'
@@ -36,6 +42,7 @@ const QuestionScreen = () => {
   >('initial');
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [popUp, setPopUp] = useState(false);
+  const [ipSwich, setIpSwich] = useState(false);
 
   const handleAnswer = (id: string, value: any) => {
     setAnswers(prev => ({...prev, [id]: value}));
@@ -130,6 +137,7 @@ const QuestionScreen = () => {
           answers={answers}
           handleAnswer={handleAnswer}
           setCurrentStep={setCurrentStep}
+          setIpSwich={setIpSwich}
           popUp={popUp}
           setPopUp={setPopUp}
         />
@@ -157,6 +165,7 @@ const QuestionScreen = () => {
           answers={answers}
           handleAnswer={handleAnswer}
           setCurrentStep={setCurrentStep}
+          ipSwich={ipSwich}
           popUp={popUp}
           setPopUp={setPopUp}
         />
@@ -177,6 +186,7 @@ const QuestionScreen = () => {
           setCurrentStep={setCurrentStep}
           popUp={popUp}
           setPopUp={setPopUp}
+          navigation={navigation}
         />
       ) : null}
     </ScrollView>

@@ -6,6 +6,7 @@ const Monofilament = ({
   answers,
   handleAnswer,
   setCurrentStep,
+  setIpSwich,
   popUp,
   setPopUp,
 }) => {
@@ -50,6 +51,7 @@ const Monofilament = ({
                 onPress={() => {
                   setPopUp(false);
                   setCurrentStep('monofilamentQ');
+                  setIpSwich(false);
                 }}>
                 <Text style={styles.modalButtonText}>Yes</Text>
               </TouchableOpacity>
@@ -58,6 +60,7 @@ const Monofilament = ({
                 onPress={() => {
                   setPopUp(false);
                   setCurrentStep('ipSwich');
+                  setIpSwich(true);
                 }}>
                 <Text style={styles.modalButtonText}>No</Text>
               </TouchableOpacity>

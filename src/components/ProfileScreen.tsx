@@ -9,6 +9,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {url} from '../utils/constants';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -28,7 +29,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         return null;
       }
 
-      const response = await fetch(`http://192.168.137.124:3000/api/profile`, {
+      const response = await fetch(`${url}/profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,9 +54,10 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
     try {
       // Clear the token from storage
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('isLoggedIn');
 
       // Optionally, call the backend logout endpoint
-      const response = await fetch(`http://192.168.137.124:3000/api/logout`, {
+      const response = await fetch(`${url}/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,9 +89,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         </View>
         <View style={styles.profileItem}>
           <Text style={styles.profileText}>Email: </Text>
-          <Text style={styles.profileText}>
-            {profile.email}
-          </Text>
+          <Text style={styles.profileText}>{profile.email}</Text>
         </View>
         <TouchableOpacity
           style={styles.buttonStyle}

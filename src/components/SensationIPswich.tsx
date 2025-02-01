@@ -247,7 +247,9 @@ const SensationIPswich = ({
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
-        onPress={() => setCurrentStep('pedal')}>
+        onPress={() => {
+          setCurrentStep('pedal');
+        }}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
     </>

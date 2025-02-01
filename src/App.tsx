@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 // import type {PropsWithChildren} from 'react';
 import {StatusBar, useColorScheme} from 'react-native';
-
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Navigation
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // Screens
 import LoginScreen from './components/LoginScreen';
@@ -16,6 +16,7 @@ import WelcomeScreen from './components/WelcomeScreen';
 import Questions from './components/Questions';
 import Register from './components/Register';
 import ProfileScreen from './components/ProfileScreen';
+import ReportScreen from './components/ReportScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -24,6 +25,7 @@ export type RootStackParamList = {
   Welcome: undefined;
   Profile: undefined;
   Qes: undefined;
+  Report: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -34,6 +36,17 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  const getData = async () => {
+    const data = await AsyncStorage.getItem('isLoggedIn');
+    setIsLoggedIn(data === 'true'); // Convert string to boolean
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <NavigationContainer>
@@ -87,6 +100,13 @@ function App(): React.JSX.Element {
             component={Questions}
             options={{
               title: 'Question Screen',
+            }}
+          />
+          <Stack.Screen
+            name="Report"
+            component={ReportScreen}
+            options={{
+              title: 'Report Screen',
             }}
           />
         </Stack.Navigator>

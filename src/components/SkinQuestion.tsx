@@ -5,19 +5,19 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 const questions = [
   {
-    id: '1',
+    id: 'skin1',
     text: 'Skin is intact and has no signs of trauma. No signs of fungus orcallus formation?',
   },
   {
-    id: '2',
+    id: 'skin2',
     text: 'Skin is dry, fungus such as a moccasin foot or interdigital yeast may be present. Some callus build-up may be noted?',
   },
   {
-    id: '3',
+    id: 'skin3',
     text: 'Heavy callus build up?',
   },
   {
-    id: '4',
+    id: 'skin4',
     text: 'Open skin ulceration present?',
   },
 ];

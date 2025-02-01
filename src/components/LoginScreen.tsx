@@ -9,6 +9,7 @@ import {
 import React, {useState} from 'react';
 import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {url} from '../utils/constants';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -28,7 +29,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
     };
     if (isFormValid) {
       try {
-        const response = await fetch(`http://192.168.137.124:3000/api/login`, {
+        const response = await fetch(`${url}/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -40,8 +41,9 @@ const LoginScreen = ({navigation}: LoginProps) => {
 
         if (data.success) {
           await AsyncStorage.setItem('token', data.token);
+          await AsyncStorage.setItem('isLoggedIn', 'true');
           Alert.alert('Login successfull!!!');
-          navigation.navigate('Home');
+          navigation.replace('Home');
         } else {
           Alert.alert('Login failed!!!');
         }
