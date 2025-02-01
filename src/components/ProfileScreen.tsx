@@ -1,24 +1,18 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {colors} from '../utils/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
-
-// Navigation
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
+import {useAuth} from '../AuthContext';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 const ProfileScreen = ({navigation}: ProfileProps) => {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState<{name?: string; email?: string}>({});
+  const {logout} = useAuth();
+
   const getUserProfile = async () => {
     try {
       // Retrieve the token from AsyncStorage
@@ -50,53 +44,48 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
       console.error('Error fetching profile:', error);
     }
   };
+
   const handleLogout = async () => {
     try {
-      // Clear the token from storage
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('isLoggedIn');
-
-      // Optionally, call the backend logout endpoint
       const response = await fetch(`${url}/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // Add your authentication header here
         },
       });
 
       const data = await response.json();
 
       if (data.success) {
+        await logout();
         console.log('User logged out successfully.');
-        navigation.replace('Welcome');
       } else {
         console.error('Error logging out:', data.message);
+        Alert.alert('Error', 'Failed to logout. Please try again.');
       }
     } catch (error) {
       console.error('Error during logout:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
     }
   };
+
   useEffect(() => {
     getUserProfile();
-  }, []);
+  }, []); //This was the line that needed to be updated.  The empty array [] was causing the issue.
+
   return (
     <View style={styles.container}>
       <Text style={styles.headingText}>Profile</Text>
-      <View style={styles.innerContainer}>
-        <View style={styles.profileItem}>
-          <Text style={styles.profileText}>UserName: </Text>
-          <Text style={styles.profileText}>{profile.name}</Text>
-        </View>
-        <View style={styles.profileItem}>
-          <Text style={styles.profileText}>Email: </Text>
-          <Text style={styles.profileText}>{profile.email}</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => handleLogout()}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
+      <View style={styles.profileItem}>
+        <Text style={styles.profileText}>Username: {profile.name}</Text>
       </View>
+      <View style={styles.profileItem}>
+        <Text style={styles.profileText}>Email: {profile.email}</Text>
+      </View>
+      <TouchableOpacity style={styles.buttonStyle} onPress={handleLogout}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };

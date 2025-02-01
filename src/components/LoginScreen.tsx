@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,14 +7,11 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
 import {colors} from '../utils/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
-
-// Navigation
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
+import {useAuth} from '../AuthContext';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../App';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -21,12 +19,9 @@ const LoginScreen = ({navigation}: LoginProps) => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const isFormValid = email.length >= 9 && password.length >= 6;
+  const {login} = useAuth();
 
   const handleSubmit = async () => {
-    const userData = {
-      email,
-      password,
-    };
     if (isFormValid) {
       try {
         const response = await fetch(`${url}/login`, {
@@ -34,24 +29,23 @@ const LoginScreen = ({navigation}: LoginProps) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify({email, password}),
         });
 
         const data = await response.json();
 
         if (data.success) {
-          await AsyncStorage.setItem('token', data.token);
-          await AsyncStorage.setItem('isLoggedIn', 'true');
-          Alert.alert('Login successfull!!!');
-          navigation.replace('Home');
+          await login(data.token);
+          Alert.alert('Success', 'Login successful!');
         } else {
-          Alert.alert('Login failed!!!');
+          Alert.alert('Error', 'Login failed!');
         }
       } catch (error) {
         console.error('Error Logging in:', error);
+        Alert.alert('Error', 'An error occurred. Please try again.');
       }
     } else {
-      Alert.alert('Please fill all the fields');
+      Alert.alert('Error', 'Please fill all the fields');
     }
   };
 
@@ -65,7 +59,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={setEmail}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -76,7 +70,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
           autoCorrect={false}
           secureTextEntry={true}
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={setPassword}
         />
       </View>
       <TouchableOpacity
@@ -88,7 +82,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
           },
         ]}
         disabled={!isFormValid}
-        onPress={() => handleSubmit()}
+        onPress={handleSubmit}
         accessible
         accessibilityLabel="Login button">
         <Text style={styles.buttonText}>LOGIN</Text>
