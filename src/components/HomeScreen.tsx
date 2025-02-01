@@ -81,9 +81,9 @@ const HomeScreen = ({navigation}: HomeProps) => {
   return (
     <View style={styles.container}>
       {/* Header Section */}
-      <View style={styles.headerContainer}>
+      {/* <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Account details</Text>
-      </View>
+      </View> */}
 
       {/* Greeting Section */}
       <View style={styles.greetingContainer}>
@@ -91,7 +91,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
           onPress={() => navigation.navigate('Profile')}
           style={styles.greetingButton}>
           <View style={styles.greetingContent}>
-            <Text style={styles.greetingText}>Hello {profile.name}</Text>
+            <Text style={styles.greetingText}>Hello {profile?.name}</Text>
             <View style={styles.userIcon}>
               <View style={styles.userIconCircle} />
               <View style={styles.userIconBody} />

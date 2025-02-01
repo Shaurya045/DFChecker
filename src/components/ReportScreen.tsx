@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -22,24 +23,21 @@ type ReportProps = NativeStackScreenProps<RootStackParamList, 'Report'>;
 const recommendations = [
   {
     id: 'High Risk',
-    text: 'Education on: risk factors (including LOPS + PAD foot deformity); risk of ulcer recurrence, daily foot inspection; appropriate footwearand foot-and nail-care; when/how to seek medical attention if needed',
+    text: 'Refer to podiatry clinic or treating physician',
   },
   {
-    id: 'High Risk',
-    text: 'Daily inspection of feet',
+    id: 'Healthy Foot - Need Self Care',
+    text: 'Daily inspection of feet.',
   },
   {
-    id: 'High Risk',
-    text: 'Well-fitting, orthopedic footwear with custom full-contact total contact casted foot orthoses and diabetic socks. Footwear must accommodate any deformities present',
+    id: 'Healthy Foot - Need Self Care',
+    text: 'Trimming toenails straight.',
   },
   {
-    id: 'High Risk',
-    text: 'Modified footwear and/or prosthesis based on level of amputation',
+    id: 'Healthy Foot - Need Self Care',
+    text: 'Well-fitting footwear.',
   },
-  {
-    id: 'High Risk',
-    text: 'level of amputation Vascular',
-  },
+
   {
     id: 'Very Low Risk',
     text: 'Daily inspection of feet.',
@@ -58,7 +56,7 @@ const recommendations = [
   },
   {
     id: 'Very Low Risk',
-    text: 'Dont remove any calluses by yourself.',
+    text: 'Don’t remove any calluses by yourself.',
   },
   {
     id: 'Very Low Risk',
@@ -82,7 +80,7 @@ const recommendations = [
   },
   {
     id: 'Low Risk',
-    text: 'Dont remove any calluses by yourself.',
+    text: 'Don’t remove any calluses by yourself.',
   },
   {
     id: 'Low Risk',
@@ -102,7 +100,7 @@ const recommendations = [
   },
   {
     id: 'Moderate Risk',
-    text: 'Dont remove any calluses by yourself.',
+    text: 'Don’t remove any calluses by yourself.',
   },
   {
     id: 'Moderate Risk',
@@ -122,15 +120,27 @@ const recommendations = [
   },
   {
     id: 'Moderate Risk',
-    text: 'Seek a ehab specialist for consultation on fitness exercises for feet.',
+    text: 'Seek a rehab specialist for consultation on fitness exercises for feet.',
   },
   {
     id: 'Urgent Risk',
-    text: 'Referral to a general, orthopedic or foot surgeon, if indicated, to surgically manage foot deformities',
+    text: 'Seek immediate medical attention from a podiatrist or physician.',
   },
   {
     id: 'Urgent Risk',
-    text: 'Referral to infectious diseases to manage infection, if indicated, and/or to a general, orthopedic or foot surgeon to debride infectious tissue & bone, if indicated',
+    text: 'Avoid walking or putting pressure on the affected foot.',
+  },
+  {
+    id: 'Urgent Risk',
+    text: 'Keep the foot clean and dry to prevent infection.',
+  },
+  {
+    id: 'Urgent Risk',
+    text: 'Do not attempt home treatments such as cutting calluses or draining wounds.',
+  },
+  {
+    id: 'Urgent Risk',
+    text: 'Visit an emergency care center if pain, swelling, or signs of infection (redness, pus, fever) occur.',
   },
 ];
 
@@ -159,10 +169,10 @@ const ReportScreen = ({navigation}: ReportProps) => {
       const data = await response.json();
 
       if (data.success) {
-        const report = data.data;
+        const report = data.data.result;
         // console.log('Report:', report);
         setReportData(report);
-        // console.log(reportData);
+        console.log(reportData);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -182,10 +192,15 @@ const ReportScreen = ({navigation}: ReportProps) => {
         setResult('Low Risk');
       } else if (category === 'Moderate Risk (Category 2)') {
         setResult('Moderate Risk');
-      } else if (category === 'High Risk (Category 3)') {
+      } else if (
+        category === 'High Risk' ||
+        category === 'High Risk (Category 3)'
+      ) {
         setResult('High Risk');
       } else if (category === 'Urgent Risk') {
         setResult('Urgent Risk');
+      } else if (category === null) {
+        setResult('Healthy Foot - Need Self Care');
       }
     }
   };
@@ -209,6 +224,11 @@ const ReportScreen = ({navigation}: ReportProps) => {
           />
         </View>
       </Modal>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+        style={{alignSelf: 'flex-start', marginBottom: 10}}>
+        <Icon name="arrowleft" size={30} />
+      </TouchableOpacity>
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>Assessment Report</Text>
       </View>
