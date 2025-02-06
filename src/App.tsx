@@ -3,6 +3,7 @@ import {StatusBar, useColorScheme} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SplashScreen from 'react-native-splash-screen';
 
 // Screens
 import LoginScreen from './components/LoginScreen';
@@ -15,6 +16,7 @@ import ReportScreen from './components/ReportScreen';
 
 // Auth Context
 import {AuthProvider, useAuth} from './AuthContext';
+import {useEffect} from 'react';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -56,6 +58,12 @@ function RootNavigator() {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
+  useEffect(() => {
+    // setTimeout(() => {
+      SplashScreen.hide();
+    // }, 500);
+  },[]);
 
   return (
     <AuthProvider>

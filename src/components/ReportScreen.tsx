@@ -170,9 +170,9 @@ const ReportScreen = ({navigation}: ReportProps) => {
 
       if (data.success) {
         const report = data.data.result;
-        // console.log('Report:', report);
+        console.log('Report:', report);
         setReportData(report);
-        console.log(reportData);
+        // console.log(reportData);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -186,20 +186,20 @@ const ReportScreen = ({navigation}: ReportProps) => {
   const checkreport = () => {
     if (reportData) {
       const category = reportData.riskCategory;
-      if (category === 'Very Low Risk (Category 0)') {
+      if (category === 'Low Risk - Category 0') {
         setResult('Very Low Risk');
-      } else if (category === 'Low Risk (Category 1)') {
-        setResult('Low Risk');
-      } else if (category === 'Moderate Risk (Category 2)') {
-        setResult('Moderate Risk');
       } else if (
-        category === 'High Risk' ||
-        category === 'High Risk (Category 3)'
+        category === 'Low Risk - Category 1' ||
+        category === 'Low Risk'
       ) {
+        setResult('Low Risk');
+      } else if (category === 'Moderate Risk - Category 2') {
+        setResult('Moderate Risk');
+      } else if (category === 'High Risk - Category 3') {
         setResult('High Risk');
       } else if (category === 'Urgent Risk') {
         setResult('Urgent Risk');
-      } else if (category === null) {
+      } else if (category === 'Healthy Foot - Need Self Care') {
         setResult('Healthy Foot - Need Self Care');
       }
     }
