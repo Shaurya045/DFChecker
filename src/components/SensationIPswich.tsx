@@ -7,9 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useRef} from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
+import VideoPlayer, {type VideoPlayerRef} from 'react-native-video-player';
 
 const questions = [
   {
@@ -25,6 +26,7 @@ const SensationIPswich = ({
   popUp,
   setPopUp,
 }) => {
+  const playerRef = useRef<VideoPlayerRef>(null);
   const regionsL = [
     {id: 'region3', number: 3, x: '25%', y: '5%'},
     {id: 'region6', number: 6, x: '51%', y: '13%'},
@@ -90,6 +92,16 @@ const SensationIPswich = ({
           Ask the patient to close their eyes. Touch must be very light 1 - 2
           seconds. Do not repeat if the patient didn't respond to touch
         </Text>
+      </View>
+      <View style={{marginBottom: 15, borderWidth: 1}}>
+        <VideoPlayer
+          ref={playerRef}
+          endWithThumbnail
+          thumbnail={require('../assets/image.png')}
+          source={require('../assets/ipswichvideo.mp4')}
+          onError={e => console.log(e)}
+          showDuration={true}
+        />
       </View>
       <View
         style={{

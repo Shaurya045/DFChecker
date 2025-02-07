@@ -13,6 +13,7 @@ import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
 import Icon from 'react-native-vector-icons/AntDesign';
+import notifee, {AndroidImportance, TriggerType} from '@notifee/react-native';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -170,7 +171,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
 
       if (data.success) {
         const report = data.data.result;
-        console.log('Report:', report);
+        // console.log('Report:', report);
         setReportData(report);
         // console.log(reportData);
         setTimeout(() => {
@@ -204,12 +205,62 @@ const ReportScreen = ({navigation}: ReportProps) => {
       }
     }
   };
+
+  async function requestPermissions() {
+    const settings = await notifee.requestPermission();
+    if (!settings.authorizationStatus) {
+      console.log('User denied notifications');
+    }
+  }
+  async function createNotificationChannel() {
+    await notifee.createChannel({
+      id: 'test-retest',
+      name: 'Test Retake Reminders',
+      importance: AndroidImportance.HIGH,
+    });
+  }
+  async function scheduleNotification(duration) {
+    // const delay = calculateRetestTime(duration); // Get time delay
+    const delay = duration; // Get time delay
+
+    await notifee.createTriggerNotification(
+      {
+        title: 'Retake Your Test',
+        body: 'Time to retake your test for better results!',
+        android: {
+          channelId: 'test-retest',
+          pressAction: {
+            id: 'test-retest',
+            launchActivity: 'default',
+          },
+        },
+      },
+      {
+        type: TriggerType.TIMESTAMP,
+        timestamp: Date.now() + delay, // Schedule the notification
+      },
+    );
+  }
+
+  const handleTestSubmission = () => {
+    Alert.alert(
+      'Testing Frequency',
+      `Your Frequency: ${reportData.screeningFrequency}`,
+    );
+    let freq = reportData.screeningFrequency;
+    freq = freq.match(/\d+/);
+    scheduleNotification(parseInt(freq[0], 10) * 1000);
+  };
+
   useEffect(() => {
     getReport();
+    requestPermissions();
+    createNotificationChannel();
   }, []);
   useEffect(() => {
     if (reportData && reportData.riskCategory) {
       checkreport();
+      handleTestSubmission();
     }
   }, [reportData]); // Runs only when reportData changes
   return (
