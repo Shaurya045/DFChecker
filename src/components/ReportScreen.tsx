@@ -323,7 +323,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
           color: colors.primary,
           textAlign: 'center',
         }}>
-        ** Kindly repeat this assessment in {reportData.screeningFrequency}.**
+        ** Kindly repeat this assessment {reportData.screeningFrequency}.**
       </Text>
     </SafeAreaView>
   );
