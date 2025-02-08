@@ -64,6 +64,7 @@ const Register = ({navigation}: RegisterProps) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+      <View style={{paddingHorizontal: 30}}>  
       <Text style={styles.mainHeader}>Register</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.labels}>Enter Your Name</Text>
@@ -118,6 +119,7 @@ const Register = ({navigation}: RegisterProps) => {
         onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     height: '100%',
-    paddingHorizontal: 30,
+    //paddingHorizontal: 30,
     backgroundColor: '#fff',
   },
   mainHeader: {

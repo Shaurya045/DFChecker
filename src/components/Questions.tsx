@@ -50,7 +50,7 @@ const QuestionScreen = ({navigation}: QesProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView >
+      <ScrollView style={{padding: 20}}>
         <Text style={styles.title}>Foot Health Questionnaire</Text>
         {currentStep === 'initial' ? (
           <BasicQuestions
@@ -198,7 +198,7 @@ const QuestionScreen = ({navigation}: QesProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    //padding: 20,
     backgroundColor: '#f5f5f5',
   },
   title: {

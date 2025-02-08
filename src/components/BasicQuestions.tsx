@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {initialQuestions} from '../utils/questions';
@@ -298,11 +299,14 @@ const BasicQuestions = ({
       />
 
       <TouchableOpacity
-        style={styles.nextButton}
+        style={styles.nextButton}  
         onPress={() => {
-          setCurrentStep('skin');
           setPopUp(true);
           submitImage();
+          setCurrentStep('skin');
+          if((footImage.left || footImage.right) && answers.ulcer){
+            Alert.alert('Image uploaded successfully','Your image will be analyzed by AI and report will be generated in 24 hours.');    
+          }
         }}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>

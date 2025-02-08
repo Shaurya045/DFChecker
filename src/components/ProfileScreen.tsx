@@ -178,7 +178,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                           fontWeight: '600',
                           color: colors.gray,
                         }}>
-                        RESULT:{' '}
+                        Result:{' '}
                       </Text>
                       <Text style={{color: colors.white, fontSize: 18}}>
                         {item?.result.riskCategory
@@ -193,7 +193,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                           fontWeight: '600',
                           color: colors.gray,
                         }}>
-                        DATE OF TEST:{' '}
+                        Date of Test:{' '}
                       </Text>
                       <Text style={{color: colors.white, fontSize: 18}}>
                         {formattedDate}

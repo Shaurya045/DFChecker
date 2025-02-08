@@ -49,13 +49,13 @@ const PedalQuestion = ({
                 <Text style={{fontWeight: 'bold'}}>
                   Check pulse on top of the foot:
                 </Text>{' '}
-                gently feel for the pulse on the top of the foot.
+                Gently feel for the pulse on the top of the foot.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>
                   Alternative pulse check:
                 </Text>{' '}
-                if you can't feel the pulse on top, feel for the pulse just
+                If you can't feel the pulse on top, feel for the pulse just
                 below the inner ankle.
               </Text>
             </View>

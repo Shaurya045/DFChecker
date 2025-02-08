@@ -58,22 +58,22 @@ const MotionQuestion = ({
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Move the big toe:</Text>{' '}
-                gently move the big toe up and down.
+                Gently move the big toe up and down.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Normal movement:</Text> the
+                <Text style={{fontWeight: 'bold'}}>Normal movement:</Text> The
                 big toe moves easily.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Restricted movement:</Text>{' '}
-                the big toe has some difficulty moving.
+                The big toe has some difficulty moving.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Stiff toe:</Text> the big toe
+                <Text style={{fontWeight: 'bold'}}>Stiff toe:</Text> The big toe
                 is rigid and cannot be moved.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Missing toe:</Text> the big
+                <Text style={{fontWeight: 'bold'}}>Missing toe:</Text> The big
                 toe is missing.
               </Text>
             </View>

@@ -52,6 +52,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+      <View style={{paddingHorizontal: 30}}>
       <Text style={styles.mainHeader}>LOGIN</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.labels}>Enter Your Email</Text>
@@ -96,6 +97,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
         onPress={() => navigation.navigate('Register')}>
         <Text style={styles.buttonText}>REGISTER</Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     height: '100%',
-    paddingHorizontal: 30,
+    //paddingHorizontal: 30,
     backgroundColor: '#fff',
   },
   mainHeader: {

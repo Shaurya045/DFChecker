@@ -51,39 +51,39 @@ const SkinQuestion = ({
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Examine the foot:</Text>{' '}
-                inspect the top, bottom, sides, and between the toes.
+                Inspect the top, bottom, sides, and between the toes.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>Check skin integrity:</Text>{' '}
-                ensure the skin is unbroken, without cuts, blisters, or open
+                Ensure the skin is unbroken, without cuts, blisters, or open
                 wounds. Note any damage.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>Look for trauma:</Text> check
+                <Text style={{fontWeight: 'bold'}}>Look for trauma:</Text> Check
                 for cuts, scrapes, or blisters. Record their location and type.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>
                   Assess for fungal infections:
                 </Text>{' '}
-                look for dry, flaky skin (moccasin foot) or moist, red areas
+                Look for dry, flaky skin (moccasin foot) or moist, red areas
                 (yeast infection) between the toes.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>Check skin condition:</Text>{' '}
-                feel for dry, rough, or cracked skin. Note if it’s moist in any
+                Feel for dry, rough, or cracked skin. Note if it’s moist in any
                 areas.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>Check for calluses:</Text>{' '}
-                look for thickened skin, especially on the bottom of the feet.
+                Look for thickened skin, especially on the bottom of the feet.
                 Note if it’s light or heavy.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>
                   Look for ulcers or open wounds:
                 </Text>{' '}
-                inspect for any open sores. Document their size and location.
+                Inspect for any open sores. Document their size and location.
               </Text>
             </View>
             <TouchableOpacity

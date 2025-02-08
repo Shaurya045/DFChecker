@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Image,
   Modal,
   StyleSheet,
   Text,
@@ -13,7 +14,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 const questions = [
   {
     id: 'deformity1',
-    text: 'No deformity (photo shows healty normal foot)',
+    text: 'No deformity (photo shows healthy normal foot)',
   },
   {
     id: 'deformity2',
@@ -54,11 +55,11 @@ const DeformityQestion = ({
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Look for deformities:</Text>{' '}
-                inspect the foot for any changes that might affect how shoes
+                Inspect the foot for any changes that might affect how shoes
                 fit.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Mild deformities:</Text> look
+                <Text style={{fontWeight: 'bold'}}>Mild deformities:</Text> Look
                 for signs of discomfort, such as:
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
@@ -74,10 +75,12 @@ const DeformityQestion = ({
                 A deformity that alters the shape of the foot.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Amputation:</Text> check if
+                <Text style={{fontWeight: 'bold'}}>Amputation:</Text> Check if
                 any toes are missing or show signs of being removed.
               </Text>
             </View>
+            <Text style={{fontWeight: 'bold', marginBottom: 10}}>Sample Image:</Text>
+            <Image source={require('../assets/deformity.jpeg')} style={{height: 150, width:220, marginBottom: 20}}/>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>

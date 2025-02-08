@@ -102,6 +102,7 @@ const SensationIPswich = ({
           onError={e => console.log(e)}
           showDuration={true}
         />
+        <Text style={{textAlign:'center'}}>Credit: boureaujulien</Text>
       </View>
       <View
         style={{

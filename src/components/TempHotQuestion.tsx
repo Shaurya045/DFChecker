@@ -52,15 +52,15 @@ const TempHotQuestion = ({
                 <Text style={{fontWeight: 'bold'}}>
                   Compare foot temperature:
                 </Text>{' '}
-                feel the foot and compare it to the other foot or the
+                Feel the foot and compare it to the other foot or the
                 surrounding environment.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Normal temperature:</Text>{' '}
-                the foot is at a normal temperature for the current environment.
+                The foot is at a normal temperature for the current environment.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Hot foot:</Text> the foot
+                <Text style={{fontWeight: 'bold'}}>Hot foot:</Text> The foot
                 feels hotter than the other foot or hotter than expected for the
                 environment.
               </Text>

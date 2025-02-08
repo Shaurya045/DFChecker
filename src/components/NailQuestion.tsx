@@ -47,21 +47,21 @@ const NailQuestion = ({
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Examine toenails:</Text>{' '}
-                check for how well they are being managed.​
+                Check for how well they are being managed.​
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>Nails well-kept:</Text>{' '}
-                ensure nails are trimmed, neat, and healthy.​
+                Ensure nails are trimmed, neat, and healthy.​
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Nails unkempt:</Text> look
+                <Text style={{fontWeight: 'bold'}}>Nails unkempt:</Text> Look
                 for nails that are ragged or untidy.​
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>
                   Nails thick, damaged, or infected:
                 </Text>{' '}
-                check for nails that are thick, damaged, or showing signs of
+                Check for nails that are thick, damaged, or showing signs of
                 infection.​​
               </Text>
             </View>
