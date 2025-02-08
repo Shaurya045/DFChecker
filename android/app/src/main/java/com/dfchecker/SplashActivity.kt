@@ -1,4 +1,4 @@
-package com.test
+package com.dfchecker
 
 import android.content.Intent
 import android.os.Bundle
