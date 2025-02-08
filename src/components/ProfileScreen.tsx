@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {colors} from '../utils/colors';
 import {url} from '../utils/constants';
@@ -114,7 +115,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
   }, []); //This was the line that needed to be updated.  The empty array [] was causing the issue.
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
         style={{alignSelf: 'flex-start'}}>
@@ -207,7 +208,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
           <Text style={{textAlign: 'center', fontSize: 18}}>No Test Taken</Text>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

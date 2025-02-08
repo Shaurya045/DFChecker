@@ -81,7 +81,7 @@ const DeformityQestion = ({
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.modalButtonText}>Okay</Text>
             </TouchableOpacity>
           </View>
         </View>

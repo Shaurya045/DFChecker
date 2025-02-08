@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import {colors} from '../utils/colors';
 import {url} from '../utils/constants';
@@ -50,7 +51,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <Text style={styles.mainHeader}>LOGIN</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.labels}>Enter Your Email</Text>
@@ -95,7 +96,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
         onPress={() => navigation.navigate('Register')}>
         <Text style={styles.buttonText}>REGISTER</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

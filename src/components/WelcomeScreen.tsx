@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+} from 'react-native';
 import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
@@ -11,7 +18,7 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
     navigation.navigate('Login');
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <Text style={styles.mainText}>DFChecker</Text> */}
       <Image
         source={require('../assets/dfcheckerImage.png')}
@@ -22,7 +29,7 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
         onPress={submit}>
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

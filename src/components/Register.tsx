@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../utils/colors';
@@ -62,7 +63,7 @@ const Register = ({navigation}: RegisterProps) => {
   // }, [username, password]);
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <Text style={styles.mainHeader}>Register</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.labels}>Enter Your Name</Text>
@@ -117,7 +118,7 @@ const Register = ({navigation}: RegisterProps) => {
         onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

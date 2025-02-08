@@ -7,6 +7,7 @@ import {
   Alert,
   BackHandler,
   Button,
+  SafeAreaView,
 } from 'react-native';
 import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -80,7 +81,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header Section */}
       {/* <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Account details</Text>
@@ -112,7 +113,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
           <Text style={styles.buttonText}>Take Test</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, ScrollView} from 'react-native';
+import {Text, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 import BasicQuestions from './BasicQuestions';
 import SkinQuestion from './SkinQuestion';
 import NailQuestion from './NailQuestion';
@@ -49,147 +49,149 @@ const QuestionScreen = ({navigation}: QesProps) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Foot Health Questionnaire</Text>
-      {currentStep === 'initial' ? (
-        <BasicQuestions
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'skin' ? (
-        <SkinQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'nail' ? (
-        <NailQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'deformity' ? (
-        <DeformityQestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'footwear' ? (
-        <FootwearQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'tempCold' ? (
-        <TempColdQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'tempHot' ? (
-        <TempHotQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'motion' ? (
-        <MotionQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'sensation' ? (
-        <SensationQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'monofilament' ? (
-        <Monofilament
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          setIpSwich={setIpSwich}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'monofilamentQ' ? (
-        <MonofilamentQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'ipSwich' ? (
-        <SensationIPswich
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'pedal' ? (
-        <PedalQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          ipSwich={ipSwich}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'rubor' ? (
-        <RuborQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-        />
-      ) : null}
-      {currentStep === 'erythema' ? (
-        <ErythemaQuestion
-          answers={answers}
-          handleAnswer={handleAnswer}
-          setCurrentStep={setCurrentStep}
-          popUp={popUp}
-          setPopUp={setPopUp}
-          navigation={navigation}
-        />
-      ) : null}
-    </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView >
+        <Text style={styles.title}>Foot Health Questionnaire</Text>
+        {currentStep === 'initial' ? (
+          <BasicQuestions
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'skin' ? (
+          <SkinQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'nail' ? (
+          <NailQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'deformity' ? (
+          <DeformityQestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'footwear' ? (
+          <FootwearQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'tempCold' ? (
+          <TempColdQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'tempHot' ? (
+          <TempHotQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'motion' ? (
+          <MotionQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'sensation' ? (
+          <SensationQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'monofilament' ? (
+          <Monofilament
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            setIpSwich={setIpSwich}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'monofilamentQ' ? (
+          <MonofilamentQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'ipSwich' ? (
+          <SensationIPswich
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'pedal' ? (
+          <PedalQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            ipSwich={ipSwich}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'rubor' ? (
+          <RuborQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+          />
+        ) : null}
+        {currentStep === 'erythema' ? (
+          <ErythemaQuestion
+            answers={answers}
+            handleAnswer={handleAnswer}
+            setCurrentStep={setCurrentStep}
+            popUp={popUp}
+            setPopUp={setPopUp}
+            navigation={navigation}
+          />
+        ) : null}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

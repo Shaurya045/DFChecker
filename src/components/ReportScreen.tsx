@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   Modal,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors} from '../utils/colors';
@@ -186,6 +187,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
   };
   const checkreport = () => {
     if (reportData) {
+      handleTestSubmission();
       const category = reportData.riskCategory;
       if (category === 'Low Risk - Category 0') {
         setResult('Very Low Risk');
@@ -243,10 +245,10 @@ const ReportScreen = ({navigation}: ReportProps) => {
   }
 
   const handleTestSubmission = () => {
-    Alert.alert(
-      'Testing Frequency',
-      `Your Frequency: ${reportData.screeningFrequency}`,
-    );
+    // Alert.alert(
+    //   'Testing Frequency',
+    //   `Your Frequency: ${reportData.screeningFrequency}`,
+    // );
     let freq = reportData.screeningFrequency;
     freq = freq.match(/\d+/);
     scheduleNotification(parseInt(freq[0], 10) * 1000);
@@ -260,11 +262,11 @@ const ReportScreen = ({navigation}: ReportProps) => {
   useEffect(() => {
     if (reportData && reportData.riskCategory) {
       checkreport();
-      handleTestSubmission();
+      // handleTestSubmission();
     }
   }, [reportData]); // Runs only when reportData changes
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Modal animationType="fade" transparent={false} visible={loading}>
         <View
           style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}>
@@ -313,7 +315,17 @@ const ReportScreen = ({navigation}: ReportProps) => {
           ) : null,
         )}
       </View>
-    </View>
+      <Text
+        style={{
+          marginTop: 15,
+          fontSize: 18,
+          fontWeight: 500,
+          color: colors.primary,
+          textAlign: 'center',
+        }}>
+        ** Kindly repeat this assessment in {reportData.screeningFrequency}.**
+      </Text>
+    </SafeAreaView>
   );
 };
 
