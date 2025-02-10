@@ -73,7 +73,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
       if (data.success) {
         const report = data.data;
         setReports(report);
-        console.log('Reports:', report[0].createdAt);
+        console.log('Reports:', report[0]);
         // console.log('Reports:', report[0].result.riskCategory);
       } else {
         setReports([]);
@@ -147,7 +147,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
           Previous Test Result
         </Text>
         {reports[0] ? (
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {reports.map((item, index) => {
               const formattedDate = new Date(
                 item?.createdAt,
@@ -171,31 +171,60 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                       flexDirection: 'column',
                       gap: 5,
                     }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View
+                      style={{flexDirection: 'row', alignItems: 'baseline'}}>
                       <Text
                         style={{
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: '600',
                           color: colors.gray,
                         }}>
-                        Result:{' '}
+                        Left Foot Result:{' '}
                       </Text>
-                      <Text style={{color: colors.white, fontSize: 18}}>
-                        {item?.result.riskCategory
-                          .replace(/\(Category \d+\)/, '')
-                          .trim()}
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontSize: 16,
+                          maxWidth: '70%',
+                        }}>
+                        {item?.result?.left_foot?.risk_category?.replace(
+                          /^(.*?)\s-\sCategory\s\d+$/,
+                          '$1',
+                        )}
+                      </Text>
+                    </View>
+                    <View
+                      style={{flexDirection: 'row', alignItems: 'baseline'}}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: '600',
+                          color: colors.gray,
+                        }}>
+                        Right foot Result:{' '}
+                      </Text>
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontSize: 16,
+                          maxWidth: '70%',
+                        }}>
+                        {item?.result?.right_foot?.risk_category?.replace(
+                          /^(.*?)\s-\sCategory\s\d+$/,
+                          '$1',
+                        )}
                       </Text>
                     </View>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text
                         style={{
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: '600',
                           color: colors.gray,
                         }}>
                         Date of Test:{' '}
                       </Text>
-                      <Text style={{color: colors.white, fontSize: 18}}>
+                      <Text style={{color: colors.white, fontSize: 16}}>
                         {formattedDate}
                       </Text>
                     </View>

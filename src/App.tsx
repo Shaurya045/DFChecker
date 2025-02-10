@@ -13,6 +13,7 @@ import Questions from './components/Questions';
 import Register from './components/Register';
 import ProfileScreen from './components/ProfileScreen';
 import ReportScreen from './components/ReportScreen';
+import ReportDetail from './components/ReportDetail';
 
 // Auth Context
 import {AuthProvider, useAuth} from './AuthContext';
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Qes: undefined;
   Report: undefined;
+  ReportDetail: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,6 +39,7 @@ function AuthenticatedStack() {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Qes" component={Questions} />
       <Stack.Screen name="Report" component={ReportScreen} />
+      <Stack.Screen name="ReportDetail" component={ReportDetail} />
     </Stack.Navigator>
   );
 }
@@ -61,9 +64,9 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     // setTimeout(() => {
-      SplashScreen.hide();
+    SplashScreen.hide();
     // }, 500);
-  },[]);
+  }, []);
 
   return (
     <AuthProvider>

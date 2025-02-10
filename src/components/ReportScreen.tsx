@@ -149,7 +149,7 @@ const recommendations = [
 const ReportScreen = ({navigation}: ReportProps) => {
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState([]);
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState({left: null, right: null});
   const getReport = async () => {
     try {
       // Retrieve the token from AsyncStorage
@@ -188,23 +188,33 @@ const ReportScreen = ({navigation}: ReportProps) => {
   const checkreport = () => {
     if (reportData) {
       handleTestSubmission();
-      const category = reportData.riskCategory;
-      if (category === 'Low Risk - Category 0') {
-        setResult('Very Low Risk');
-      } else if (
-        category === 'Low Risk - Category 1' ||
-        category === 'Low Risk'
-      ) {
-        setResult('Low Risk');
-      } else if (category === 'Moderate Risk - Category 2') {
-        setResult('Moderate Risk');
-      } else if (category === 'High Risk - Category 3') {
-        setResult('High Risk');
-      } else if (category === 'Urgent Risk') {
-        setResult('Urgent Risk');
-      } else if (category === 'Healthy Foot - Need Self Care') {
-        setResult('Healthy Foot - Need Self Care');
-      }
+      const categoryL = reportData.left_foot.risk_category;
+      const categoryR = reportData.right_foot.risk_category;
+      // Function to map risk category to a simplified result
+      const getSimplifiedResult = category => {
+        switch (category) {
+          case 'Very Low Risk - Category 0':
+            return 'Very Low Risk';
+          case 'Low Risk - Category 1':
+            return 'Low Risk';
+          case 'Moderate Risk - Category 2':
+            return 'Moderate Risk';
+          case 'High Risk - Category 3':
+            return 'High Risk';
+          case 'Urgent Risk':
+            return 'Urgent Risk';
+          case 'Healthy Foot - Need Self Care':
+            return 'Healthy Foot - Need Self Care';
+          default:
+            return null;
+        }
+      };
+
+      // Update the result state for both feet
+      setResult({
+        left: getSimplifiedResult(categoryL),
+        right: getSimplifiedResult(categoryR),
+      });
     }
   };
 
@@ -249,9 +259,32 @@ const ReportScreen = ({navigation}: ReportProps) => {
     //   'Testing Frequency',
     //   `Your Frequency: ${reportData.screeningFrequency}`,
     // );
-    let freq = reportData.screeningFrequency;
-    freq = freq.match(/\d+/);
-    scheduleNotification(parseInt(freq[0], 10) * 1000);
+    let freqLeft = reportData.left_foot.screening_frequency;
+    let freqRight = reportData.right_foot.screening_frequency;
+
+    // Extract numbers safely
+    freqLeft = freqLeft.match(/\d+/)
+      ? parseInt(freqLeft.match(/\d+/)[0], 10)
+      : null;
+    freqRight = freqRight.match(/\d+/)
+      ? parseInt(freqRight.match(/\d+/)[0], 10)
+      : null;
+
+    // Ensure both frequencies are valid numbers
+    if (freqLeft === null || freqRight === null) {
+      console.error('Invalid screening frequency data');
+      return;
+    }
+
+    // Get the minimum frequency
+    let freq = Math.min(freqLeft, freqRight);
+
+    // Ensure frequency is a valid positive number before scheduling
+    if (freq > 0) {
+      scheduleNotification(freq * 1000);
+    } else {
+      console.error('Invalid frequency value:', freq);
+    }
   };
 
   useEffect(() => {
@@ -260,7 +293,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
     createNotificationChannel();
   }, []);
   useEffect(() => {
-    if (reportData && reportData.riskCategory) {
+    if (reportData && (reportData.left_foot || reportData.right_foot)) {
       checkreport();
       // handleTestSubmission();
     }
@@ -285,26 +318,93 @@ const ReportScreen = ({navigation}: ReportProps) => {
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>Assessment Report</Text>
       </View>
-      <Text
+      <View
         style={{
-          fontSize: 30,
-          fontWeight: 500,
-          color: 'green',
-          textAlign: 'center',
+          flexDirection: 'row',
+          gap: 25,
+          justifyContent: 'center',
+          marginHorizontal: 10,
         }}>
-        {result}
-      </Text>
-      <Text
+        <View style={{maxWidth: '50%'}}>
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              padding: 10,
+              borderRadius: 10,
+              marginBottom: 15,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.white,
+                fontSize: 16,
+                fontWeight: '500',
+              }}>
+              Left Foot
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: 'green',
+              textAlign: 'center',
+            }}>
+            {result.left}
+          </Text>
+        </View>
+
+        <View style={{maxWidth: '50%'}}>
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              padding: 10,
+              borderRadius: 10,
+              marginBottom: 15,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.white,
+                fontSize: 16,
+                fontWeight: '500',
+              }}>
+              Right Foot
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: 'green',
+              textAlign: 'center',
+            }}>
+            {result.right}
+          </Text>
+        </View>
+      </View>
+      <TouchableOpacity
         style={{
-          marginTop: 40,
-          fontSize: 25,
-          fontWeight: 'bold',
-          color: colors.primary,
-          textAlign: 'center',
-        }}>
-        Recommendations!
-      </Text>
-      <View style={{marginTop: 15}}>
+          backgroundColor: colors.primary,
+          padding: 10,
+          borderRadius: 10,
+          position: 'absolute',
+          bottom: 20,
+        }}
+        onPress={() =>
+          navigation.replace('ReportDetail', {reportData, result})
+        }>
+        <Text
+          style={{
+            fontSize: 23,
+            fontWeight: 600,
+            color: colors.white,
+            textAlign: 'center',
+          }}>
+          Click here for detailed report
+        </Text>
+      </TouchableOpacity>
+      {/* <View style={{marginTop: 15}}>
         {recommendations.map((item, index) =>
           item.id === result ? (
             <Text
@@ -314,8 +414,8 @@ const ReportScreen = ({navigation}: ReportProps) => {
             </Text>
           ) : null,
         )}
-      </View>
-      <Text
+      </View> */}
+      {/* <Text
         style={{
           marginTop: 15,
           fontSize: 18,
@@ -324,7 +424,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
           textAlign: 'center',
         }}>
         ** Kindly repeat this assessment {reportData.screeningFrequency}.**
-      </Text>
+      </Text> */}
     </SafeAreaView>
   );
 };
