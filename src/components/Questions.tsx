@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
+import {Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
 import BasicQuestions from './BasicQuestions';
 import SkinQuestion from './SkinQuestion';
 import NailQuestion from './NailQuestion';
@@ -15,6 +15,7 @@ import RuborQuestion from './RuborQuestion';
 import ErythemaQuestion from './ErythemaQuestion';
 import Monofilament from './Monofilament';
 import MonofilamentQuestion from './MonofilamentQuestion';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -50,6 +51,11 @@ const QuestionScreen = ({navigation}: QesProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+        style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}>
+        <Icon name="arrowleft" size={30} />
+      </TouchableOpacity>
       <ScrollView style={{padding: 20}}>
         <Text style={styles.title}>Foot Health Questionnaire</Text>
         {currentStep === 'initial' ? (
@@ -198,7 +204,7 @@ const QuestionScreen = ({navigation}: QesProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //padding: 20,
+    // margin: 20,
     backgroundColor: '#f5f5f5',
   },
   title: {

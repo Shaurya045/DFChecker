@@ -28,6 +28,9 @@ const TempColdQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const isAnyQuestionAnswered = Object.values(answers).some(
+    answer => answer.left || answer.right,
+  );
   return (
     <>
       <Modal
@@ -102,49 +105,61 @@ const TempColdQuestion = ({
           <Text style={styles.headingTxt}>Right</Text>
         </View>
       </View>
-      {questions.map(item => (
-        <View style={styles.heading} key={item.id}>
-          <Text style={styles.questionTxt}>{item.text}</Text>
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  left: !answers[item.id]?.left,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.left && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  right: !answers[item.id]?.right,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.right && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.right && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
+      {questions.map(item => {
+        const isDisabled =
+          isAnyQuestionAnswered &&
+          !(answers[item.id]?.left || answers[item.id]?.right);
+
+        return (
+          <View style={styles.heading} key={item.id}>
+            <Text
+              style={[styles.questionTxt, isDisabled && styles.disabledText]}>
+              {item.text}
+            </Text>
+            <View style={styles.buttonGroup}>
+              <TouchableOpacity
+                style={[styles.button, isDisabled && styles.disabledButton]}
+                disabled={isDisabled}
+                onPress={() =>
+                  handleAnswer(item.id, {
+                    ...answers[item.id],
+                    left: !answers[item.id]?.left,
+                  })
+                }>
+                <View
+                  style={[
+                    styles.checkbox,
+                    answers[item.id]?.left && styles.checkboxChecked,
+                  ]}>
+                  {answers[item.id]?.left && (
+                    <Text style={styles.checkmark}>✓</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, isDisabled && styles.disabledButton]}
+                disabled={isDisabled}
+                onPress={() =>
+                  handleAnswer(item.id, {
+                    ...answers[item.id],
+                    right: !answers[item.id]?.right,
+                  })
+                }>
+                <View
+                  style={[
+                    styles.checkbox,
+                    answers[item.id]?.right && styles.checkboxChecked,
+                  ]}>
+                  {answers[item.id]?.right && (
+                    <Text style={styles.checkmark}>✓</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      ))}
+        );
+      })}
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('footwear')}>
@@ -279,5 +294,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  disabledButton: {
+    padding: 0,
+    borderRadius: '50%',
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: '#e0e0e0',
+    // borderColor: 'gray',
+    // opacity: 0.8,
+  },
+  disabledText: {
+    color: 'gray',
+    opacity: 0.5,
   },
 });

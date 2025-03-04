@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 const questions = [
   {
     id: 'footwear1',
-    text: 'After removal of the footwear are there any reddened ares on the foot?',
+    text: 'After removal of the footwear are there any reddened areas on the foot?',
   },
   {
     id: 'footwear2',
