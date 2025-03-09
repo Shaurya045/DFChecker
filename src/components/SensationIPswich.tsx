@@ -14,9 +14,22 @@ import VideoPlayer, {type VideoPlayerRef} from 'react-native-video-player';
 
 const questions = [
   {
-    id: 'ipswich',
-    text: 'Patient did not respond to touch for more than 2 toes.',
+    id: 'ipswich3',
+    text: 'Patient respond to touch for all 6 toes.',
   },
+  {
+    id: 'ipswich2',
+    text: 'Patient respond to touch for 5 out of 6 toes.',
+  },
+  {
+    id: 'ipswich1',
+    text: 'Patient respond to touch for 4 out of 6 toes.',
+  },
+  {
+    id: 'ipswich',
+    text: 'Patient respond to touch 3 and below toes.',
+  },
+
 ];
 
 const SensationIPswich = ({
@@ -252,6 +265,17 @@ const SensationIPswich = ({
           </View>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+                  <View style={styles.instructionBox}>
+                          <Text style={styles.instructionText}>
+                            <Text style={styles.boldText}>For "Yes":</Text> 
+                            Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+                          </Text>
+                          <Text style={styles.instructionText}>
+                            <Text style={styles.boldText}>For "No":</Text> 
+                            Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+                          </Text>
+                        </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
@@ -411,6 +435,29 @@ const styles = StyleSheet.create({
   },
   regionNumber: {
     fontSize: 14,
+    fontWeight: 'bold',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
     fontWeight: 'bold',
   },
 });

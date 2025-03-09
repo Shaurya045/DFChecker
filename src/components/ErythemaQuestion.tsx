@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   FlatList,
   Modal,
@@ -6,15 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {url} from '../utils/constants';
+import { colors } from '../utils/colors';
+import { url } from '../utils/constants';
 
 const questions = [
   {
     id: 'erythema',
-    text: 'Look for redness of the skin that does not change when the foot is elevated?',
+    text: 'Redness noted',
   },
 ];
 
@@ -28,25 +28,47 @@ const ErythemaQuestion = ({
 }) => {
   const submitFormData = async () => {
     const data = answers;
+
     try {
       const token = await AsyncStorage.getItem('token');
 
       if (!token) {
         console.error('No token found. Please log in.');
-        return null;
+        return;
       }
-      let response = await fetch(`${url}/submit-form`, {
+
+      // Log the data being sent
+      console.log('Data being sent:', JSON.stringify({ data: data }));
+
+      const response = await fetch(`${url}/submit-form`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({data: data}), // Send the form data in the body
-      }); // Parse the response as JSON
-      const result = await response.json();
+        body: JSON.stringify({ data: data }),
+      });
+
+      // Log the raw response text
+      const responseText = await response.text();
+      console.log('Response Text:', responseText);
+
+      if (!responseText) {
+        console.error('Empty response from server');
+        return;
+      }
+
+      // Attempt to parse the response as JSON
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Error parsing JSON:', parseError);
+        return;
+      }
 
       if (response.ok) {
-        // console.log('Form submitted successfully:', result.form);
+        console.log('Form submitted successfully:', result);
         navigation.replace('Report');
       } else {
         console.error('Error submitting form:', result.message);
@@ -55,72 +77,53 @@ const ErythemaQuestion = ({
       console.error('Error submitting form:', error);
     }
   };
+
   return (
     <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={popUp}
-        // onRequestClose={onClose}
-      >
+      <Modal animationType="fade" transparent={true} visible={popUp}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 20,
-                fontWeight: '600',
-                marginBottom: 10,
-              }}>
-              Instructions
-            </Text>
-            <View style={{marginBottom: 15}}>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                1. Mark the questions for both the foot in there respective
-                column
+            <Text style={styles.modalTitle}>Instructions</Text>
+            <View style={styles.instructionTextContainer}>
+              <Text style={styles.instructionText}>
+                1. Mark the questions for both feet in their respective columns.
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                2. For example if I have heavy callus build up on both foot then
-                will select both the foot left and right and if only on the
-                right foot then will select it only.
+              <Text style={styles.instructionText}>
+                2. For example, if you have heavy callus build-up on both feet,
+                select both the left and right foot. If only on the right foot,
+                select it only.
               </Text>
             </View>
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={() => setPopUp(false)}>
+              onPress={() => setPopUp(false)}
+            >
               <Text style={styles.modalButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>Diabetic Foot Test - Erythema</Text>
       </View>
-      {/* <View>
-        <Text
-          style={{
-            color: 'black',
-            fontSize: 18,
-            fontWeight: '400',
-            marginBottom: 20,
-          }}>
-          Elevation of the leg when the patient laying down on his back for 1
-          min and then bring the leg down as in sitting posture.
+
+      <View>
+        <Text style={styles.questionInstruction}>
+          Look for redness of the skin that does not change when the foot is
+          elevated?
         </Text>
-      </View> */}
+      </View>
+
       <View style={styles.heading}>
-        {/* <TouchableOpacity
-          style={{flexDirection: 'row', gap: 10}}
-          onPress={() => setPopUp(true)}>
-          <Icon name="questioncircle" size={25} color="black" /> */}
         <Text style={styles.headingTxt}>Questions</Text>
-        {/* </TouchableOpacity> */}
         <View style={styles.rightHeading}>
           <Text style={styles.headingTxt}>Left</Text>
           <Text style={styles.headingTxt}>Right</Text>
         </View>
       </View>
-      {questions.map(item => (
+
+      {questions.map((item) => (
         <View style={styles.heading} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
@@ -131,12 +134,14 @@ const ErythemaQuestion = ({
                   ...answers[item.id],
                   left: !answers[item.id]?.left,
                 })
-              }>
+              }
+            >
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.left && styles.checkboxChecked,
-                ]}>
+                ]}
+              >
                 {answers[item.id]?.left && (
                   <Text style={styles.checkmark}>✓</Text>
                 )}
@@ -149,12 +154,14 @@ const ErythemaQuestion = ({
                   ...answers[item.id],
                   right: !answers[item.id]?.right,
                 })
-              }>
+              }
+            >
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
-                ]}>
+                ]}
+              >
                 {answers[item.id]?.right && (
                   <Text style={styles.checkmark}>✓</Text>
                 )}
@@ -163,15 +170,26 @@ const ErythemaQuestion = ({
           </View>
         </View>
       ))}
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={() => setCurrentStep('rubor')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
-      </TouchableOpacity>
+
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "Yes":</Text> Click the checkbox (
+          <Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "No":</Text> Leave the checkbox
+          unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
 
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => submitFormData()}>
+        onPress={() => setCurrentStep('rubor')}
+      >
+        <Text style={styles.nextButtonText}>Previous</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.nextButton} onPress={submitFormData}>
         <Text style={styles.nextButtonText}>Submit</Text>
       </TouchableOpacity>
     </>
@@ -190,7 +208,7 @@ const styles = StyleSheet.create({
   titleTxt: {
     color: 'white',
     fontSize: 20,
-    fontWeight: 'semibold',
+    fontWeight: '600',
     textAlign: 'center',
     padding: 8,
   },
@@ -215,46 +233,17 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     gap: 30,
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
-    borderRadius: '50%',
+    borderRadius: 50,
     width: 30,
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  selectedButton: {
-    backgroundColor: colors.primary,
-  },
-  selectedButtonText: {
-    color: colors.white,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: 'black',
-    flexWrap: 'wrap',
-    textAlign: 'center',
-  },
-  nextButton: {
-    backgroundColor: colors.primary,
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 20,
-    // marginBottom: 40,
-  },
-  nextButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   checkbox: {
-    position: 'absolute',
-    bottom: -10,
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -285,6 +274,20 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
+  modalTitle: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 10,
+  },
+  instructionTextContainer: {
+    marginBottom: 15,
+  },
+  instructionText: {
+    fontSize: 15,
+    fontWeight: '400',
+    marginBottom: 7,
+  },
   modalButton: {
     borderRadius: 10,
     padding: 15,
@@ -297,5 +300,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  nextButton: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  nextButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  instructionBox: {
+    marginTop: 0,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  questionInstruction: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: '400',
+    marginBottom: 20,
   },
 });

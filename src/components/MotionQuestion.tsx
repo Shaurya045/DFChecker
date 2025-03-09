@@ -5,12 +5,17 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const questions = [
+  {
+    id: 'motion4',
+    text: 'First toe amputated?',
+  },
   {
     id: 'motion1',
     text: 'First toe (hallux) is easily moved?',
@@ -23,10 +28,6 @@ const questions = [
     id: 'motion3',
     text: 'First toe is rigid and cannot be moved',
   },
-  {
-    id: 'motion4',
-    text: 'First toe amputated?',
-  },
 ];
 
 const MotionQuestion = ({
@@ -36,6 +37,44 @@ const MotionQuestion = ({
   popUp,
   setPopUp,
 }) => {
+ const validateAnswers = () => {
+     // Check if motion4 is checked (either left or right)
+     const ismotion4Checked = answers['motion4']?.left || answers['motion4']?.right;
+ 
+     // Check if deformity2, deformity3, and deformity4 are not checked (both left and right)
+     const areOtherQuestionsUnchecked = ['motion1', 'motion2', 'motion3'].every(
+       questionId => !answers[questionId]?.left && !answers[questionId]?.right,
+     );
+ 
+     // If motion4 is checked and other questions are unchecked, allow proceeding
+     if (ismotion4Checked && areOtherQuestionsUnchecked) {
+       return true;
+     }
+ 
+     // Otherwise, check if all questions have at least one checkbox selected (left or right)
+     const isAllAnswered = questions.every(
+       question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined,
+     );
+ 
+     if (!isAllAnswered) {
+       return false;
+     }
+ 
+     return true;
+   };
+ 
+   const handleNext = () => {
+     if (!validateAnswers()) {
+       Alert.alert(
+         'Incomplete Form',
+         'Please answer all the questions before proceeding.',
+       );
+       return; // Stop if validation fails
+     }
+ 
+     setCurrentStep('sensation'); // Proceed to the next step
+   };
+
   return (
     <>
       <Modal
@@ -113,60 +152,102 @@ const MotionQuestion = ({
           <Text style={styles.headingTxt}>Right</Text>
         </View>
       </View>
-      {questions.map(item => (
-        <View style={styles.heading} key={item.id}>
-          <Text style={styles.questionTxt}>{item.text}</Text>
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  left: !answers[item.id]?.left,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.left && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
+      {questions.map((item) => (
+              <View style={styles.heading} key={item.id}>
+                <Text style={styles.questionTxt}>{item.text}</Text>
+                <View style={styles.buttonGroup}>
+                  {/* Left Checkbox */}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      // If motion4 is being checked, uncheck all other left checkboxes
+                      if (item.id === 'motion4' && !answers[item.id]?.left) {
+                        questions.forEach((question) => {
+                          if (question.id !== 'motion4') {
+                            handleAnswer(question.id, {
+                              ...answers[question.id],
+                              left: false,
+                            });
+                          }
+                        });
+                      }
+                      // Toggle the current checkbox
+                      handleAnswer(item.id, {
+                        ...answers[item.id],
+                        left: !answers[item.id]?.left,
+                      });
+                    }}
+                    disabled={answers['motion4']?.left && item.id !== 'motion4'}>
+                    <View
+                      style={[
+                        styles.checkbox,
+                        answers[item.id]?.left && styles.checkboxChecked,
+                        answers['motion4']?.left && item.id !== 'motion4' && styles.disabledCheckbox,
+                      ]}>
+                      {answers[item.id]?.left && (
+                        <Text style={styles.checkmark}>✓</Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+      
+                  {/* Right Checkbox */}
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      // If motion4 is being checked, uncheck all other right checkboxes
+                      if (item.id === 'motion4' && !answers[item.id]?.right) {
+                        questions.forEach((question) => {
+                          if (question.id !== 'motion4') {
+                            handleAnswer(question.id, {
+                              ...answers[question.id],
+                              right: false,
+                            });
+                          }
+                        });
+                      }
+                      // Toggle the current checkbox
+                      handleAnswer(item.id, {
+                        ...answers[item.id],
+                        right: !answers[item.id]?.right,
+                      });
+                    }}
+                    disabled={answers['motion4']?.right && item.id !== 'motion4'}>
+                    <View
+                      style={[
+                        styles.checkbox,
+                        answers[item.id]?.right && styles.checkboxChecked,
+                        answers['motion4']?.right && item.id !== 'motion4' && styles.disabledCheckbox,
+                      ]}>
+                      {answers[item.id]?.right && (
+                        <Text style={styles.checkmark}>✓</Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  right: !answers[item.id]?.right,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.right && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.right && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
+            ))}
+      {/* Add instructions for checkbox interaction */}
+            <View style={styles.instructionBox}>
+                    <Text style={styles.instructionText}>
+                      <Text style={styles.boldText}>For "Yes":</Text> 
+                      Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+                    </Text>
+                    <Text style={styles.instructionText}>
+                      <Text style={styles.boldText}>For "No":</Text> 
+                      Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+                    </Text>
+                  </View>      
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('tempHot')}>
         <Text style={styles.nextButtonText}>Previous</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.nextButton, {marginBottom: 40}]}
-        onPress={() => setCurrentStep('sensation')}>
-        <Text style={styles.nextButtonText}>Next</Text>
-      </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.nextButton, {marginBottom: 40}]}
+              onPress={handleNext}>
+              <Text style={styles.nextButtonText}>Next</Text>
+            </TouchableOpacity>
     </>
   );
 };
@@ -208,11 +289,9 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     gap: 30,
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
     borderRadius: '50%',
     width: 30,
@@ -238,7 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
@@ -260,6 +338,10 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
+  },
+  disabledCheckbox: {
+    backgroundColor: '#e0e0e0',
+    borderColor: '#e0e0e0',
   },
   checkmark: {
     color: 'white',
@@ -290,5 +372,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });

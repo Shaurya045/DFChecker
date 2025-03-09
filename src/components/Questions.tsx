@@ -51,10 +51,11 @@ const QuestionScreen = ({navigation}: QesProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Replace arrow symbol with home symbol */}
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
         style={{alignSelf: 'flex-start', marginLeft: 10, marginTop: 10}}>
-        <Icon name="arrowleft" size={30} />
+        <Icon name="home" size={30} color="#000" /> {/* Home icon */}
       </TouchableOpacity>
       <ScrollView style={{padding: 20}}>
         <Text style={styles.title}>Foot Health Questionnaire</Text>
@@ -204,7 +205,6 @@ const QuestionScreen = ({navigation}: QesProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // margin: 20,
     backgroundColor: '#f5f5f5',
   },
   title: {

@@ -40,7 +40,6 @@ const BasicQuestions = ({
       avoidEmptySpaceAroundImage: true,
       freeStyleCropEnabled: true,
     }).then(img => {
-      // console.log(img);
       if (foot === 'Left') {
         setFootImage({...footImage, left: img});
       } else {
@@ -58,7 +57,6 @@ const BasicQuestions = ({
       avoidEmptySpaceAroundImage: true,
       freeStyleCropEnabled: true,
     }).then(img => {
-      // console.log(img);
       if (foot === 'Left') {
         setFootImage({...footImage, left: img});
       } else {
@@ -87,7 +85,6 @@ const BasicQuestions = ({
     });
 
     try {
-      // Retrieve the token from AsyncStorage
       const token = await AsyncStorage.getItem('token');
 
       if (!token) {
@@ -111,10 +108,8 @@ const BasicQuestions = ({
   };
 
   useEffect(() => {
-    // Fetch images from the backend
     const fetchImages = async () => {
       try {
-        // Retrieve the token from AsyncStorage
         const token = await AsyncStorage.getItem('token');
 
         if (!token) {
@@ -128,7 +123,6 @@ const BasicQuestions = ({
           },
         });
         let data = await response.json();
-        // console.log(data.data.imageL); // Log the data received
         if (data.data.imageL) {
           setFootImage({
             ...footImage,
@@ -204,6 +198,42 @@ const BasicQuestions = ({
         );
       default:
         return null;
+    }
+  };
+
+  const validateAnswers = () => {
+    // Check if all required questions are answered
+    const requiredQuestions = initialQuestions.filter(
+      q => !q.condition || q.condition(answers),
+    );
+    const isAllAnswered = requiredQuestions.every(
+      q => answers[q.id] !== undefined,
+    );
+
+    if (!isAllAnswered) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please answer all the questions before proceeding.',
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleNext = () => {
+    if (!validateAnswers()) {
+      return; // Stop if validation fails
+    }
+
+    setPopUp(true);
+    submitImage();
+    setCurrentStep('skin');
+    if ((footImage.left || footImage.right) && answers.ulcer) {
+      Alert.alert(
+        'Image uploaded successfully',
+        'Your image will be analyzed by AI and report will be generated in 24 hours.',
+      );
     }
   };
 
@@ -297,17 +327,20 @@ const BasicQuestions = ({
         onTakePhoto={handleTakePhoto}
         onChooseFromGallery={handleChooseFromGallery}
       />
-
+{/* Add instructions for checkbox interaction */}
+            <View style={styles.instructionBox}>
+                    <Text style={styles.instructionText}>
+                      <Text style={styles.boldText}>For "Yes":</Text> 
+                      Click the (Y) .
+                    </Text>
+                    <Text style={styles.instructionText}>
+                      <Text style={styles.boldText}>For "No":</Text> 
+                      Click the (N) .
+                    </Text>
+                  </View>
       <TouchableOpacity
-        style={styles.nextButton}  
-        onPress={() => {
-          setPopUp(true);
-          submitImage();
-          setCurrentStep('skin');
-          if((footImage.left || footImage.right) && answers.ulcer){
-            Alert.alert('Image uploaded successfully','Your image will be analyzed by AI and report will be generated in 24 hours.');    
-          }
-        }}>
+        style={styles.nextButton}
+        onPress={handleNext}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
     </>
@@ -380,26 +413,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '45%',
   },
-  cameraView: {
-    height: 300,
-    marginBottom: 20,
-  },
-  camera: {
-    flex: 1,
-  },
-  cameraBtnContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    marginBottom: 20,
-  },
-  cameraBtn: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-  },
   imgContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -415,45 +428,43 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'contain',
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  footQuestionContainer: {
-    marginBottom: 15,
-  },
-  footQuestion: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  checkboxGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  checkbox: {
-    borderWidth: 1,
-    borderColor: '#000',
-    padding: 10,
-    borderRadius: 5,
-  },
-  checkedBox: {
-    backgroundColor: colors.primary,
-  },
   nextButton: {
     backgroundColor: colors.primary,
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+
 });
+
 
 export default BasicQuestions;

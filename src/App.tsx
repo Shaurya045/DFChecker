@@ -27,7 +27,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Qes: undefined;
   Report: undefined;
-  ReportDetail: undefined;
+  ReportDetail: { reportData: any; result: { left: string | null; right: string | null } };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
