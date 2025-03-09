@@ -134,6 +134,17 @@ const RuborQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+              <Text style={styles.instructionText}>
+                <Text style={styles.boldText}>For "Yes":</Text> 
+                Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+              </Text>
+              <Text style={styles.instructionText}>
+                <Text style={styles.boldText}>For "No":</Text> 
+                Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+              </Text>
+            </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('pedal')}>
@@ -269,4 +280,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  
 });

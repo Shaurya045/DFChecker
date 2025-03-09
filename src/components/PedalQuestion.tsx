@@ -13,8 +13,9 @@ import Icon from 'react-native-vector-icons/AntDesign';
 const questions = [
   {
     id: 'pedal',
-    text: 'Pulses present?',
+    text: 'Pulses present?', 
   },
+  
 ];
 
 const PedalQuestion = ({
@@ -57,6 +58,13 @@ const PedalQuestion = ({
                 </Text>{' '}
                 If you can't feel the pulse on top, feel for the pulse just
                 below the inner ankle.
+              </Text>
+              {/* Additional instructions for users */}
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>Note:</Text> If you are
+                unsure how to check pedal pulses, ask your physician to assess
+                them for you. The app will halt the assessment until you receive
+                the results.
               </Text>
             </View>
             <TouchableOpacity
@@ -138,6 +146,22 @@ const PedalQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add "Yes" and "No" options below the question */}
+      <View style={styles.yesNoContainer}>
+        <Text style={styles.yesNoText}></Text>
+        <Text style={styles.yesNoText}></Text>
+      </View>
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "Yes":</Text> 
+          Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "No":</Text> 
+          Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() =>
@@ -192,11 +216,9 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     gap: 30,
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
     borderRadius: '50%',
     width: 30,
@@ -222,7 +244,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
@@ -231,7 +252,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     position: 'absolute',
-    bottom: -10,
+    bottom: 5,
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -264,15 +285,50 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     borderRadius: 10,
-    padding: 15,
+    padding: 0,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
     backgroundColor: '#f0f0f0',
   },
   modalButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  yesNoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 40,
+    marginRight: 0,
+    marginTop: -5,
+  },
+  yesNoText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+  },
+  instructionBox: {
+    marginTop: -20,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });
