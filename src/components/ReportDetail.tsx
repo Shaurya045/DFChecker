@@ -6,45 +6,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import { colors } from '../utils/colors';
+import React, {useEffect, useState} from 'react';
+import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 // Navigation
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../App';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
 
-type ReportDetailProps = NativeStackScreenProps<RootStackParamList, 'ReportDetail'> & {
-  route: {
-    params: {
-      reportData: {
-        basic_questions: {
-          neurologicalDisease: boolean;
-          amputation: boolean;
-          amputationCount: number;
-          smoking: boolean;
-          ulcer: boolean;
-        };
-        left_foot: {
-          risk_category: string;
-          criteria: string;
-          clinical_indicator: string;
-          screening_frequency: string;
-        };
-        right_foot: {
-          risk_category: string;
-          criteria: string;
-          clinical_indicator: string;
-          screening_frequency: string;
-        };
-      };
-      result: {
-        left: string;
-        right: string;
-      };
-    };
-  };
-};
+type ReportDetailProps = NativeStackScreenProps<
+  RootStackParamList,
+  'ReportDetail'
+>;
 
 const recommendations = [
   {
@@ -169,40 +142,19 @@ const recommendations = [
   },
 ];
 
-const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
-  const { params } = route;
-  const { reportData, result } = params || {};
+const ReportDetail = ({route, navigation}: ReportDetailProps) => {
+  const [detailedReport, setDetailedReport] = useState<any>({});
+  const {reportData, result} = route.params;
 
-  // Fallback to default values if reportData or result is undefined
-  const safeReportData = reportData || {
-    basic_questions: {
-      neurologicalDisease: false,
-      amputation: false,
-      amputationCount: 0,
-      smoking: false,
-      ulcer: false,
-    },
-    left_foot: {
-      risk_category: '',
-      criteria: '',
-      clinical_indicator: '',
-      screening_frequency: '',
-    },
-    right_foot: {
-      risk_category: '',
-      criteria: '',
-      clinical_indicator: '',
-      screening_frequency: '',
-    },
-  };
-
-  const safeResult = result || { left: '', right: '' };
+  useEffect(() => {
+    setDetailedReport(route.params);
+  }, [route.params]);
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Report')}
-        style={{ alignSelf: 'flex-start', marginBottom: 10 }}>
+        onPress={() => navigation.navigate('Home')}
+        style={{alignSelf: 'flex-start', marginBottom: 10}}>
         <Icon name="arrowleft" size={30} />
       </TouchableOpacity>
 
@@ -210,9 +162,9 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
         <Text style={styles.titleTxt}>Report Detail</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Pre-screening Assessment */}
+        {/* Basic Questions */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Pre-screening Assessment:</Text>
+          <Text style={styles.heading}>Pre-screening Assessment</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -223,7 +175,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
               Do you have peripheral neurological disease?{' '}
             </Text>
             <Text style={styles.infoText}>
-              {safeReportData.basic_questions.neurologicalDisease ? 'Yes' : 'No'}
+              {reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'}
             </Text>
           </View>
           <View
@@ -234,7 +186,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Have you had any amputations? </Text>
             <Text style={styles.infoText}>
-              {safeReportData.basic_questions.amputation ? 'Yes' : 'No'}
+              {reportData?.basic_questions?.amputation ? 'Yes' : 'No'}
             </Text>
           </View>
           <View
@@ -247,7 +199,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
               How many amputations have you had?{' '}
             </Text>
             <Text style={styles.infoText}>
-              {safeReportData.basic_questions.amputationCount || 'N/A'}
+              {reportData?.basic_questions?.amputationCount || 'N/A'}
             </Text>
           </View>
           <View
@@ -258,7 +210,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Are you currently smoking? </Text>
             <Text style={styles.infoText}>
-              {safeReportData.basic_questions.smoking ? 'Yes' : 'No'}
+              {reportData?.basic_questions?.smoking ? 'Yes' : 'No'}
             </Text>
           </View>
           <View
@@ -271,7 +223,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
               Do you have any ulcers on your feet?{' '}
             </Text>
             <Text style={styles.infoText}>
-              {safeReportData.basic_questions.ulcer ? 'Yes' : 'No'}
+              {reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}
             </Text>
           </View>
         </View>
@@ -287,7 +239,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Risk Category: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.left_foot.risk_category || 'N/A'}
+              {reportData?.left_foot?.risk_category || 'N/A'}
             </Text>
           </View>
           <View
@@ -298,7 +250,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Criteria: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.left_foot.criteria || 'N/A'}
+              {reportData?.left_foot?.criteria || 'N/A'}
             </Text>
           </View>
           <View
@@ -309,7 +261,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Clinical Indicator: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.left_foot.clinical_indicator || 'N/A'}
+              {reportData?.left_foot?.clinical_indicator || 'N/A'}
             </Text>
           </View>
           <View
@@ -320,7 +272,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Screening Frequency: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.left_foot.screening_frequency || 'N/A'}
+              {reportData?.left_foot?.screening_frequency || 'N/A'}
             </Text>
           </View>
         </View>
@@ -336,7 +288,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Risk Category: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.right_foot.risk_category || 'N/A'}
+              {reportData?.right_foot?.risk_category || 'N/A'}
             </Text>
           </View>
           <View
@@ -347,7 +299,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Criteria: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.right_foot.criteria || 'N/A'}
+              {reportData?.right_foot?.criteria || 'N/A'}
             </Text>
           </View>
           <View
@@ -358,7 +310,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Clinical Indicator: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.right_foot.clinical_indicator || 'N/A'}
+              {reportData?.right_foot?.clinical_indicator || 'N/A'}
             </Text>
           </View>
           <View
@@ -369,14 +321,14 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             }}>
             <Text style={styles.subHeading}>Screening Frequency: </Text>
             <Text style={styles.infoText}>
-              {safeReportData.right_foot.screening_frequency || 'N/A'}
+              {reportData?.right_foot?.screening_frequency || 'N/A'}
             </Text>
           </View>
         </View>
 
         {/* Recommendations */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Recommendations:</Text>
+          <Text style={styles.heading}>Recommendations</Text>
           <View style={styles.recommendationBox}>
             <Text
               style={{
@@ -390,14 +342,13 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
               For Left Foot:
             </Text>
             {recommendations
-              .filter(item => item.id === safeResult.left)
+              .filter(item => item.id === result.left)
               .map((item, index) => (
                 <Text key={index} style={styles.recommendationText}>
                   • {item.text}
                 </Text>
               ))}
           </View>
-
           <View style={styles.recommendationBox}>
             <Text
               style={{
@@ -411,7 +362,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
               For Right Foot:
             </Text>
             {recommendations
-              .filter(item => item.id === safeResult.right)
+              .filter(item => item.id === result.right)
               .map((item, index) => (
                 <Text key={index} style={styles.recommendationText}>
                   • {item.text}
@@ -423,8 +374,6 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
     </SafeAreaView>
   );
 };
-
-export default ReportDetail;
 
 const styles = StyleSheet.create({
   container: {
@@ -471,3 +420,5 @@ const styles = StyleSheet.create({
     maxWidth: '60%',
   },
 });
+
+export default ReportDetail;

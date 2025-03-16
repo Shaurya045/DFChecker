@@ -18,6 +18,7 @@ import ReportDetail from './components/ReportDetail';
 // Auth Context
 import {AuthProvider, useAuth} from './AuthContext';
 import {useEffect} from 'react';
+import ReportProfile from './components/ReportProfile';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -28,6 +29,8 @@ export type RootStackParamList = {
   Qes: undefined;
   Report: undefined;
   ReportDetail: { reportData: any; result: { left: string | null; right: string | null } };
+  ReportProfile: { reportData: any; result: { left: string | null; right: string | null } };
+
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +43,7 @@ function AuthenticatedStack() {
       <Stack.Screen name="Qes" component={Questions} />
       <Stack.Screen name="Report" component={ReportScreen} />
       <Stack.Screen name="ReportDetail" component={ReportDetail} />
+      <Stack.Screen name="ReportProfile" component={ReportProfile} />
     </Stack.Navigator>
   );
 }

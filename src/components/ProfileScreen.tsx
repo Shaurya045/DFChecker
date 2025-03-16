@@ -20,7 +20,7 @@ type ProfileProps = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 const ProfileScreen = ({navigation}: ProfileProps) => {
   const [profile, setProfile] = useState<{name?: string; email?: string}>({});
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState<any[]>([]);
   const {logout} = useAuth();
 
   const getUserProfile = async () => {
@@ -54,6 +54,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
       console.error('Error fetching profile:', error);
     }
   };
+
   const getAllReports = async () => {
     try {
       // Retrieve the token from AsyncStorage
@@ -74,10 +75,8 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         const report = data.data;
         setReports(report);
         console.log('Reports:', report[0]);
-        // console.log('Reports:', report[0].result.riskCategory);
       } else {
         setReports([]);
-        // console.error('Failed to fetch reports:', data.message);
       }
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -90,7 +89,6 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Add your authentication header here
         },
       });
 
@@ -112,7 +110,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
   useEffect(() => {
     getUserProfile();
     getAllReports();
-  }, []); //This was the line that needed to be updated.  The empty array [] was causing the issue.
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -139,14 +137,14 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         <Text
           style={{
             fontSize: 23,
-            fontWeight: 500,
+            fontWeight: '500',
             marginBottom: 15,
             textAlign: 'center',
             color: colors.secondary,
           }}>
-          Previous Test Result
+          Previous Test Results
         </Text>
-        {reports[0] ? (
+        {reports.length > 0 ? (
           <ScrollView showsVerticalScrollIndicator={false}>
             {reports.map((item, index) => {
               const formattedDate = new Date(
@@ -158,78 +156,92 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
               });
 
               return (
-                <View
+                <TouchableOpacity
                   key={index}
-                  style={{
-                    backgroundColor: colors.primary,
-                    padding: 15,
-                    borderRadius: 10,
-                    marginBottom: 17,
-                  }}>
+                  onPress={() =>
+                    navigation.navigate('ReportProfile', {
+                      reportData: item,
+                      result: {
+                        left: item?.result?.left_foot?.risk_category?.replace(
+                          /^(.*?)\s-\sCategory\s\d+$/,
+                          '$1',
+                        ),
+                        right: item?.result?.right_foot?.risk_category?.replace(
+                          /^(.*?)\s-\sCategory\s\d+$/,
+                          '$1',
+                        ),
+                      },
+                    })
+                  }>
                   <View
                     style={{
-                      flexDirection: 'column',
-                      gap: 5,
+                      backgroundColor: colors.primary,
+                      padding: 15,
+                      borderRadius: 10,
+                      marginBottom: 17,
                     }}>
-                    <View
-                      style={{flexDirection: 'row', alignItems: 'baseline'}}>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '600',
-                          color: colors.gray,
-                        }}>
-                        Left Foot Result:{' '}
-                      </Text>
-                      <Text
-                        style={{
-                          color: colors.white,
-                          fontSize: 16,
-                          maxWidth: '70%',
-                        }}>
-                        {item?.result?.left_foot?.risk_category?.replace(
-                          /^(.*?)\s-\sCategory\s\d+$/,
-                          '$1',
-                        )}
-                      </Text>
-                    </View>
-                    <View
-                      style={{flexDirection: 'row', alignItems: 'baseline'}}>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '600',
-                          color: colors.gray,
-                        }}>
-                        Right foot Result:{' '}
-                      </Text>
-                      <Text
-                        style={{
-                          color: colors.white,
-                          fontSize: 16,
-                          maxWidth: '70%',
-                        }}>
-                        {item?.result?.right_foot?.risk_category?.replace(
-                          /^(.*?)\s-\sCategory\s\d+$/,
-                          '$1',
-                        )}
-                      </Text>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '600',
-                          color: colors.gray,
-                        }}>
-                        Date of Test:{' '}
-                      </Text>
-                      <Text style={{color: colors.white, fontSize: 16}}>
-                        {formattedDate}
-                      </Text>
+                    <View style={{flexDirection: 'column', gap: 5}}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'baseline'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: colors.gray,
+                          }}>
+                          Left Foot Result:{' '}
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.white,
+                            fontSize: 16,
+                            maxWidth: '70%',
+                          }}>
+                          {item?.result?.left_foot?.risk_category?.replace(
+                            /^(.*?)\s-\sCategory\s\d+$/,
+                            '$1',
+                          )}
+                        </Text>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'baseline'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: colors.gray,
+                          }}>
+                          Right Foot Result:{' '}
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.white,
+                            fontSize: 16,
+                            maxWidth: '70%',
+                          }}>
+                          {item?.result?.right_foot?.risk_category?.replace(
+                            /^(.*?)\s-\sCategory\s\d+$/,
+                            '$1',
+                          )}
+                        </Text>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: colors.gray,
+                          }}>
+                          Date of Test:{' '}
+                        </Text>
+                        <Text style={{color: colors.white, fontSize: 16}}>
+                          {formattedDate}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -261,13 +273,13 @@ const styles = StyleSheet.create({
   },
   profileText: {
     fontSize: 20,
-    fontWeight: 500,
+    fontWeight: '500',
     color: '#1D1616',
   },
   profileTextAns: {
     color: colors.secondary,
     fontSize: 20,
-    fontWeight: 400,
+    fontWeight: '400',
   },
   buttonStyle: {
     backgroundColor: colors.primary,

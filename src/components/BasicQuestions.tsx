@@ -331,11 +331,11 @@ const BasicQuestions = ({
             <View style={styles.instructionBox}>
                     <Text style={styles.instructionText}>
                       <Text style={styles.boldText}>For "Yes":</Text> 
-                      Click the (Y) .
+                     <Text>Click the (Y).</Text> 
                     </Text>
                     <Text style={styles.instructionText}>
                       <Text style={styles.boldText}>For "No":</Text> 
-                      Click the (N) .
+                      <Text>Click the (N).</Text>
                     </Text>
                   </View>
       <TouchableOpacity
