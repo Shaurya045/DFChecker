@@ -13,6 +13,7 @@ import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const questions = [
+  
   {
     id: 'deformity1',
     text: 'No deformity (photo shows healthy normal foot)',
@@ -39,6 +40,17 @@ const DeformityQestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
+        const hasAnyAnswers = questions.some(
+          question => answers[question.id]?.left === true && answers[question.id]?.right === true
+        );
+        
+        if (!hasAnyAnswers) {
+          Alert.alert(
+            'Incomplete Form',
+            'Please select at least one option before proceeding.',
+          );
+          return false;
+        }
     // Check if deformity1 is checked (either left or right)
     const isDeformity1Checked = answers['deformity1']?.left || answers['deformity1']?.right;
 
@@ -66,10 +78,7 @@ const DeformityQestion = ({
 
   const handleNext = () => {
     if (!validateAnswers()) {
-      Alert.alert(
-        'Incomplete Form',
-        'Please answer all the questions before proceeding.',
-      );
+
       return; // Stop if validation fails
     }
 

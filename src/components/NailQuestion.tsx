@@ -26,6 +26,17 @@ const NailQuestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
+        const hasAnyAnswers = questions.some(
+          question => answers[question.id]?.left === true && answers[question.id]?.right === true
+        );
+        
+        if (!hasAnyAnswers) {
+          Alert.alert(
+            'Incomplete Form',
+            'Please select at least one option before proceeding.',
+          );
+          return false;
+        }
     // Check if nails1 is checked (either left or right)
     const isNails1Checked = answers['nails1']?.left || answers['nails1']?.right;
 
@@ -53,10 +64,7 @@ const NailQuestion = ({
 
   const handleNext = () => {
     if (!validateAnswers()) {
-      Alert.alert(
-        'Incomplete Form',
-        'Please answer all the questions before proceeding.',
-      );
+
       return; // Stop if validation fails
     }
 

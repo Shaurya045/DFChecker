@@ -38,6 +38,17 @@ const MotionQuestion = ({
   setPopUp,
 }) => {
  const validateAnswers = () => {
+      const hasAnyAnswers = questions.some(
+        question => answers[question.id]?.left === true && answers[question.id]?.right === true
+      );
+      
+      if (!hasAnyAnswers) {
+        Alert.alert(
+          'Incomplete Form',
+          'Please select at least one option before proceeding.',
+        );
+        return false;
+      }
      // Check if motion4 is checked (either left or right)
      const ismotion4Checked = answers['motion4']?.left || answers['motion4']?.right;
  
@@ -65,10 +76,7 @@ const MotionQuestion = ({
  
    const handleNext = () => {
      if (!validateAnswers()) {
-       Alert.alert(
-         'Incomplete Form',
-         'Please answer all the questions before proceeding.',
-       );
+
        return; // Stop if validation fails
      }
  

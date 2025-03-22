@@ -158,7 +158,11 @@ const BasicQuestions = ({
                   styles.button,
                   answers[question.id] === true && styles.selectedButton,
                 ]}
-                onPress={() => handleAnswer(question.id, true)}>
+                onPress={() => {
+                  // Toggle the Yes button
+                  const currentValue = answers[question.id];
+                  handleAnswer(question.id, currentValue === true ? undefined : true);
+                }}>
                 <Text
                   style={[
                     styles.buttonText,
@@ -172,7 +176,11 @@ const BasicQuestions = ({
                   styles.button,
                   answers[question.id] === false && styles.selectedButton,
                 ]}
-                onPress={() => handleAnswer(question.id, false)}>
+                onPress={() => {
+                  // Toggle the No button
+                  const currentValue = answers[question.id];
+                  handleAnswer(question.id, currentValue === false ? undefined : false);
+                }}>
                 <Text
                   style={[
                     styles.buttonText,
@@ -327,17 +335,17 @@ const BasicQuestions = ({
         onTakePhoto={handleTakePhoto}
         onChooseFromGallery={handleChooseFromGallery}
       />
-{/* Add instructions for checkbox interaction */}
-            <View style={styles.instructionBox}>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "Yes":</Text> 
-                     <Text>Click the (Y).</Text> 
-                    </Text>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "No":</Text> 
-                      <Text>Click the (N).</Text>
-                    </Text>
-                  </View>
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "Yes":</Text> 
+          <Text> Click the (Y). Click again to deselect.</Text> 
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "No":</Text> 
+          <Text> Click the (N). Click again to deselect.</Text>
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={handleNext}>
@@ -463,8 +471,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
-
 });
-
 
 export default BasicQuestions;

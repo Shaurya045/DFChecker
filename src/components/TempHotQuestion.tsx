@@ -30,6 +30,17 @@ const TempHotQuestion = ({
 }) => {
   // Function to check if a checkbox should be disabled
   const validateAnswers = () => {
+        const hasAnyAnswers = questions.some(
+          question => answers[question.id]?.left === true && answers[question.id]?.right === true
+        );
+        
+        if (!hasAnyAnswers) {
+          Alert.alert(
+            'Incomplete Form',
+            'Please select at least one option before proceeding.',
+          );
+          return false;
+        }
     // Check if tempHot1 is checked (either left or right)
     const istempHot1Checked = answers['tempHot1']?.left || answers['tempHot1']?.right;
 
@@ -57,10 +68,7 @@ const TempHotQuestion = ({
     
       const handleNext = () => {
         if (!validateAnswers()) {
-          Alert.alert(
-            'Incomplete Form',
-            'Please answer all the questions before proceeding.',
-          );
+
           return; // Stop if validation fails
         }
     

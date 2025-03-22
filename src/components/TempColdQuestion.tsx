@@ -29,6 +29,17 @@ const TempColdQuestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
+        const hasAnyAnswers = questions.some(
+          question => answers[question.id]?.left === true && answers[question.id]?.right === true
+        );
+        
+        if (!hasAnyAnswers) {
+          Alert.alert(
+            'Incomplete Form',
+            'Please select at least one option before proceeding.',
+          );
+          return false;
+        }
       // Check if tempCold1 is checked (either left or right)
       const istempCold1Checked = answers['tempCold1']?.left || answers['tempCold1']?.right;
   
@@ -56,10 +67,7 @@ const TempColdQuestion = ({
   
     const handleNext = () => {
       if (!validateAnswers()) {
-        Alert.alert(
-          'Incomplete Form',
-          'Please answer all the questions before proceeding.',
-        );
+
         return; // Stop if validation fails
       }
   

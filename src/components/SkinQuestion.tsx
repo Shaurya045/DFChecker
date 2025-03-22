@@ -30,6 +30,17 @@ const SkinQuestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
+    const hasAnyAnswers = questions.some(
+      question => answers[question.id]?.left === true && answers[question.id]?.right === true
+    );
+    
+    if (!hasAnyAnswers) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option before proceeding.',
+      );
+      return false;
+    }
     // Check if skin1 is checked (either left or right)
     const isSkin1Checked = answers['skin1']?.left || answers['skin1']?.right;
 
@@ -51,7 +62,7 @@ const SkinQuestion = ({
     if (!isAllAnswered) {
       Alert.alert(
         'Incomplete Form',
-        'Please answer all the questions before proceeding.',
+        'Please answer all questions before proceeding.',
       );
       return false;
     }
@@ -108,13 +119,13 @@ const SkinQuestion = ({
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>Check skin condition:</Text>{' '}
-                Feel for dry, rough, or cracked skin. Note if it’s moist in any
+                Feel for dry, rough, or cracked skin. Note if it's moist in any
                 areas.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>Check for calluses:</Text>{' '}
                 Look for thickened skin, especially on the bottom of the feet.
-                Note if it’s light or heavy.
+                Note if it's light or heavy.
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>
