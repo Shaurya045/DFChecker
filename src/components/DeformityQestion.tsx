@@ -40,39 +40,66 @@ const DeformityQestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
-        const hasAnyAnswers = questions.some(
-          question => answers[question.id]?.left === true && answers[question.id]?.right === true
-        );
-        
-        if (!hasAnyAnswers) {
-          Alert.alert(
-            'Incomplete Form',
-            'Please select at least one option before proceeding.',
-          );
-          return false;
-        }
-    // Check if deformity1 is checked (either left or right)
-    const isDeformity1Checked = answers['deformity1']?.left || answers['deformity1']?.right;
-
-    // Check if deformity2, deformity3, and deformity4 are not checked (both left and right)
-    const areOtherQuestionsUnchecked = ['deformity2', 'deformity3', 'deformity4'].every(
-      questionId => !answers[questionId]?.left && !answers[questionId]?.right,
+    // 1. Check if at least one option is selected for any question
+    const hasAnyAnswers = questions.some(
+      question => answers[question.id]?.left === true || answers[question.id]?.right === true
     );
-
-    // If deformity1 is checked and other questions are unchecked, allow proceeding
-    if (isDeformity1Checked && areOtherQuestionsUnchecked) {
-      return true;
-    }
-
-    // Otherwise, check if all questions have at least one checkbox selected (left or right)
-    const isAllAnswered = questions.every(
-      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined,
-    );
-
-    if (!isAllAnswered) {
+  
+    if (!hasAnyAnswers) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option before proceeding.',
+      );
       return false;
     }
-
+  
+    // 2. Check if at least one left foot and one right foot option is selected
+    const hasLeftFootSelection = questions.some(
+      question => answers[question.id]?.left === true
+    );
+    const hasRightFootSelection = questions.some(
+      question => answers[question.id]?.right === true
+    );
+  
+    if (!hasLeftFootSelection || !hasRightFootSelection) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option for each foot (left and right).',
+      );
+      return false;
+    }
+  
+    // 3. Check if deformity1 is checked for at least one foot
+    const isDeformity1Checked = answers['deformity1']?.left || answers['deformity1']?.right;
+  
+    // 4. Check if any other deformity is checked for the other foot
+    const isOtherDeformityChecked = ['deformity2', 'deformity3', 'deformity4'].some(
+      questionId => answers[questionId]?.left || answers[questionId]?.right
+    );
+  
+    // 5. If deformity1 is checked for one foot and another deformity is checked for the other foot, allow proceeding
+    if (isDeformity1Checked && isOtherDeformityChecked) {
+      return true;
+    }
+    
+    // if at least one left foot and one right foot option is selected, allow proceeding
+    if (hasLeftFootSelection && hasRightFootSelection) {
+      return true;
+    }
+    
+    // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
+    const isAllAnswered = questions.every(
+      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined
+    );
+  
+    if (!isAllAnswered) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please answer all questions before proceeding.',
+      );
+      return false;
+    }
+  
     return true;
   };
 
@@ -173,51 +200,68 @@ const DeformityQestion = ({
           <View style={styles.buttonGroup}>
             {/* Left Checkbox */}
             <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                // If deformity1 is being checked, uncheck all other left checkboxes
-                if (item.id === 'deformity1' && !answers[item.id]?.left) {
-                  questions.forEach((question) => {
-                    if (question.id !== 'deformity1') {
-                      handleAnswer(question.id, {
-                        ...answers[question.id],
-                        left: false,
-                      });
-                    }
-                  });
-                }
-                // Toggle the current checkbox
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  left: !answers[item.id]?.left,
-                });
-              }}
-              disabled={answers['deformity1']?.left && item.id !== 'deformity1'}>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.left && styles.checkboxChecked,
-                  answers['deformity1']?.left && item.id !== 'deformity1' && styles.disabledCheckbox,
-                ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
+  style={styles.button}
+  onPress={() => {
+    // If deformity1 or deformity4 is being checked, uncheck all other left checkboxes
+    if ((item.id === 'deformity1' || item.id === 'deformity4') && !answers[item.id]?.left) {
+      questions.forEach((question) => {
+        if (question.id !== 'deformity1' && question.id !== 'deformity4') {
+          handleAnswer(question.id, {
+            ...answers[question.id],
+            left: false,
+          });
+        }
+      });
+      // Also uncheck the other special deformity checkbox if it's not the current one
+      const otherDeformity = item.id === 'deformity1' ? 'deformity4' : 'deformity1';
+      handleAnswer(otherDeformity, {
+        ...answers[otherDeformity],
+        left: false,
+      });
+    }
+    // Toggle the current checkbox
+    handleAnswer(item.id, {
+      ...answers[item.id],
+      left: !answers[item.id]?.left,
+    });
+  }}
+  disabled={
+    (answers['deformity1']?.left || answers['deformity4']?.left) && 
+    (item.id !== 'deformity1' && item.id !== 'deformity4')
+  }>
+  <View
+    style={[
+      styles.checkbox,
+      answers[item.id]?.left && styles.checkboxChecked,
+      (answers['deformity1']?.left || answers['deformity4']?.left) && 
+        (item.id !== 'deformity1' && item.id !== 'deformity4') && 
+        styles.disabledCheckbox,
+    ]}>
+    {answers[item.id]?.left && (
+      <Text style={styles.checkmark}>✓</Text>
+    )}
+  </View>
             </TouchableOpacity>
 
             {/* Right Checkbox */}
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                // If deformity1 is being checked, uncheck all other right checkboxes
-                if (item.id === 'deformity1' && !answers[item.id]?.right) {
+                // If deformity1 or deformity4 is being checked, uncheck all other right checkboxes
+                if ((item.id === 'deformity1' || item.id === 'deformity4') && !answers[item.id]?.right) {
                   questions.forEach((question) => {
-                    if (question.id !== 'deformity1') {
+                    if (question.id !== 'deformity1' && question.id !== 'deformity4') {
                       handleAnswer(question.id, {
                         ...answers[question.id],
                         right: false,
                       });
                     }
+                  });
+                  // Also uncheck the other special deformity checkbox if it's not the current one
+                  const otherDeformity = item.id === 'deformity1' ? 'deformity4' : 'deformity1';
+                  handleAnswer(otherDeformity, {
+                    ...answers[otherDeformity],
+                    right: false,
                   });
                 }
                 // Toggle the current checkbox
@@ -226,12 +270,17 @@ const DeformityQestion = ({
                   right: !answers[item.id]?.right,
                 });
               }}
-              disabled={answers['deformity1']?.right && item.id !== 'deformity1'}>
+              disabled={
+                (answers['deformity1']?.right || answers['deformity4']?.right) && 
+                (item.id !== 'deformity1' && item.id !== 'deformity4')
+              }>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
-                  answers['deformity1']?.right && item.id !== 'deformity1' && styles.disabledCheckbox,
+                  (answers['deformity1']?.right || answers['deformity4']?.right) && 
+                    (item.id !== 'deformity1' && item.id !== 'deformity4') && 
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.right && (
                   <Text style={styles.checkmark}>✓</Text>

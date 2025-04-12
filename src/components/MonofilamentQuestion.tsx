@@ -59,64 +59,43 @@ const MonofilamentQuestion = ({
       <View style={styles.heading}>
         <Text style={styles.headingTxt}>Questions</Text>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>Select if Yes</Text>
         </View>
       </View>
       {questions.map(item => (
-        <View style={styles.heading} key={item.id}>
+        <View style={styles.questionRow} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  left: !answers[item.id]?.left,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.left && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  right: !answers[item.id]?.right,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.right && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.right && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              handleAnswer(item.id, {
+                ...answers[item.id],
+                value: !answers[item.id]?.value,
+              })
+            }>
+            <View
+              style={[
+                styles.checkbox,
+                answers[item.id]?.value && styles.checkboxChecked,
+              ]}>
+              {answers[item.id]?.value && (
+                <Text style={styles.checkmark}>✓</Text>
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
       ))}
       {/* Add instructions for checkbox interaction */}
-            <View style={styles.instructionBox}>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "Yes":</Text> 
-                      Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
-                    </Text>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "No":</Text> 
-                      Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-                    </Text>
-                  </View>
+      {/* <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "Yes":</Text> 
+          Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "No":</Text> 
+          Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View> */}
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
@@ -175,20 +154,21 @@ const styles = StyleSheet.create({
   },
   rightHeading: {
     flexDirection: 'row',
-    gap: 20,
   },
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
   },
+  questionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
-    maxWidth: '60%',
-  },
-  buttonGroup: {
-    flexDirection: 'row',
-    gap: 30,
+    maxWidth: '80%',
   },
   button: {
     padding: 0,
@@ -223,8 +203,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   checkbox: {
-    position: 'absolute',
-    bottom: -10,
     width: 24,
     height: 24,
     borderRadius: 12,

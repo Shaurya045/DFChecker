@@ -11,15 +11,15 @@ const RightFootSensation: React.FC<FootSensationTestProps> = ({
   handleAnswer,
 }) => {
   const regions = [
-    {id: 'region1', number: 1, x: '30%', y: '5%'},
-    {id: 'region2', number: 2, x: '51%', y: '14%'},
-    {id: 'region3', number: 3, x: '62%', y: '24%'},
-    {id: 'region4', number: 4, x: '28%', y: '32%'},
-    {id: 'region5', number: 5, x: '45%', y: '33%'},
-    {id: 'region6', number: 6, x: '60%', y: '38%'},
-    {id: 'region7', number: 7, x: '42%', y: '55%'},
-    {id: 'region8', number: 8, x: '55%', y: '57%'},
-    {id: 'region9', number: 9, x: '40%', y: '80%'},
+    {id: 'region1', number: 1, x: 30, y: 5},
+    {id: 'region2', number: 2, x: 51, y: 14},
+    {id: 'region3', number: 3, x: 62, y: 24},
+    {id: 'region4', number: 4, x: 28, y: 32},
+    {id: 'region5', number: 5, x: 45, y: 33},
+    {id: 'region6', number: 6, x: 60, y: 38},
+    {id: 'region7', number: 7, x: 42, y: 55},
+    {id: 'region8', number: 8, x: 55, y: 57},
+    {id: 'region9', number: 9, x: 40, y: 80},
   ];
 
   const toggleRegion = (regionId: string) => {
@@ -47,8 +47,8 @@ const RightFootSensation: React.FC<FootSensationTestProps> = ({
             style={[
               styles.region,
               {
-                left: x,
-                top: y,
+                left: `${x}%`,
+                top: `${y}%`,
                 backgroundColor: answers[`sensation_${id}`]
                   ? '#007AFF'
                   : 'white',

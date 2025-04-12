@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   Modal,
@@ -26,7 +26,10 @@ const ErythemaQuestion = ({
   setPopUp,
   navigation,
 }) => {
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+
   const submitFormData = async () => {
+    setShowSubmitConfirm(false); // Close the confirmation modal
     const data = answers;
 
     try {
@@ -37,7 +40,6 @@ const ErythemaQuestion = ({
         return;
       }
 
-      // Log the data being sent
       console.log('Data being sent:', JSON.stringify({ data: data }));
 
       const response = await fetch(`${url}/submit-form`, {
@@ -49,7 +51,6 @@ const ErythemaQuestion = ({
         body: JSON.stringify({ data: data }),
       });
 
-      // Log the raw response text
       const responseText = await response.text();
       console.log('Response Text:', responseText);
 
@@ -58,7 +59,6 @@ const ErythemaQuestion = ({
         return;
       }
 
-      // Attempt to parse the response as JSON
       let result;
       try {
         result = JSON.parse(responseText);
@@ -80,6 +80,7 @@ const ErythemaQuestion = ({
 
   return (
     <>
+      {/* Instruction Modal */}
       <Modal animationType="fade" transparent={true} visible={popUp}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -100,6 +101,32 @@ const ErythemaQuestion = ({
             >
               <Text style={styles.modalButtonText}>Cancel</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Submit Confirmation Modal */}
+      <Modal animationType="fade" transparent={true} visible={showSubmitConfirm}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirm Submission</Text>
+            <Text style={styles.confirmationText}>
+              Are you sure you want to submit the form?
+            </Text>
+            <View style={styles.confirmationButtonContainer}>
+              <TouchableOpacity
+                style={[styles.confirmationButton, styles.cancelButton]}
+                onPress={() => setShowSubmitConfirm(false)}
+              >
+                <Text style={styles.confirmationButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.confirmationButton, styles.submitButton]}
+                onPress={submitFormData}
+              >
+                <Text style={styles.confirmationButtonText}>Done</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -189,7 +216,10 @@ const ErythemaQuestion = ({
         <Text style={styles.nextButtonText}>Previous</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.nextButton} onPress={submitFormData}>
+      <TouchableOpacity 
+        style={styles.nextButton} 
+        onPress={() => setShowSubmitConfirm(true)}
+      >
         <Text style={styles.nextButtonText}>Submit</Text>
       </TouchableOpacity>
     </>
@@ -335,5 +365,33 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     marginBottom: 20,
+  },
+  // New styles for confirmation modal
+  confirmationText: {
+    fontSize: 16,
+    fontWeight: '400',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  confirmationButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  confirmationButton: {
+    borderRadius: 10,
+    padding: 15,
+    width: '48%',
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#f0f0f0',
+  },
+  submitButton: {
+    backgroundColor: colors.primary,
+  },
+  confirmationButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

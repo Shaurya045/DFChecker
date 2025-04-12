@@ -34,46 +34,71 @@ const FootwearQuestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
-
-      const hasAnyAnswers = questions.some(
-        question => answers[question.id]?.left === true && answers[question.id]?.right === true
+    // 1. Check if at least one option is selected for any question (left OR right)
+    const hasAnyAnswers = questions.some(
+      question => answers[question.id]?.left === true || answers[question.id]?.right === true
+    );
+  
+    if (!hasAnyAnswers) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option before proceeding.',
       );
-      
-      if (!hasAnyAnswers) {
-        Alert.alert(
-          'Incomplete Form',
-          'Please select at least one option before proceeding.',
-        );
-        return false;
-      }
-    // Check if footwear1 is checked (either left or right)
-    const isFootwear1Checked = answers['footwear1']?.left || answers['footwear1']?.right;
-
-    // Check if footwear2 and footwear3 are not checked (both left and right)
-    const areOtherQuestionsUnchecked = ['footwear2', 'footwear3'].every(
-      questionId => !answers[questionId]?.left && !answers[questionId]?.right,
-    );
-
-    // If footwear1 is checked and other questions are unchecked, allow proceeding
-    if (isFootwear1Checked && areOtherQuestionsUnchecked) {
-      return true;
-    }
-
-    // Otherwise, check if all questions have at least one checkbox selected (left or right)
-    const isAllAnswered = questions.every(
-      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined,
-    );
-
-    if (!isAllAnswered) {
       return false;
     }
-
+  
+    // 2. Check if at least one left foot and one right foot option is selected
+    const hasLeftFootSelection = questions.some(
+      question => answers[question.id]?.left === true
+    );
+    const hasRightFootSelection = questions.some(
+      question => answers[question.id]?.right === true
+    );
+  
+    if (!hasLeftFootSelection || !hasRightFootSelection) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option for each foot (left and right).',
+      );
+      return false;
+    }
+  
+    // 3. Check if nails1 is checked (either left or right)
+    const isNails1Checked = answers['footwear1']?.left || answers['footwear1']?.right;
+  
+    // 4. Check if nails2 and nails3 are not checked (both left and right)
+    const areOtherQuestionsUnchecked = ['footwear2', 'footwear3'].every(
+      questionId => !answers[questionId]?.left && !answers[questionId]?.right
+    );
+  
+    // 5. If nails1 is checked and other questions are unchecked, allow proceeding
+    if (isNails1Checked && areOtherQuestionsUnchecked) {
+      return true;
+    }
+    
+    // if at least one left foot and one right foot option is selected, allow proceeding
+    if (hasLeftFootSelection && hasRightFootSelection) {
+      return true;
+    }
+    
+    // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
+    const isAllAnswered = questions.every(
+      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined
+    );
+  
+    if (!isAllAnswered) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please answer all questions before proceeding.',
+      );
+      return false;
+    }
+  
     return true;
   };
 
   const handleNext = () => {
     if (!validateAnswers()) {
-
       return; // Stop if validation fails
     }
 
@@ -268,16 +293,16 @@ const FootwearQuestion = ({
         </View>
       ))}
       {/* Add instructions for checkbox interaction */}
-            <View style={styles.instructionBox}>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "Yes":</Text> 
-                      Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
-                    </Text>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "No":</Text> 
-                      Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-                    </Text>
-                  </View>
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "Yes":</Text> 
+          Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "No":</Text> 
+          Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('deformity')}>
@@ -292,8 +317,6 @@ const FootwearQuestion = ({
     </>
   );
 };
-
-export default FootwearQuestion;
 
 const styles = StyleSheet.create({
   titleBox: {
@@ -438,3 +461,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default FootwearQuestion;

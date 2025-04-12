@@ -29,41 +29,68 @@ const TempColdQuestion = ({
   setPopUp,
 }) => {
   const validateAnswers = () => {
-        const hasAnyAnswers = questions.some(
-          question => answers[question.id]?.left === true && answers[question.id]?.right === true
-        );
-        
-        if (!hasAnyAnswers) {
-          Alert.alert(
-            'Incomplete Form',
-            'Please select at least one option before proceeding.',
-          );
-          return false;
-        }
-      // Check if tempCold1 is checked (either left or right)
-      const istempCold1Checked = answers['tempCold1']?.left || answers['tempCold1']?.right;
+    // 1. Check if at least one option is selected for any question (left OR right)
+    const hasAnyAnswers = questions.some(
+      question => answers[question.id]?.left === true || answers[question.id]?.right === true
+    );
   
-      // Check if tempCold2 are not checked (both left and right)
-      const areOtherQuestionsUnchecked = ['tempCold2'].every(
-        questionId => !answers[questionId]?.left && !answers[questionId]?.right,
+    if (!hasAnyAnswers) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option before proceeding.',
       );
+      return false;
+    }
   
-      // If tempCold1 is checked and other questions are unchecked, allow proceeding
-      if (istempCold1Checked && areOtherQuestionsUnchecked) {
-        return true;
-      }
+    // 2. Check if at least one left foot and one right foot option is selected
+    const hasLeftFootSelection = questions.some(
+      question => answers[question.id]?.left === true
+    );
+    const hasRightFootSelection = questions.some(
+      question => answers[question.id]?.right === true
+    );
   
-      // Otherwise, check if all questions have at least one checkbox selected (left or right)
-      const isAllAnswered = questions.every(
-        question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined,
+    if (!hasLeftFootSelection || !hasRightFootSelection) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please select at least one option for each foot (left and right).',
       );
+      return false;
+    }
   
-      if (!isAllAnswered) {
-        return false;
-      }
+    // 3. Check if tempCold1 is checked (either left or right)
+    const istempCold1Checked = answers['tempCold1']?.left || answers['tempCold1']?.right;
   
+    // 4. Check if tempCold2 is not checked (both left and right)
+    const areOtherQuestionsUnchecked = ['tempCold2'].every(
+      questionId => !answers[questionId]?.left && !answers[questionId]?.right
+    );
+  
+    // 5. If tempCold1 is checked and tempCold2 is unchecked, allow proceeding
+    if (istempCold1Checked && areOtherQuestionsUnchecked) {
       return true;
-    };
+    }
+
+    // if at least one left foot and one right foot option is selected, allow proceeding
+    if (hasLeftFootSelection && hasRightFootSelection) {
+      return true;
+    }
+    
+    // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
+    const isAllAnswered = questions.every(
+      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined
+    );
+  
+    if (!isAllAnswered) {
+      Alert.alert(
+        'Incomplete Form',
+        'Please answer all questions before proceeding.',
+      );
+      return false;
+    }
+  
+    return true;
+  };
   
     const handleNext = () => {
       if (!validateAnswers()) {
