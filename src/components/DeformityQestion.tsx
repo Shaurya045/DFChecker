@@ -30,6 +30,10 @@ const questions = [
     id: 'deformity4',
     text: 'Amputation',
   },
+  {
+    id: 'deformity4',
+    text: 'Sudden swelling and hotness of the foot',
+  },
 ];
 
 const DeformityQestion = ({
