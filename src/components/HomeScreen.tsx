@@ -17,6 +17,7 @@ import {url} from '../utils/constants';
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
+import {useTranslation} from 'react-i18next';
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -24,7 +25,8 @@ const HomeScreen = ({navigation}: HomeProps) => {
   const [profile, setProfile] = useState({});
   const [showPulseModal, setShowPulseModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  
+  const {t} = useTranslation();
+
   const getUserProfile = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
@@ -91,7 +93,9 @@ const HomeScreen = ({navigation}: HomeProps) => {
           onPress={() => navigation.navigate('Profile')}
           style={styles.greetingButton}>
           <View style={styles.greetingContent}>
-            <Text style={styles.greetingText}>Hello {profile?.name}</Text>
+            <Text style={styles.greetingText}>
+              {t('Home.hello')} {profile?.name}
+            </Text>
             <View style={styles.userIcon}>
               <View style={styles.userIconCircle} />
               <View style={styles.userIconBody} />
@@ -101,14 +105,14 @@ const HomeScreen = ({navigation}: HomeProps) => {
       </View>
 
       <View style={styles.cameraSection}>
-        <Text style={styles.instructionText}>Take Diabetic Foot Test</Text>
+        <Text style={styles.instructionText}>{t('Home.text1')}</Text>
         <View style={styles.arrowContainer}>
           <View style={styles.arrow} />
         </View>
         <TouchableOpacity
           onPress={handleTestButtonPress}
           style={styles.buttonStyle}>
-          <Text style={styles.buttonText}>Take Test</Text>
+          <Text style={styles.buttonText}>{t('Home.btn1')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -117,39 +121,34 @@ const HomeScreen = ({navigation}: HomeProps) => {
         visible={showConfirmation}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setShowConfirmation(false)}
-      >
+        onRequestClose={() => setShowConfirmation(false)}>
         <View style={styles.confirmationModalContainer}>
           <View style={styles.confirmationModalContent}>
             <View style={styles.confirmationHeader}>
               <View style={styles.confirmationIcon}>
                 <Text style={styles.confirmationIconText}>🩺</Text>
               </View>
-              <Text style={styles.confirmationTitle}>Pedal Pulse Verification</Text>
-              <Text style={styles.confirmationSubtitle}>
-                We need your pedal pulse results before proceeding with the assessment
-              </Text>
+              <Text style={styles.confirmationTitle}>{t('Home.title1')}</Text>
+              <Text style={styles.confirmationSubtitle}>{t('Home.text2')}</Text>
             </View>
-            
+
             <View style={styles.confirmationButtons}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.confirmationButton, styles.helpButton]}
                 onPress={() => {
                   setShowConfirmation(false);
                   setShowPulseModal(true);
-                }}
-              >
-                <Text style={styles.helpButtonText}>Show Me How</Text>
+                }}>
+                <Text style={styles.helpButtonText}>{t('Home.btn2')}</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[styles.confirmationButton, styles.confirmButton]}
                 onPress={() => {
                   setShowConfirmation(false);
                   navigation.navigate('Qes');
-                }}
-              >
-                <Text style={styles.confirmButtonText}>I Have Results</Text>
+                }}>
+                <Text style={styles.confirmButtonText}>{t('Home.btn3')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -161,8 +160,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
         visible={showPulseModal}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowPulseModal(false)}
-      >
+        onRequestClose={() => setShowPulseModal(false)}>
         <View style={styles.modalBackdrop}>
           <View style={styles.instructionModalContainer}>
             {/* Header with icon */}
@@ -170,7 +168,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
               <View style={styles.pulseIconContainer}>
                 <Text style={styles.pulseIcon}>💓</Text>
               </View>
-              <Text style={styles.modalTitle}>Pedal Pulse Check Guide</Text>
+              <Text style={styles.modalTitle}>{t('Home.title2')}</Text>
             </View>
 
             {/* Content with step-by-step instructions */}
@@ -181,11 +179,8 @@ const HomeScreen = ({navigation}: HomeProps) => {
                   <Text style={styles.stepNumber}>1</Text>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>Top of Foot Check</Text>
-                  <Text style={styles.stepDescription}>
-                    Gently place two fingers on the top of your foot, between the bones 
-                    just below the ankle (dorsalis pedis artery). Apply light pressure.
-                  </Text>
+                  <Text style={styles.stepTitle}>{t('Home.title3')}</Text>
+                  <Text style={styles.stepDescription}>{t('Home.text3')}</Text>
                 </View>
               </View>
 
@@ -198,30 +193,23 @@ const HomeScreen = ({navigation}: HomeProps) => {
                   <Text style={styles.stepNumber}>2</Text>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>Inner Ankle Check</Text>
-                  <Text style={styles.stepDescription}>
-                    If you can't feel it on top, move your fingers to the inner ankle, 
-                    just behind the bony prominence (posterior tibial artery).
-                  </Text>
+                  <Text style={styles.stepTitle}>{t('Home.title4')}</Text>
+                  <Text style={styles.stepDescription}>{t('Home.text4')}</Text>
                 </View>
               </View>
 
               {/* Important Note */}
               <View style={styles.noteContainer}>
-                <Text style={styles.noteTitle}>Important Note</Text>
-                <Text style={styles.noteText}>
-                  If you're having difficulty finding the pulse or are unsure, please consult 
-                  your healthcare provider. Accurate pulse detection is essential for proper assessment.
-                </Text>
+                <Text style={styles.noteTitle}>{t('Home.title5')}</Text>
+                <Text style={styles.noteText}>{t('Home.text5')}</Text>
               </View>
             </View>
 
             {/* Footer with button */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.gotItButton}
-              onPress={() => setShowPulseModal(false)}
-            >
-              <Text style={styles.gotItButtonText}>I Understand</Text>
+              onPress={() => setShowPulseModal(false)}>
+              <Text style={styles.gotItButtonText}>{t('Home.btn4')}</Text>
             </TouchableOpacity>
           </View>
         </View>

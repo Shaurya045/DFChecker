@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useTransition} from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
+import {useTranslation} from 'react-i18next';
 
 type ReportDetailProps = NativeStackScreenProps<
   RootStackParamList,
@@ -145,6 +146,7 @@ const recommendations = [
 const ReportDetail = ({route, navigation}: ReportDetailProps) => {
   const [detailedReport, setDetailedReport] = useState<any>({});
   const {reportData, result} = route.params;
+  const {t} = useTranslation();
 
   useEffect(() => {
     setDetailedReport(route.params);
@@ -159,21 +161,19 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
       </TouchableOpacity>
 
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Report Detail</Text>
+        <Text style={styles.titleTxt}>{t('Detail.title1')}</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Basic Questions */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Pre-screening Assessment</Text>
+          <Text style={styles.heading}>{t('Detail.title2')}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'baseline',
             }}>
-            <Text style={styles.subHeading}>
-              Do you have peripheral neurological disease?{' '}
-            </Text>
+            <Text style={styles.subHeading}>{t('Detail.text1')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'}
             </Text>
@@ -184,7 +184,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Have you had any amputations? </Text>
+            <Text style={styles.subHeading}>{t('Detail.text2')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.amputation ? 'Yes' : 'No'}
             </Text>
@@ -195,9 +195,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>
-              How many amputations have you had?{' '}
-            </Text>
+            <Text style={styles.subHeading}>{t('Detail.text3')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.amputationCount || 'N/A'}
             </Text>
@@ -208,7 +206,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Are you currently smoking? </Text>
+            <Text style={styles.subHeading}>{t('Detail.text4')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.smoking ? 'Yes' : 'No'}
             </Text>
@@ -219,9 +217,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>
-              Do you have any ulcers on your feet?{' '}
-            </Text>
+            <Text style={styles.subHeading}>{t('Detail.text5')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}
             </Text>
@@ -230,14 +226,14 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
 
         {/* Left Foot Report */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Left Foot Report</Text>
+          <Text style={styles.heading}>{t('Detail.title3')}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Risk Category: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text6')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.left_foot?.risk_category || 'N/A'}
             </Text>
@@ -248,7 +244,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Criteria: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text7')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.left_foot?.criteria || 'N/A'}
             </Text>
@@ -259,7 +255,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Clinical Indicator: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text8')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.left_foot?.clinical_indicator || 'N/A'}
             </Text>
@@ -270,7 +266,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Screening Frequency: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text9')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.left_foot?.screening_frequency || 'N/A'}
             </Text>
@@ -279,14 +275,14 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
 
         {/* Right Foot Report */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Right Foot Report</Text>
+          <Text style={styles.heading}>{t('Detail.title4')}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Risk Category: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text6')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.right_foot?.risk_category || 'N/A'}
             </Text>
@@ -297,7 +293,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Criteria: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text7')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.right_foot?.criteria || 'N/A'}
             </Text>
@@ -308,7 +304,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Clinical Indicator: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text8')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.right_foot?.clinical_indicator || 'N/A'}
             </Text>
@@ -319,7 +315,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Screening Frequency: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text9')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.right_foot?.screening_frequency || 'N/A'}
             </Text>
@@ -328,7 +324,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
 
         {/* Recommendations */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Recommendations</Text>
+          <Text style={styles.heading}>{t('Detail.title5')}</Text>
           <View style={styles.recommendationBox}>
             <Text
               style={{
@@ -339,7 +335,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
                 borderBottomColor: 'black',
                 width: '40%',
               }}>
-              For Left Foot:
+              {t('Detail.title6')}:
             </Text>
             {recommendations
               .filter(item => item.id === result.left)
@@ -359,7 +355,7 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
                 borderBottomColor: 'black',
                 width: '45%',
               }}>
-              For Right Foot:
+              {t('Detail.title7')}:
             </Text>
             {recommendations
               .filter(item => item.id === result.right)

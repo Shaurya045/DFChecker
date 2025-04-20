@@ -11,25 +11,7 @@ import React, {useRef} from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import VideoPlayer, {type VideoPlayerRef} from 'react-native-video-player';
-
-const questions = [
-  {
-    id: 'ipswich3',
-    text: 'Patient respond to touch for all 6 toes.',
-  },
-  {
-    id: 'ipswich2',
-    text: 'Patient respond to touch for 5 out of 6 toes.',
-  },
-  {
-    id: 'ipswich1',
-    text: 'Patient respond to touch for 4 out of 6 toes.',
-  },
-  {
-    id: 'ipswich',
-    text: 'Patient respond to touch 3 and below toes.',
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 interface SensationIPswichProps {
   answers: Record<string, any>;
@@ -46,6 +28,25 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'ipswich3',
+      text: t('Ipswich.qes1'),
+    },
+    {
+      id: 'ipswich2',
+      text: t('Ipswich.qes2'),
+    },
+    {
+      id: 'ipswich1',
+      text: t('Ipswich.qes3'),
+    },
+    {
+      id: 'ipswich',
+      text: t('Ipswich.qes4'),
+    },
+  ];
   const playerRef = useRef<VideoPlayerRef>(null);
   const regionsL = [
     {id: 'region3', number: 3, x: '25%', y: '5%'},
@@ -63,7 +64,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
   return (
     <>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Ipswich</Text>
+        <Text style={styles.titleTxt}>{t('Ipswich.title8')}</Text>
       </View>
       <View>
         <Text
@@ -73,8 +74,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Ask the patient to close their eyes. Touch must be very light 1 - 2
-          seconds. Do not repeat if the patient didn't respond to touch
+          {t('Ipswich.text3')}
         </Text>
       </View>
       <View style={{marginBottom: 15, borderWidth: 1}}>
@@ -86,7 +86,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
           onError={e => console.log(e)}
           showDuration={true}
         />
-        <Text style={{textAlign:'center'}}>Credit: boureaujulien</Text>
+        <Text style={{textAlign:'center'}}>{t('Ipswich.text4')}</Text>
       </View>
       <View
         style={{
@@ -105,7 +105,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
               fontWeight: 'bold',
               zIndex: 10,
             }}>
-            R
+            {t('Ipswich.text5')}
           </Text>
           <Image
             source={require('../assets/foot-outline_Right.png')}
@@ -148,7 +148,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
               fontWeight: 'bold',
               zIndex: 10,
             }}>
-            L
+            {t('Ipswich.text6')}
           </Text>
           <Image
             source={require('../assets/foot-outline_Left.png')}
@@ -182,8 +182,8 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
         </View>
       </View>
       <View style={styles.heading}>
-        <Text style={styles.headingTxt}>Questions</Text>
-        <Text style={styles.headingTxt}>Select if Yes</Text>
+        <Text style={styles.headingTxt}>{t('Ipswich.text1')}</Text>
+        <Text style={styles.headingTxt}>{t('Ipswich.text2')}</Text>
       </View>
       {questions.map(item => (
         <View style={styles.questionRow} key={item.id}>
@@ -222,7 +222,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -230,7 +230,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
         onPress={() => {
           setCurrentStep('pedal');
         }}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );

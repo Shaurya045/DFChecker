@@ -1,21 +1,14 @@
-import { Modal, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import React, { useState } from 'react';
-import { colors } from '../utils/colors';
-
-const questions = [
-  {
-    id: 'monofilament1',
-    text: 'Sensation present at all 10 sites?',
-  },
-  {
-    id: 'monofilament2',
-    text: 'Sensation present at 7 - 9 sites?',
-  },
-  {
-    id: 'monofilament3',
-    text: 'Sensation present at 0 - 6 sites?',
-  },
-];
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from 'react-native';
+import React, {useState} from 'react';
+import {colors} from '../utils/colors';
+import {useTranslation} from 'react-i18next';
 
 const MonofilamentQuestion = ({
   answers,
@@ -25,11 +18,27 @@ const MonofilamentQuestion = ({
   setPopUp,
 }) => {
   const [isImageVisible, setIsImageVisible] = useState(false);
+  const {t} = useTranslation();
+
+  const questions = [
+    {
+      id: 'monofilament1',
+      text: t('MonofilamentQes.qes1'),
+    },
+    {
+      id: 'monofilament2',
+      text: t('MonofilamentQes.qes2'),
+    },
+    {
+      id: 'monofilament3',
+      text: t('MonofilamentQes.qes3'),
+    },
+  ];
 
   return (
     <>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Monofilament</Text>
+        <Text style={styles.titleTxt}>{t('MonofilamentQes.title8')}</Text>
       </View>
       <View>
         <Text
@@ -38,8 +47,7 @@ const MonofilamentQuestion = ({
             fontSize: 18,
             fontWeight: '400',
           }}>
-          Please make sure that you have your physician or your family member to
-          conduct this test. Lie down comfortably and close your eyes.
+          {t('MonofilamentQes.text3')}
         </Text>
         <Text
           style={{
@@ -48,18 +56,20 @@ const MonofilamentQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Using the 5.07 monofilament please test the site as shown in picture.
+          {t('MonofilamentQes.text4')}
         </Text>
         <TouchableOpacity
           style={styles.imageButton}
           onPress={() => setIsImageVisible(true)}>
-          <Text style={styles.imageButtonText}>Show Example Image</Text>
+          <Text style={styles.imageButtonText}>
+            {t('MonofilamentQes.btn1')}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.heading}>
-        <Text style={styles.headingTxt}>Questions</Text>
+        <Text style={styles.headingTxt}>{t('MonofilamentQes.text1')}</Text>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Select if Yes</Text>
+          <Text style={styles.headingTxt}>{t('MonofilamentQes.text2')}</Text>
         </View>
       </View>
       {questions.map(item => (
@@ -99,13 +109,13 @@ const MonofilamentQuestion = ({
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.nextButton, { marginBottom: 40 }]}
+        style={[styles.nextButton, {marginBottom: 40}]}
         onPress={() => setCurrentStep('pedal')}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
 
       <Modal
@@ -121,7 +131,7 @@ const MonofilamentQuestion = ({
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setIsImageVisible(false)}>
-              <Text style={styles.modalButtonText}>Close</Text>
+              <Text style={styles.modalButtonText}>{t('Skin.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>

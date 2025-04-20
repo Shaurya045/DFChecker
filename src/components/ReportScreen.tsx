@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,15 +9,16 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import { colors } from '../utils/colors';
+import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { url } from '../utils/constants';
+import {url} from '../utils/constants';
 import Icon from 'react-native-vector-icons/AntDesign';
-import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../App';
+import notifee, {AndroidImportance, TriggerType} from '@notifee/react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
+import {useTranslation} from 'react-i18next';
 
 type ReportProps = NativeStackScreenProps<RootStackParamList, 'Report'>;
 
@@ -144,10 +145,11 @@ const recommendations = [
   },
 ];
 
-const ReportScreen = ({ navigation }: ReportProps) => {
+const ReportScreen = ({navigation}: ReportProps) => {
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState<any>(null);
-  const [result, setResult] = useState({ left: null, right: null });
+  const [result, setResult] = useState({left: null, right: null});
+  const {t} = useTranslation();
 
   const getReport = async () => {
     try {
@@ -231,7 +233,8 @@ const ReportScreen = ({ navigation }: ReportProps) => {
 
     if (duration >= 7 * 24 * 60 * 60) {
       // If duration is 7 days or more, schedule notification 7 days before
-      const notificationTime = Date.now() + (duration - 7 * 24 * 60 * 60) * 1000;
+      const notificationTime =
+        Date.now() + (duration - 7 * 24 * 60 * 60) * 1000;
       await notifee.createTriggerNotification(
         {
           title: 'Retake Your Test',
@@ -277,8 +280,12 @@ const ReportScreen = ({ navigation }: ReportProps) => {
     let freqLeft = reportData.left_foot.screening_frequency;
     let freqRight = reportData.right_foot.screening_frequency;
 
-    freqLeft = freqLeft.match(/\d+/) ? parseInt(freqLeft.match(/\d+/)[0], 10) : null;
-    freqRight = freqRight.match(/\d+/) ? parseInt(freqRight.match(/\d+/)[0], 10) : null;
+    freqLeft = freqLeft.match(/\d+/)
+      ? parseInt(freqLeft.match(/\d+/)[0], 10)
+      : null;
+    freqRight = freqRight.match(/\d+/)
+      ? parseInt(freqRight.match(/\d+/)[0], 10)
+      : null;
 
     if (freqLeft === null || freqRight === null) {
       console.error('Invalid screening frequency data');
@@ -287,7 +294,7 @@ const ReportScreen = ({ navigation }: ReportProps) => {
 
     let freq = Math.min(freqLeft, freqRight);
     if (freq > 0) {
-      scheduleNotification(freq * 1000);
+      scheduleNotification(freq * 1000 * 60 * 60 * 24);
     } else {
       console.error('Invalid frequency value:', freq);
     }
@@ -303,23 +310,41 @@ const ReportScreen = ({ navigation }: ReportProps) => {
       const htmlContent = `
         <h1>Report Detail</h1>
         <h2>Pre-screening Assessment</h2>
-        <p>Do you have peripheral neurological disease? ${reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'}</p>
-        <p>Have you had any amputations? ${reportData?.basic_questions?.amputation ? 'Yes' : 'No'}</p>
-        <p>How many amputations have you had? ${reportData?.basic_questions?.amputationCount || 'N/A'}</p>
-        <p>Are you currently smoking? ${reportData?.basic_questions?.smoking ? 'Yes' : 'No'}</p>
-        <p>Do you have any ulcers on your feet? ${reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}</p>
+        <p>Do you have peripheral neurological disease? ${
+          reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'
+        }</p>
+        <p>Have you had any amputations? ${
+          reportData?.basic_questions?.amputation ? 'Yes' : 'No'
+        }</p>
+        <p>How many amputations have you had? ${
+          reportData?.basic_questions?.amputationCount || 'N/A'
+        }</p>
+        <p>Are you currently smoking? ${
+          reportData?.basic_questions?.smoking ? 'Yes' : 'No'
+        }</p>
+        <p>Do you have any ulcers on your feet? ${
+          reportData?.basic_questions?.ulcer ? 'Yes' : 'No'
+        }</p>
         
         <h2>Left Foot Report</h2>
         <p>Risk Category: ${reportData?.left_foot?.risk_category || 'N/A'}</p>
         <p>Criteria: ${reportData?.left_foot?.criteria || 'N/A'}</p>
-        <p>Clinical Indicator: ${reportData?.left_foot?.clinical_indicator || 'N/A'}</p>
-        <p>Screening Frequency: ${reportData?.left_foot?.screening_frequency || 'N/A'}</p>
+        <p>Clinical Indicator: ${
+          reportData?.left_foot?.clinical_indicator || 'N/A'
+        }</p>
+        <p>Screening Frequency: ${
+          reportData?.left_foot?.screening_frequency || 'N/A'
+        }</p>
         
         <h2>Right Foot Report</h2>
         <p>Risk Category: ${reportData?.right_foot?.risk_category || 'N/A'}</p>
         <p>Criteria: ${reportData?.right_foot?.criteria || 'N/A'}</p>
-        <p>Clinical Indicator: ${reportData?.right_foot?.clinical_indicator || 'N/A'}</p>
-        <p>Screening Frequency: ${reportData?.right_foot?.screening_frequency || 'N/A'}</p>
+        <p>Clinical Indicator: ${
+          reportData?.right_foot?.clinical_indicator || 'N/A'
+        }</p>
+        <p>Screening Frequency: ${
+          reportData?.right_foot?.screening_frequency || 'N/A'
+        }</p>
         
         <h2>Recommendations</h2>
         <h3>For Left Foot:</h3>
@@ -355,10 +380,16 @@ const ReportScreen = ({ navigation }: ReportProps) => {
       };
 
       await Share.open(shareOptions);
-      Alert.alert('PDF generated successfully!', 'You can now share or save the PDF.');
+      Alert.alert(
+        'PDF generated successfully!',
+        'You can now share or save the PDF.',
+      );
     } catch (error) {
       console.error('Error generating or sharing PDF:', error);
-      Alert.alert('Error', 'Failed to generate or share the PDF. Please try again.');
+      Alert.alert(
+        'Error',
+        'Failed to generate or share the PDF. Please try again.',
+      );
     }
   };
 
@@ -377,28 +408,85 @@ const ReportScreen = ({ navigation }: ReportProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <Modal animationType="fade" transparent={false} visible={loading}>
-        <View style={{ flex: 1, justifyContent: 'center', alignContent: 'center' }}>
-          <ActivityIndicator size={150} color={colors.primary} animating={loading} />
+        <View
+          style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}>
+          <ActivityIndicator
+            size={150}
+            color={colors.primary}
+            animating={loading}
+          />
         </View>
       </Modal>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={{ alignSelf: 'flex-start', marginBottom: 10 }}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+        style={{alignSelf: 'flex-start', marginBottom: 10}}>
         <Icon name="arrowleft" size={30} />
       </TouchableOpacity>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Assessment Report</Text>
+        <Text style={styles.titleTxt}>{t('Report.title1')}</Text>
       </View>
-      <View style={{ flexDirection: 'row', gap: 25, justifyContent: 'center', marginHorizontal: 10 }}>
-        <View style={{ maxWidth: '50%' }}>
-          <View style={{ backgroundColor: colors.primary, padding: 10, borderRadius: 10, marginBottom: 15 }}>
-            <Text style={{ textAlign: 'center', color: colors.white, fontSize: 16, fontWeight: '500' }}>Left Foot</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 25,
+          justifyContent: 'center',
+          marginHorizontal: 10,
+        }}>
+        <View style={{maxWidth: '50%'}}>
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              padding: 10,
+              borderRadius: 10,
+              marginBottom: 15,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.white,
+                fontSize: 16,
+                fontWeight: '500',
+              }}>
+              {t('Report.title2')}
+            </Text>
           </View>
-          <Text style={{ fontSize: 20, fontWeight: 500, color: 'green', textAlign: 'center' }}>{result.left}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: 'green',
+              textAlign: 'center',
+            }}>
+            {result.left}
+          </Text>
         </View>
-        <View style={{ maxWidth: '50%' }}>
-          <View style={{ backgroundColor: colors.primary, padding: 10, borderRadius: 10, marginBottom: 15 }}>
-            <Text style={{ textAlign: 'center', color: colors.white, fontSize: 16, fontWeight: '500' }}>Right Foot</Text>
+        <View style={{maxWidth: '50%'}}>
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              padding: 10,
+              borderRadius: 10,
+              marginBottom: 15,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.white,
+                fontSize: 16,
+                fontWeight: '500',
+              }}>
+              {t('Report.title2')}
+            </Text>
           </View>
-          <Text style={{ fontSize: 20, fontWeight: 500, color: 'green', textAlign: 'center' }}>{result.right}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: 'green',
+              textAlign: 'center',
+            }}>
+            {result.right}
+          </Text>
         </View>
       </View>
       <TouchableOpacity
@@ -409,10 +497,17 @@ const ReportScreen = ({ navigation }: ReportProps) => {
           position: 'absolute',
           bottom: 80,
         }}
-        onPress={() => navigation.replace('ReportDetail', { reportData, result })}
-      >
-        <Text style={{ fontSize: 23, fontWeight: 600, color: colors.white, textAlign: 'center' }}>
-          Click here for detailed report
+        onPress={() =>
+          navigation.replace('ReportDetail', {reportData, result})
+        }>
+        <Text
+          style={{
+            fontSize: 23,
+            fontWeight: 600,
+            color: colors.white,
+            textAlign: 'center',
+          }}>
+          {t('Report.btn1')}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -423,10 +518,15 @@ const ReportScreen = ({ navigation }: ReportProps) => {
           position: 'absolute',
           bottom: 20,
         }}
-        onPress={generatePDF}
-      >
-        <Text style={{ fontSize: 23, fontWeight: 600, color: colors.white, textAlign: 'center' }}>
-          Download Report as PDF
+        onPress={generatePDF}>
+        <Text
+          style={{
+            fontSize: 23,
+            fontWeight: 600,
+            color: colors.white,
+            textAlign: 'center',
+          }}>
+          {t('Report.btn2')}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

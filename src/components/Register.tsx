@@ -14,6 +14,7 @@ import {url} from '../utils/constants';
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
+import {useTranslation} from 'react-i18next';
 
 type RegisterProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -21,6 +22,7 @@ const Register = ({navigation}: RegisterProps) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const {t} = useTranslation();
   const isFormValid =
     name.length >= 3 && email.length >= 9 && password.length >= 6;
 
@@ -64,61 +66,61 @@ const Register = ({navigation}: RegisterProps) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <View style={{paddingHorizontal: 30}}>  
-      <Text style={styles.mainHeader}>Register</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Enter Your Name</Text>
-        <TextInput
-          style={styles.inputStyle}
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={name}
-          onChangeText={text => setName(text)}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Enter Your Email</Text>
-        <TextInput
-          style={styles.inputStyle}
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={email}
-          onChangeText={text => setEmail(text)}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Enter Your Password</Text>
-        <TextInput
-          style={styles.inputStyle}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-          value={password}
-          onChangeText={text => setPassword(text)}
-        />
-      </View>
-      <TouchableOpacity
-        style={[
-          styles.buttonStyle,
-          {
-            backgroundColor: isFormValid ? colors.primary : 'grey',
-            marginTop: 50,
-          },
-        ]}
-        disabled={!isFormValid}
-        onPress={() => handleSubmit()}
-        accessible
-        accessibilityLabel="Login button">
-        <Text style={styles.buttonText}>REGISTER</Text>
-      </TouchableOpacity>
-      <Text style={[styles.description, {marginTop: 20}]}>
-        Already have an account?
-      </Text>
-      <TouchableOpacity
-        style={[styles.buttonStyle, {backgroundColor: colors.primary}]}
-        onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </TouchableOpacity>
+      <View style={{paddingHorizontal: 30}}>
+        <Text style={styles.mainHeader}>{t('Register.title')}</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>{t('Register.text1')}</Text>
+          <TextInput
+            style={styles.inputStyle}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={name}
+            onChangeText={text => setName(text)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>{t('Register.text2')}</Text>
+          <TextInput
+            style={styles.inputStyle}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>{t('Register.text3')}</Text>
+          <TextInput
+            style={styles.inputStyle}
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={true}
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+        </View>
+        <TouchableOpacity
+          style={[
+            styles.buttonStyle,
+            {
+              backgroundColor: isFormValid ? colors.primary : 'grey',
+              marginTop: 50,
+            },
+          ]}
+          disabled={!isFormValid}
+          onPress={() => handleSubmit()}
+          accessible
+          accessibilityLabel="Login button">
+          <Text style={styles.buttonText}>{t('Register.btn1')}</Text>
+        </TouchableOpacity>
+        <Text style={[styles.description, {marginTop: 20}]}>
+          {t('Register.text4')}
+        </Text>
+        <TouchableOpacity
+          style={[styles.buttonStyle, {backgroundColor: colors.primary}]}
+          onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.buttonText}>{t('Register.btn2')}</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

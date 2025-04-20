@@ -1,6 +1,7 @@
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
+import { useTranslation } from 'react-i18next';
 
 const Monofilament = ({
   answers,
@@ -10,6 +11,7 @@ const Monofilament = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
   return (
     <>
       <Modal animationType="fade" transparent={false} visible={popUp}>
@@ -32,7 +34,7 @@ const Monofilament = ({
                   marginBottom: 7,
                   color: 'white',
                 }}>
-                Before taking the next assessment, please confirm below.
+                {t('Monofilament.text1')}
               </Text>
               <Text
                 style={{
@@ -41,8 +43,7 @@ const Monofilament = ({
                   color: 'white',
                   marginBottom: 10,
                 }}>
-                Are you aware of monofilament test and have monofilament with
-                you now to take test?
+                {t('Monofilament.text2')}
               </Text>
             </View>
             <View style={{flexDirection: 'row', gap: 10}}>
@@ -53,7 +54,7 @@ const Monofilament = ({
                   setCurrentStep('monofilamentQ');
                   setIpSwich(false);
                 }}>
-                <Text style={styles.modalButtonText}>Yes</Text>
+                <Text style={styles.modalButtonText}>{t('Monofilament.btn1')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalButton}
@@ -62,7 +63,7 @@ const Monofilament = ({
                   setCurrentStep('ipSwich');
                   setIpSwich(true);
                 }}>
-                <Text style={styles.modalButtonText}>No</Text>
+                <Text style={styles.modalButtonText}>{t('Monofilament.btn2')}</Text>
               </TouchableOpacity>
             </View>
           </View>

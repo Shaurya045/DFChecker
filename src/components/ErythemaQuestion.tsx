@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   Modal,
@@ -8,15 +8,9 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { colors } from '../utils/colors';
-import { url } from '../utils/constants';
-
-const questions = [
-  {
-    id: 'erythema',
-    text: 'Redness noted',
-  },
-];
+import {colors} from '../utils/colors';
+import {url} from '../utils/constants';
+import {useTranslation} from 'react-i18next';
 
 const ErythemaQuestion = ({
   answers,
@@ -27,6 +21,14 @@ const ErythemaQuestion = ({
   navigation,
 }) => {
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  const {t} = useTranslation();
+
+  const questions = [
+    {
+      id: 'erythema',
+      text: t('Erythema.qes1'),
+    },
+  ];
 
   const submitFormData = async () => {
     setShowSubmitConfirm(false); // Close the confirmation modal
@@ -40,7 +42,7 @@ const ErythemaQuestion = ({
         return;
       }
 
-      console.log('Data being sent:', JSON.stringify({ data: data }));
+      console.log('Data being sent:', JSON.stringify({data: data}));
 
       const response = await fetch(`${url}/submit-form`, {
         method: 'POST',
@@ -48,7 +50,7 @@ const ErythemaQuestion = ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ data: data }),
+        body: JSON.stringify({data: data}),
       });
 
       const responseText = await response.text();
@@ -97,8 +99,7 @@ const ErythemaQuestion = ({
             </View>
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={() => setPopUp(false)}
-            >
+              onPress={() => setPopUp(false)}>
               <Text style={styles.modalButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -106,25 +107,28 @@ const ErythemaQuestion = ({
       </Modal>
 
       {/* Submit Confirmation Modal */}
-      <Modal animationType="fade" transparent={true} visible={showSubmitConfirm}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showSubmitConfirm}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Confirm Submission</Text>
-            <Text style={styles.confirmationText}>
-              Are you sure you want to submit the form?
-            </Text>
+            <Text style={styles.modalTitle}>{t('Erythema.title1')}</Text>
+            <Text style={styles.confirmationText}>{t('Erythema.text2')}</Text>
             <View style={styles.confirmationButtonContainer}>
               <TouchableOpacity
                 style={[styles.confirmationButton, styles.cancelButton]}
-                onPress={() => setShowSubmitConfirm(false)}
-              >
-                <Text style={styles.confirmationButtonText}>Cancel</Text>
+                onPress={() => setShowSubmitConfirm(false)}>
+                <Text style={styles.confirmationButtonText}>
+                  {t('Erythema.btn2')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.confirmationButton, styles.submitButton]}
-                onPress={submitFormData}
-              >
-                <Text style={styles.confirmationButtonText}>Done</Text>
+                onPress={submitFormData}>
+                <Text style={styles.confirmationButtonText}>
+                  {t('Erythema.btn3')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -132,25 +136,22 @@ const ErythemaQuestion = ({
       </Modal>
 
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Erythema</Text>
+        <Text style={styles.titleTxt}>{t('Erythema.title8')}</Text>
       </View>
 
       <View>
-        <Text style={styles.questionInstruction}>
-          Look for redness of the skin that does not change when the foot is
-          elevated?
-        </Text>
+        <Text style={styles.questionInstruction}>{t('Erythema.text3')}</Text>
       </View>
 
       <View style={styles.heading}>
-        <Text style={styles.headingTxt}>Questions</Text>
+        <Text style={styles.headingTxt}>{t('Erythema.text1')}</Text>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
 
-      {questions.map((item) => (
+      {questions.map(item => (
         <View style={styles.heading} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
@@ -161,14 +162,12 @@ const ErythemaQuestion = ({
                   ...answers[item.id],
                   left: !answers[item.id]?.left,
                 })
-              }
-            >
+              }>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.left && styles.checkboxChecked,
-                ]}
-              >
+                ]}>
                 {answers[item.id]?.left && (
                   <Text style={styles.checkmark}>✓</Text>
                 )}
@@ -181,14 +180,12 @@ const ErythemaQuestion = ({
                   ...answers[item.id],
                   right: !answers[item.id]?.right,
                 })
-              }
-            >
+              }>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
-                ]}
-              >
+                ]}>
                 {answers[item.id]?.right && (
                   <Text style={styles.checkmark}>✓</Text>
                 )}
@@ -200,27 +197,28 @@ const ErythemaQuestion = ({
 
       <View style={styles.instructionBox}>
         <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "Yes":</Text> Click the checkbox (
-          <Text style={styles.checkmarkSymbol}>✓</Text>).
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
         </Text>
         <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "No":</Text> Leave the checkbox
-          unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
         </Text>
       </View>
+      <TouchableOpacity
+        style={styles.nextButton}
+        onPress={() => setCurrentStep('rubor')}>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => setCurrentStep('rubor')}
-      >
-        <Text style={styles.nextButtonText}>Previous</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={styles.nextButton} 
-        onPress={() => setShowSubmitConfirm(true)}
-      >
-        <Text style={styles.nextButtonText}>Submit</Text>
+        onPress={() => setShowSubmitConfirm(true)}>
+        <Text style={styles.nextButtonText}>{t('Erythema.btn1')}</Text>
       </TouchableOpacity>
     </>
   );

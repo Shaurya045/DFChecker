@@ -13,6 +13,7 @@ import {url} from '../utils/constants';
 import {useAuth} from '../AuthContext';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../App';
+import {useTranslation} from 'react-i18next';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -21,6 +22,8 @@ const LoginScreen = ({navigation}: LoginProps) => {
   const [email, setEmail] = useState('');
   const isFormValid = email.length >= 9 && password.length >= 6;
   const {login} = useAuth();
+
+  const {t} = useTranslation();
 
   const handleSubmit = async () => {
     if (isFormValid) {
@@ -53,50 +56,50 @@ const LoginScreen = ({navigation}: LoginProps) => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={{paddingHorizontal: 30}}>
-      <Text style={styles.mainHeader}>LOGIN</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Enter Your Email</Text>
-        <TextInput
-          style={styles.inputStyle}
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={email}
-          onChangeText={setEmail}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.labels}>Enter Your Password</Text>
-        <TextInput
-          style={styles.inputStyle}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-          value={password}
-          onChangeText={setPassword}
-        />
-      </View>
-      <TouchableOpacity
-        style={[
-          styles.buttonStyle,
-          {backgroundColor: isFormValid ? colors.primary : 'grey'},
-          {
-            marginTop: 50,
-          },
-        ]}
-        disabled={!isFormValid}
-        onPress={handleSubmit}
-        accessible
-        accessibilityLabel="Login button">
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </TouchableOpacity>
-      <Text style={[styles.description, {marginTop: 20}]}>
-        Don't have an account?
-      </Text>
-      <TouchableOpacity
-        style={[styles.buttonStyle, {backgroundColor: colors.primary}]}
-        onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.buttonText}>REGISTER</Text>
-      </TouchableOpacity>
+        <Text style={styles.mainHeader}>{t('Login.title')}</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>{t('Login.text1')}</Text>
+          <TextInput
+            style={styles.inputStyle}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.labels}>{t('Login.text2')}</Text>
+          <TextInput
+            style={styles.inputStyle}
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+        <TouchableOpacity
+          style={[
+            styles.buttonStyle,
+            {backgroundColor: isFormValid ? colors.primary : 'grey'},
+            {
+              marginTop: 50,
+            },
+          ]}
+          disabled={!isFormValid}
+          onPress={handleSubmit}
+          accessible
+          accessibilityLabel="Login button">
+          <Text style={styles.buttonText}>{t('Login.btn1')}</Text>
+        </TouchableOpacity>
+        <Text style={[styles.description, {marginTop: 20}]}>
+          {t('Login.text3')}
+        </Text>
+        <TouchableOpacity
+          style={[styles.buttonStyle, {backgroundColor: colors.primary}]}
+          onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.buttonText}>{t('Login.btn2')}</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

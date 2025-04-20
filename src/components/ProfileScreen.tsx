@@ -15,6 +15,8 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
+import LanguageDropdown from './LanguageDropdown';
+import {useTranslation} from 'react-i18next';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
@@ -22,6 +24,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
   const [profile, setProfile] = useState<{name?: string; email?: string}>({});
   const [reports, setReports] = useState<any[]>([]);
   const {logout} = useAuth();
+  const {t} = useTranslation();
 
   const getUserProfile = async () => {
     try {
@@ -120,17 +123,25 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         <Icon name="arrowleft" size={30} />
       </TouchableOpacity>
       <View style={{width: '100%'}}>
-        <Text style={styles.headingText}>Profile</Text>
+        <Text style={styles.headingText}>{t('Profile.title')}</Text>
+        <View
+          style={styles.profileItem}>
+          <Text
+            style={styles.profileText}>
+            {t('Welcome.text1')}:
+          </Text>
+          <LanguageDropdown />
+        </View>
         <View style={styles.profileItem}>
-          <Text style={styles.profileText}>Username: </Text>
+          <Text style={styles.profileText}>{t('Profile.text1')}: </Text>
           <Text style={styles.profileTextAns}>{profile.name}</Text>
         </View>
         <View style={styles.profileItem}>
-          <Text style={styles.profileText}>Email: </Text>
+          <Text style={styles.profileText}>{t('Profile.text2')}: </Text>
           <Text style={styles.profileTextAns}>{profile.email}</Text>
         </View>
         <TouchableOpacity style={styles.buttonStyle} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Logout</Text>
+          <Text style={styles.buttonText}>{t('Profile.btn1')}</Text>
         </TouchableOpacity>
       </View>
       <View style={{marginTop: 30, flex: 1, width: '100%'}}>
@@ -142,7 +153,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
             textAlign: 'center',
             color: colors.secondary,
           }}>
-          Previous Test Results
+          {t('Profile.text3')}
         </Text>
         {reports.length > 0 ? (
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -189,7 +200,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                             fontWeight: '600',
                             color: colors.gray,
                           }}>
-                          Left Foot Result:{' '}
+                          {t('Profile.text4')}:{' '}
                         </Text>
                         <Text
                           style={{
@@ -211,7 +222,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                             fontWeight: '600',
                             color: colors.gray,
                           }}>
-                          Right Foot Result:{' '}
+                          {t('Profile.text5')}:{' '}
                         </Text>
                         <Text
                           style={{
@@ -233,7 +244,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                             fontWeight: '600',
                             color: colors.gray,
                           }}>
-                          Date of Test:{' '}
+                          {t('Profile.text6')}:{' '}
                         </Text>
                         <Text style={{color: colors.white, fontSize: 16}}>
                           {formattedDate}
@@ -246,7 +257,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
             })}
           </ScrollView>
         ) : (
-          <Text style={{textAlign: 'center', fontSize: 18}}>No Test Taken</Text>
+          <Text style={{textAlign: 'center', fontSize: 18}}>{t('Profile.text7')}</Text>
         )}
       </View>
     </SafeAreaView>

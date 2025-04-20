@@ -1,22 +1,15 @@
-import {Modal, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'nails1',
-    text: 'Nails well kept?',
-  },
-  {
-    id: 'nails2',
-    text: 'Nails unkempt and ragged?',
-  },
-  {
-    id: 'nails3',
-    text: 'Nails thick, damaged or infected?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const NailQuestion = ({
   answers,
@@ -25,72 +18,90 @@ const NailQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'nails1',
+      text: t('Nail.qes1'),
+    },
+    {
+      id: 'nails2',
+      text: t('Nail.qes2'),
+    },
+    {
+      id: 'nails3',
+      text: t('Nail.qes3'),
+    },
+  ];
   const validateAnswers = () => {
     // 1. Check if at least one option is selected for any question (left OR right)
     const hasAnyAnswers = questions.some(
-      question => answers[question.id]?.left === true || answers[question.id]?.right === true
+      question =>
+        answers[question.id]?.left === true ||
+        answers[question.id]?.right === true,
     );
-  
+
     if (!hasAnyAnswers) {
       Alert.alert(
-        'Incomplete Form',
-        'Please select at least one option before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text4'),
       );
       return false;
     }
-  
+
     // 2. Check if at least one left foot and one right foot option is selected
     const hasLeftFootSelection = questions.some(
-      question => answers[question.id]?.left === true
+      question => answers[question.id]?.left === true,
     );
     const hasRightFootSelection = questions.some(
-      question => answers[question.id]?.right === true
+      question => answers[question.id]?.right === true,
     );
-  
+
     if (!hasLeftFootSelection || !hasRightFootSelection) {
       Alert.alert(
-        'Incomplete Form',
-        'Please select at least one option for each foot (left and right).',
+        t('Alert.title2'),
+        t('Alert.text3'),
       );
       return false;
     }
-  
+
     // 3. Check if nails1 is checked (either left or right)
     const isNails1Checked = answers['nails1']?.left || answers['nails1']?.right;
-  
+
     // 4. Check if nails2 and nails3 are not checked (both left and right)
     const areOtherQuestionsUnchecked = ['nails2', 'nails3'].every(
-      questionId => !answers[questionId]?.left && !answers[questionId]?.right
+      questionId => !answers[questionId]?.left && !answers[questionId]?.right,
     );
-  
+
     // 5. If nails1 is checked and other questions are unchecked, allow proceeding
     if (isNails1Checked && areOtherQuestionsUnchecked) {
       return true;
     }
-    
+
     // if at least one left foot and one right foot option is selected, allow proceeding
     if (hasLeftFootSelection && hasRightFootSelection) {
       return true;
     }
     // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
     const isAllAnswered = questions.every(
-      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined
+      question =>
+        answers[question.id]?.left !== undefined ||
+        answers[question.id]?.right !== undefined,
     );
-  
+
     if (!isAllAnswered) {
       Alert.alert(
-        'Incomplete Form',
-        'Please answer all questions before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text2'),
       );
       return false;
     }
-  
+
     return true;
   };
 
   const handleNext = () => {
     if (!validateAnswers()) {
-
       return; // Stop if validation fails
     }
 
@@ -99,11 +110,7 @@ const NailQuestion = ({
 
   return (
     <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={popUp}
-      >
+      <Modal animationType="fade" transparent={true} visible={popUp}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text
@@ -113,39 +120,36 @@ const NailQuestion = ({
                 fontWeight: '600',
                 marginBottom: 10,
               }}>
-              Instructions
+              {t('Nail.inst')}
             </Text>
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Examine toenails:</Text>{' '}
-                Check for how well they are being managed.​
+                <Text style={{fontWeight: 'bold'}}>{t('Nail.title1')}:</Text>{' '}
+                {t('Nail.text1')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Nails well-kept:</Text>{' '}
-                Ensure nails are trimmed, neat, and healthy.​
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Nail.title2')}:</Text>{' '}
+                {t('Nail.text2')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Nails unkempt:</Text> Look
-                for nails that are ragged or untidy.​
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Nail.title3')}:</Text>{' '}
+                {t('Nail.text3')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>
-                  Nails thick, damaged, or infected:
-                </Text>{' '}
-                Check for nails that are thick, damaged, or showing signs of
-                infection.​​
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Nail.title4')}:</Text>{' '}
+                {t('Nail.text4')}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Okay</Text>
+              <Text style={styles.modalButtonText}>{t('Nail.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Nail</Text>
+        <Text style={styles.titleTxt}>{t('Nail.title8')}</Text>
       </View>
       <View>
         <Text
@@ -155,8 +159,7 @@ const NailQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Assess toenails to determine how well they are being managed by the
-          user.​
+          {t('Nail.text10')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -164,14 +167,14 @@ const NailQuestion = ({
           style={{flexDirection: 'row', gap: 5}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={22} color="black" />
-          <Text style={styles.headingTxt}>Click For Instructions</Text>
+          <Text style={styles.headingTxt}>{t('Nail.btn2')}</Text>
         </TouchableOpacity>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Nail.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Nail.title10')}</Text>
         </View>
       </View>
-      {questions.map((item) => (
+      {questions.map(item => (
         <View style={styles.heading} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
@@ -181,7 +184,7 @@ const NailQuestion = ({
               onPress={() => {
                 // If nails1 is being checked, uncheck all other left checkboxes
                 if (item.id === 'nails1' && !answers[item.id]?.left) {
-                  questions.forEach((question) => {
+                  questions.forEach(question => {
                     if (question.id !== 'nails1') {
                       handleAnswer(question.id, {
                         ...answers[question.id],
@@ -201,7 +204,9 @@ const NailQuestion = ({
                 style={[
                   styles.checkbox,
                   answers[item.id]?.left && styles.checkboxChecked,
-                  answers['nails1']?.left && item.id !== 'nails1' && styles.disabledCheckbox,
+                  answers['nails1']?.left &&
+                    item.id !== 'nails1' &&
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.left && (
                   <Text style={styles.checkmark}>✓</Text>
@@ -215,7 +220,7 @@ const NailQuestion = ({
               onPress={() => {
                 // If nails1 is being checked, uncheck all other right checkboxes
                 if (item.id === 'nails1' && !answers[item.id]?.right) {
-                  questions.forEach((question) => {
+                  questions.forEach(question => {
                     if (question.id !== 'nails1') {
                       handleAnswer(question.id, {
                         ...answers[question.id],
@@ -235,7 +240,9 @@ const NailQuestion = ({
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
-                  answers['nails1']?.right && item.id !== 'nails1' && styles.disabledCheckbox,
+                  answers['nails1']?.right &&
+                    item.id !== 'nails1' &&
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.right && (
                   <Text style={styles.checkmark}>✓</Text>
@@ -246,26 +253,30 @@ const NailQuestion = ({
         </View>
       ))}
       {/* Add instructions for checkbox interaction */}
-            <View style={styles.instructionBox}>
-                <Text style={styles.instructionText}>
-                  <Text style={styles.boldText}>For "Yes":</Text> 
-                  Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
-                </Text>
-                <Text style={styles.instructionText}>
-                  <Text style={styles.boldText}>For "No":</Text> 
-                  Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-               </Text>
-            </View>
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Nail.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Nail.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('skin')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Nail.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
         onPress={handleNext}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Nail.btn4')}</Text>
       </TouchableOpacity>
     </>
   );

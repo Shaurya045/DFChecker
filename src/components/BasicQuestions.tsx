@@ -9,12 +9,13 @@ import {
   Alert,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {initialQuestions} from '../utils/questions';
+// import {initialQuestions} from '../utils/questions';
 import {colors} from '../utils/colors';
 import MediaPopup from './MediaPopUp';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
+import {useTranslation} from 'react-i18next';
 
 const {high, wide} = Dimensions.get('window');
 
@@ -31,6 +32,36 @@ const BasicQuestions = ({
     left: string | null;
     right: string | null;
   }>({left: null, right: null});
+  const {t} = useTranslation();
+
+  const initialQuestions = [
+    {
+      id: 'neurologicalDisease',
+      text: t('BasicQes.qes1'),
+      type: 'boolean',
+    },
+    {
+      id: 'amputation',
+      text: t('BasicQes.qes2'),
+      type: 'boolean',
+    },
+    {
+      id: 'amputationCount',
+      text: t('BasicQes.qes3'),
+      type: 'number',
+      condition: (answers: Record<string, any>) => answers.amputation === true,
+    },
+    {
+      id: 'smoking',
+      text: t('BasicQes.qes4'),
+      type: 'boolean',
+    },
+    {
+      id: 'ulcer',
+      text: t('BasicQes.qes5'),
+      type: 'boolean',
+    },
+  ];
 
   const handleTakePhoto = () => {
     ImagePicker.openCamera({
@@ -161,14 +192,17 @@ const BasicQuestions = ({
                 onPress={() => {
                   // Toggle the Yes button
                   const currentValue = answers[question.id];
-                  handleAnswer(question.id, currentValue === true ? undefined : true);
+                  handleAnswer(
+                    question.id,
+                    currentValue === true ? undefined : true,
+                  );
                 }}>
                 <Text
                   style={[
                     styles.buttonText,
                     answers[question.id] === true && styles.selectedButtonText,
                   ]}>
-                  Y
+                  {t('BasicQes.y')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -179,14 +213,17 @@ const BasicQuestions = ({
                 onPress={() => {
                   // Toggle the No button
                   const currentValue = answers[question.id];
-                  handleAnswer(question.id, currentValue === false ? undefined : false);
+                  handleAnswer(
+                    question.id,
+                    currentValue === false ? undefined : false,
+                  );
                 }}>
                 <Text
                   style={[
                     styles.buttonText,
                     answers[question.id] === false && styles.selectedButtonText,
                   ]}>
-                  N
+                  {t('BasicQes.n')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -220,8 +257,8 @@ const BasicQuestions = ({
 
     if (!isAllAnswered) {
       Alert.alert(
-        'Incomplete Form',
-        'Please answer all the questions before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text2'),
       );
       return false;
     }
@@ -239,8 +276,8 @@ const BasicQuestions = ({
     setCurrentStep('skin');
     if ((footImage.left || footImage.right) && answers.ulcer) {
       Alert.alert(
-        'Image uploaded successfully',
-        'Your image will be analyzed by AI and report will be generated in 24 hours.',
+        t('Alert.title1'),
+        t('Alert.text1'),
       );
     }
   };
@@ -262,7 +299,7 @@ const BasicQuestions = ({
             textAlign: 'center',
             padding: 8,
           }}>
-          Pre Screening Questions
+          {t('BasicQes.title')}
         </Text>
       </View>
       {initialQuestions.map(renderQuestion)}
@@ -277,7 +314,7 @@ const BasicQuestions = ({
                 setFoot('Left');
               }}>
               <Text style={[styles.buttonText, {color: 'white'}]}>
-                Take Photo of Left Foot
+                {t('BasicQes.btn1')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -287,7 +324,7 @@ const BasicQuestions = ({
                 setFoot('Right');
               }}>
               <Text style={[styles.buttonText, {color: 'white'}]}>
-                Take Photo of Right Foot
+                {t('BasicQes.btn2')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -295,7 +332,7 @@ const BasicQuestions = ({
             {footImage.left && (
               <View style={styles.imageContainer}>
                 <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
-                  Left Foot Image:
+                  {t('BasicQes.text1')}:
                 </Text>
                 <Image
                   source={{
@@ -312,7 +349,7 @@ const BasicQuestions = ({
             {footImage.right && (
               <View style={styles.imageContainer}>
                 <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
-                  Right Foot Image:
+                  {t('BasicQes.text2')}:
                 </Text>
                 <Image
                   source={{
@@ -338,18 +375,20 @@ const BasicQuestions = ({
       {/* Add instructions for checkbox interaction */}
       <View style={styles.instructionBox}>
         <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "Yes":</Text> 
-          <Text> Click the (Y). Click again to deselect.</Text> 
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          <Text> {t('BasicQes.text4')}</Text>
         </Text>
         <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "No":</Text> 
-          <Text> Click the (N). Click again to deselect.</Text>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          <Text> {t('BasicQes.text5')}</Text>
         </Text>
       </View>
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={handleNext}>
-        <Text style={styles.nextButtonText}>Next</Text>
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.nextButtonText}>{t('BasicQes.btn3')}</Text>
       </TouchableOpacity>
     </>
   );

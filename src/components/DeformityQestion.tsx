@@ -11,30 +11,7 @@ import {
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  
-  {
-    id: 'deformity1',
-    text: 'No deformity (photo shows healthy normal foot)',
-  },
-  {
-    id: 'deformity2',
-    text: 'Mild deformity (clarified by photos)',
-  },
-  {
-    id: 'deformity3',
-    text: 'sudden swelling and hotness of the foot',
-  },
-  {
-    id: 'deformity4',
-    text: 'Amputation',
-  },
-  {
-    id: 'deformity4',
-    text: 'Sudden swelling and hotness of the foot',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const DeformityQestion = ({
   answers,
@@ -43,73 +20,104 @@ const DeformityQestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'deformity1',
+      text: t('Deformity.qes1'),
+    },
+    {
+      id: 'deformity2',
+      text: t('Deformity.qes2'),
+    },
+    {
+      id: 'deformity3',
+      text: t('Deformity.qes3'),
+    },
+    {
+      id: 'deformity4',
+      text: t('Deformity.qes4'),
+    },
+    {
+      id: 'deformity5',
+      text: t('Deformity.qes5'),
+    },
+  ];
   const validateAnswers = () => {
     // 1. Check if at least one option is selected for any question
     const hasAnyAnswers = questions.some(
-      question => answers[question.id]?.left === true || answers[question.id]?.right === true
+      question =>
+        answers[question.id]?.left === true ||
+        answers[question.id]?.right === true,
     );
-  
+
     if (!hasAnyAnswers) {
       Alert.alert(
-        'Incomplete Form',
-        'Please select at least one option before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text4'),
       );
       return false;
     }
-  
+
     // 2. Check if at least one left foot and one right foot option is selected
     const hasLeftFootSelection = questions.some(
-      question => answers[question.id]?.left === true
+      question => answers[question.id]?.left === true,
     );
     const hasRightFootSelection = questions.some(
-      question => answers[question.id]?.right === true
+      question => answers[question.id]?.right === true,
     );
-  
+
     if (!hasLeftFootSelection || !hasRightFootSelection) {
       Alert.alert(
-        'Incomplete Form',
-        'Please select at least one option for each foot (left and right).',
+        t('Alert.title2'),
+        t('Alert.text3'),
       );
       return false;
     }
-  
+
     // 3. Check if deformity1 is checked for at least one foot
-    const isDeformity1Checked = answers['deformity1']?.left || answers['deformity1']?.right;
-  
+    const isDeformity1Checked =
+      answers['deformity1']?.left || answers['deformity1']?.right;
+
     // 4. Check if any other deformity is checked for the other foot
-    const isOtherDeformityChecked = ['deformity2', 'deformity3', 'deformity4'].some(
-      questionId => answers[questionId]?.left || answers[questionId]?.right
+    const isOtherDeformityChecked = [
+      'deformity2',
+      'deformity3',
+      'deformity4',
+    ].some(
+      questionId => answers[questionId]?.left || answers[questionId]?.right,
     );
-  
+
     // 5. If deformity1 is checked for one foot and another deformity is checked for the other foot, allow proceeding
     if (isDeformity1Checked && isOtherDeformityChecked) {
       return true;
     }
-    
+
     // if at least one left foot and one right foot option is selected, allow proceeding
     if (hasLeftFootSelection && hasRightFootSelection) {
       return true;
     }
-    
+
     // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
     const isAllAnswered = questions.every(
-      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined
+      question =>
+        answers[question.id]?.left !== undefined ||
+        answers[question.id]?.right !== undefined,
     );
-  
+
     if (!isAllAnswered) {
       Alert.alert(
-        'Incomplete Form',
-        'Please answer all questions before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text2'),
       );
       return false;
     }
-  
+
     return true;
   };
 
   const handleNext = () => {
     if (!validateAnswers()) {
-
       return; // Stop if validation fails
     }
 
@@ -118,11 +126,7 @@ const DeformityQestion = ({
 
   return (
     <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={popUp}
-      >
+      <Modal animationType="fade" transparent={true} visible={popUp}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text
@@ -136,43 +140,53 @@ const DeformityQestion = ({
             </Text>
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Look for deformities:</Text>{' '}
-                Inspect the foot for any changes that might affect how shoes
-                fit.
-              </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Mild deformities:</Text> Look
-                for signs of discomfort, such as:
-              </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
                 <Text style={{fontWeight: 'bold'}}>
-                  Bumps near the big toe:
+                  {t('Deformity.title1')}:
                 </Text>{' '}
-                A noticeable bump on the side of the foot.
+                {t('Deformity.text1')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
                 <Text style={{fontWeight: 'bold'}}>
-                  Changes in foot shape due to nerve damage:
+                  {t('Deformity.title2')}:
                 </Text>{' '}
-                A deformity that alters the shape of the foot.
+                {t('Deformity.text2')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Amputation:</Text> Check if
-                any toes are missing or show signs of being removed.
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>
+                  {t('Deformity.title3')}:
+                </Text>{' '}
+                {t('Deformity.text3')}
+              </Text>
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>
+                  {t('Deformity.title4')}:
+                </Text>{' '}
+                {t('Deformity.text4')}
+              </Text>
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>
+                  {t('Deformity.title5')}:
+                </Text>{' '}
+                {t('Deformity.text5')}
               </Text>
             </View>
-            <Text style={{fontWeight: 'bold', marginBottom: 10}}>Sample Image:</Text>
-            <Image source={require('../assets/deformity.jpeg')} style={{height: 150, width:220, marginBottom: 20}}/>
+            <Text style={{fontWeight: 'bold', marginBottom: 10}}>
+              {t('Deformity.title6')}:
+            </Text>
+            <Image
+              source={require('../assets/deformity.jpeg')}
+              style={{height: 150, width: 220, marginBottom: 20}}
+            />
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Okay</Text>
+              <Text style={styles.modalButtonText}>{t('Deformity.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Deformity</Text>
+        <Text style={styles.titleTxt}>{t('Deformity.title8')}</Text>
       </View>
       <View>
         <Text
@@ -182,8 +196,7 @@ const DeformityQestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Look for any bony changes that can put you at significant risk and
-          prevent the wearing of off-the-shelf footwear
+          {t('Deformity.text10')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -191,60 +204,70 @@ const DeformityQestion = ({
           style={{flexDirection: 'row', gap: 5}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={22} color="black" />
-          <Text style={styles.headingTxt}>Click For Instructions</Text>
+          <Text style={styles.headingTxt}>{t('Deformity.btn2')}</Text>
         </TouchableOpacity>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Deformity.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Deformity.title10')}</Text>
         </View>
       </View>
-      {questions.map((item) => (
+      {questions.map(item => (
         <View style={styles.heading} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
             {/* Left Checkbox */}
             <TouchableOpacity
-  style={styles.button}
-  onPress={() => {
-    // If deformity1 or deformity4 is being checked, uncheck all other left checkboxes
-    if ((item.id === 'deformity1' || item.id === 'deformity4') && !answers[item.id]?.left) {
-      questions.forEach((question) => {
-        if (question.id !== 'deformity1' && question.id !== 'deformity4') {
-          handleAnswer(question.id, {
-            ...answers[question.id],
-            left: false,
-          });
-        }
-      });
-      // Also uncheck the other special deformity checkbox if it's not the current one
-      const otherDeformity = item.id === 'deformity1' ? 'deformity4' : 'deformity1';
-      handleAnswer(otherDeformity, {
-        ...answers[otherDeformity],
-        left: false,
-      });
-    }
-    // Toggle the current checkbox
-    handleAnswer(item.id, {
-      ...answers[item.id],
-      left: !answers[item.id]?.left,
-    });
-  }}
-  disabled={
-    (answers['deformity1']?.left || answers['deformity4']?.left) && 
-    (item.id !== 'deformity1' && item.id !== 'deformity4')
-  }>
-  <View
-    style={[
-      styles.checkbox,
-      answers[item.id]?.left && styles.checkboxChecked,
-      (answers['deformity1']?.left || answers['deformity4']?.left) && 
-        (item.id !== 'deformity1' && item.id !== 'deformity4') && 
-        styles.disabledCheckbox,
-    ]}>
-    {answers[item.id]?.left && (
-      <Text style={styles.checkmark}>✓</Text>
-    )}
-  </View>
+              style={styles.button}
+              onPress={() => {
+                // If deformity1 or deformity4 is being checked, uncheck all other left checkboxes
+                if (
+                  (item.id === 'deformity1' || item.id === 'deformity4') &&
+                  !answers[item.id]?.left
+                ) {
+                  questions.forEach(question => {
+                    if (
+                      question.id !== 'deformity1' &&
+                      question.id !== 'deformity4'
+                    ) {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        left: false,
+                      });
+                    }
+                  });
+                  // Also uncheck the other special deformity checkbox if it's not the current one
+                  const otherDeformity =
+                    item.id === 'deformity1' ? 'deformity4' : 'deformity1';
+                  handleAnswer(otherDeformity, {
+                    ...answers[otherDeformity],
+                    left: false,
+                  });
+                }
+                // Toggle the current checkbox
+                handleAnswer(item.id, {
+                  ...answers[item.id],
+                  left: !answers[item.id]?.left,
+                });
+              }}
+              disabled={
+                (answers['deformity1']?.left || answers['deformity4']?.left) &&
+                item.id !== 'deformity1' &&
+                item.id !== 'deformity4'
+              }>
+              <View
+                style={[
+                  styles.checkbox,
+                  answers[item.id]?.left && styles.checkboxChecked,
+                  (answers['deformity1']?.left ||
+                    answers['deformity4']?.left) &&
+                    item.id !== 'deformity1' &&
+                    item.id !== 'deformity4' &&
+                    styles.disabledCheckbox,
+                ]}>
+                {answers[item.id]?.left && (
+                  <Text style={styles.checkmark}>✓</Text>
+                )}
+              </View>
             </TouchableOpacity>
 
             {/* Right Checkbox */}
@@ -252,9 +275,15 @@ const DeformityQestion = ({
               style={styles.button}
               onPress={() => {
                 // If deformity1 or deformity4 is being checked, uncheck all other right checkboxes
-                if ((item.id === 'deformity1' || item.id === 'deformity4') && !answers[item.id]?.right) {
-                  questions.forEach((question) => {
-                    if (question.id !== 'deformity1' && question.id !== 'deformity4') {
+                if (
+                  (item.id === 'deformity1' || item.id === 'deformity4') &&
+                  !answers[item.id]?.right
+                ) {
+                  questions.forEach(question => {
+                    if (
+                      question.id !== 'deformity1' &&
+                      question.id !== 'deformity4'
+                    ) {
                       handleAnswer(question.id, {
                         ...answers[question.id],
                         right: false,
@@ -262,7 +291,8 @@ const DeformityQestion = ({
                     }
                   });
                   // Also uncheck the other special deformity checkbox if it's not the current one
-                  const otherDeformity = item.id === 'deformity1' ? 'deformity4' : 'deformity1';
+                  const otherDeformity =
+                    item.id === 'deformity1' ? 'deformity4' : 'deformity1';
                   handleAnswer(otherDeformity, {
                     ...answers[otherDeformity],
                     right: false,
@@ -275,15 +305,19 @@ const DeformityQestion = ({
                 });
               }}
               disabled={
-                (answers['deformity1']?.right || answers['deformity4']?.right) && 
-                (item.id !== 'deformity1' && item.id !== 'deformity4')
+                (answers['deformity1']?.right ||
+                  answers['deformity4']?.right) &&
+                item.id !== 'deformity1' &&
+                item.id !== 'deformity4'
               }>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
-                  (answers['deformity1']?.right || answers['deformity4']?.right) && 
-                    (item.id !== 'deformity1' && item.id !== 'deformity4') && 
+                  (answers['deformity1']?.right ||
+                    answers['deformity4']?.right) &&
+                    item.id !== 'deformity1' &&
+                    item.id !== 'deformity4' &&
                     styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.right && (
@@ -296,25 +330,29 @@ const DeformityQestion = ({
       ))}
       {/* Add instructions for checkbox interaction */}
       <View style={styles.instructionBox}>
-          <Text style={styles.instructionText}>
-            <Text style={styles.boldText}>For "Yes":</Text> 
-            Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
           </Text>
-          <Text style={styles.instructionText}>
-            <Text style={styles.boldText}>For "No":</Text> 
-            Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-         </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
       </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('nail')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
         onPress={handleNext}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );

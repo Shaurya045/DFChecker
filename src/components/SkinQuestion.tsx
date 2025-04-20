@@ -1,26 +1,15 @@
-import {Modal, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'skin1',
-    text: 'Skin is intact and has no signs of trauma & ulcer. No signs of fungus or callus formation?',
-  },
-  {
-    id: 'skin2',
-    text: 'Skin is dry, fungus such as a moccasin foot or interdigital yeast may be present. Some callus build-up may be noted?',
-  },
-  {
-    id: 'skin3',
-    text: 'Heavy callus build up?',
-  },
-  {
-    id: 'skin4',
-    text: 'Open skin ulceration present?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const SkinQuestion = ({
   answers,
@@ -29,44 +18,66 @@ const SkinQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'skin1',
+      text: t('Skin.qes1'),
+    },
+    {
+      id: 'skin2',
+      text: t('Skin.qes2'),
+    },
+    {
+      id: 'skin3',
+      text: t('Skin.qes3'),
+    },
+    {
+      id: 'skin4',
+      text: t('Skin.qes4'),
+    },
+  ];
+
   const validateAnswers = () => {
     // 1. Check if at least one option is selected for any question (left OR right)
     const hasAnyAnswers = questions.some(
-      question => answers[question.id]?.left === true || answers[question.id]?.right === true
+      question =>
+        answers[question.id]?.left === true ||
+        answers[question.id]?.right === true,
     );
-  
+
     if (!hasAnyAnswers) {
       Alert.alert(
-        'Incomplete Form',
-        'Please select at least one option before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text4'),
       );
       return false;
     }
-  
+
     // 2. Check if at least one left foot and one right foot option is selected
     const hasLeftFootSelection = questions.some(
-      question => answers[question.id]?.left === true
+      question => answers[question.id]?.left === true,
     );
     const hasRightFootSelection = questions.some(
-      question => answers[question.id]?.right === true
+      question => answers[question.id]?.right === true,
     );
-  
+
     if (!hasLeftFootSelection || !hasRightFootSelection) {
       Alert.alert(
-        'Incomplete Form',
-        'Please select at least one option for each foot (left and right).',
+        t('Alert.title2'),
+        t('Alert.text3'),
       );
       return false;
     }
-  
+
     // 3. Check if skin1 is checked (either left or right)
     const isSkin1Checked = answers['skin1']?.left || answers['skin1']?.right;
-  
+
     // 4. Check if skin2, skin3, and skin4 are not checked (both left and right)
     const areOtherQuestionsUnchecked = ['skin2', 'skin3', 'skin4'].every(
-      questionId => !answers[questionId]?.left && !answers[questionId]?.right
+      questionId => !answers[questionId]?.left && !answers[questionId]?.right,
     );
-  
+
     // 5. If skin1 is checked and other questions are unchecked, allow proceeding
     if (isSkin1Checked && areOtherQuestionsUnchecked) {
       return true;
@@ -78,17 +89,19 @@ const SkinQuestion = ({
     }
     // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
     const isAllAnswered = questions.every(
-      question => answers[question.id]?.left !== undefined || answers[question.id]?.right !== undefined
+      question =>
+        answers[question.id]?.left !== undefined ||
+        answers[question.id]?.right !== undefined,
     );
-  
+
     if (!isAllAnswered) {
       Alert.alert(
-        'Incomplete Form',
-        'Please answer all questions before proceeding.',
+        t('Alert.title2'),
+        t('Alert.text2'),
       );
       return false;
     }
-  
+
     return true;
   };
 
@@ -102,11 +115,7 @@ const SkinQuestion = ({
 
   return (
     <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={popUp}
-      >
+      <Modal animationType="fade" transparent={true} visible={popUp}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text
@@ -116,164 +125,160 @@ const SkinQuestion = ({
                 fontWeight: '600',
                 marginBottom: 10,
               }}>
-              Instructions
+              {t('Skin.inst')}
             </Text>
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Examine the foot:</Text>{' '}
-                Inspect the top, bottom, sides, and between the toes.
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title1')}:</Text>{' '}
+                {t('Skin.text1')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>Check skin integrity:</Text>{' '}
-                Ensure the skin is unbroken, without cuts, blisters, or open
-                wounds. Note any damage.
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title2')}:</Text>{' '}
+                {t('Skin.text2')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>Look for trauma:</Text> Check
-                for cuts, scrapes, or blisters. Record their location and type.
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title3')}:</Text>{' '}
+                {t('Skin.text3')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>
-                  Assess for fungal infections:
-                </Text>{' '}
-                Look for dry, flaky skin (moccasin foot) or moist, red areas
-                (yeast infection) between the toes.
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title4')}:</Text>{' '}
+                {t('Skin.text4')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>Check skin condition:</Text>{' '}
-                Feel for dry, rough, or cracked skin. Note if it's moist in any
-                areas.
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title5')}:</Text>{' '}
+                {t('Skin.text5')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>Check for calluses:</Text>{' '}
-                Look for thickened skin, especially on the bottom of the feet.
-                Note if it's light or heavy.
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title6')}:</Text>{' '}
+                {t('Skin.text6')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400'}}>
-                <Text style={{fontWeight: 'bold'}}>
-                  Look for ulcers or open wounds:
-                </Text>{' '}
-                Inspect for any open sores. Document their size and location.
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Skin.title7')}:</Text>{' '}
+                {t('Skin.text7')}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Okay</Text>
+              <Text style={styles.modalButtonText}>{t('Skin.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Skin</Text>
+        <Text style={styles.titleTxt}>{t('Skin.title8')}</Text>
       </View>
       <View style={styles.heading}>
         <TouchableOpacity
           style={{flexDirection: 'row', gap: 5}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={22} color="black" />
-          <Text style={styles.headingTxt}>Click For Instructions</Text>
+          <Text style={styles.headingTxt}>{t('Skin.btn2')}</Text>
         </TouchableOpacity>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
-      {questions.map((item) => (
-  <View style={styles.heading} key={item.id}>
-    <Text style={styles.questionTxt}>{item.text}</Text>
-    <View style={styles.buttonGroup}>
-      {/* Left Checkbox */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          // If skin1 is being checked, uncheck all other left checkboxes
-          if (item.id === 'skin1' && !answers[item.id]?.left) {
-            questions.forEach((question) => {
-              if (question.id !== 'skin1') {
-                handleAnswer(question.id, {
-                  ...answers[question.id],
-                  left: false,
+      {questions.map(item => (
+        <View style={styles.heading} key={item.id}>
+          <Text style={styles.questionTxt}>{item.text}</Text>
+          <View style={styles.buttonGroup}>
+            {/* Left Checkbox */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                // If skin1 is being checked, uncheck all other left checkboxes
+                if (item.id === 'skin1' && !answers[item.id]?.left) {
+                  questions.forEach(question => {
+                    if (question.id !== 'skin1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        left: false,
+                      });
+                    }
+                  });
+                }
+                // Toggle the current checkbox
+                handleAnswer(item.id, {
+                  ...answers[item.id],
+                  left: !answers[item.id]?.left,
                 });
-              }
-            });
-          }
-          // Toggle the current checkbox
-          handleAnswer(item.id, {
-            ...answers[item.id],
-            left: !answers[item.id]?.left,
-          });
-        }}
-        disabled={answers['skin1']?.left && item.id !== 'skin1'}>
-        <View
-          style={[
-            styles.checkbox,
-            answers[item.id]?.left && styles.checkboxChecked,
-            answers['skin1']?.left && item.id !== 'skin1' && styles.disabledCheckbox,
-          ]}>
-          {answers[item.id]?.left && (
-            <Text style={styles.checkmark}>✓</Text>
-          )}
-        </View>
-      </TouchableOpacity>
+              }}
+              disabled={answers['skin1']?.left && item.id !== 'skin1'}>
+              <View
+                style={[
+                  styles.checkbox,
+                  answers[item.id]?.left && styles.checkboxChecked,
+                  answers['skin1']?.left &&
+                    item.id !== 'skin1' &&
+                    styles.disabledCheckbox,
+                ]}>
+                {answers[item.id]?.left && (
+                  <Text style={styles.checkmark}>✓</Text>
+                )}
+              </View>
+            </TouchableOpacity>
 
-      {/* Right Checkbox */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          // If skin1 is being checked, uncheck all other right checkboxes
-          if (item.id === 'skin1' && !answers[item.id]?.right) {
-            questions.forEach((question) => {
-              if (question.id !== 'skin1') {
-                handleAnswer(question.id, {
-                  ...answers[question.id],
-                  right: false,
+            {/* Right Checkbox */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                // If skin1 is being checked, uncheck all other right checkboxes
+                if (item.id === 'skin1' && !answers[item.id]?.right) {
+                  questions.forEach(question => {
+                    if (question.id !== 'skin1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        right: false,
+                      });
+                    }
+                  });
+                }
+                // Toggle the current checkbox
+                handleAnswer(item.id, {
+                  ...answers[item.id],
+                  right: !answers[item.id]?.right,
                 });
-              }
-            });
-          }
-          // Toggle the current checkbox
-          handleAnswer(item.id, {
-            ...answers[item.id],
-            right: !answers[item.id]?.right,
-          });
-        }}
-        disabled={answers['skin1']?.right && item.id !== 'skin1'}>
-        <View
-          style={[
-            styles.checkbox,
-            answers[item.id]?.right && styles.checkboxChecked,
-            answers['skin1']?.right && item.id !== 'skin1' && styles.disabledCheckbox,
-          ]}>
-          {answers[item.id]?.right && (
-            <Text style={styles.checkmark}>✓</Text>
-          )}
+              }}
+              disabled={answers['skin1']?.right && item.id !== 'skin1'}>
+              <View
+                style={[
+                  styles.checkbox,
+                  answers[item.id]?.right && styles.checkboxChecked,
+                  answers['skin1']?.right &&
+                    item.id !== 'skin1' &&
+                    styles.disabledCheckbox,
+                ]}>
+                {answers[item.id]?.right && (
+                  <Text style={styles.checkmark}>✓</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-      </TouchableOpacity>
-    </View>
-  </View>
-))}
-{/* Add instructions for checkbox interaction */}
-            <View style={styles.instructionBox}>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "Yes":</Text> 
-                      Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
-                    </Text>
-                    <Text style={styles.instructionText}>
-                      <Text style={styles.boldText}>For "No":</Text> 
-                      Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-                    </Text>
-                  </View>
+      ))}
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>{t('BasicQes.text3')} "{t('BasicQes.yes')}":</Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>{t('BasicQes.text3')} "{t('BasicQes.no')}":</Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('initial')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
         onPress={handleNext}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );

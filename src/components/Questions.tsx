@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import BasicQuestions from './BasicQuestions';
 import SkinQuestion from './SkinQuestion';
 import NailQuestion from './NailQuestion';
@@ -20,6 +26,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
+import {useTranslation} from 'react-i18next';
 
 type QesProps = NativeStackScreenProps<RootStackParamList, 'Qes'>;
 
@@ -44,6 +51,7 @@ const QuestionScreen = ({navigation}: QesProps) => {
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [popUp, setPopUp] = useState(false);
   const [ipSwich, setIpSwich] = useState(false);
+  const {t} = useTranslation();
 
   const handleAnswer = (id: string, value: any) => {
     setAnswers(prev => ({...prev, [id]: value}));
@@ -58,7 +66,7 @@ const QuestionScreen = ({navigation}: QesProps) => {
         <Icon name="home" size={30} color="#000" /> {/* Home icon */}
       </TouchableOpacity>
       <ScrollView style={{padding: 20}}>
-        <Text style={styles.title}>Foot Health Questionnaire</Text>
+        <Text style={styles.title}>{t('Question.title')}</Text>
         {currentStep === 'initial' ? (
           <BasicQuestions
             answers={answers}

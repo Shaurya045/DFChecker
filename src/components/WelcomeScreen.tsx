@@ -10,6 +10,8 @@ import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 import {colors} from '../utils/colors';
+import {useTranslation} from 'react-i18next';
+import LanguageDropdown from './LanguageDropdown';
 
 type WelcomeProps = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
@@ -17,9 +19,29 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
   const submit = () => {
     navigation.navigate('Login');
   };
+  const {t} = useTranslation();
+  // const changeLanguage = () => {
+  //   if (i18n.language === 'en') {
+  //     i18n.changeLanguage('ar');
+  //   } else {
+  //     i18n.changeLanguage('en');
+  //   }
+  // };
   return (
     <SafeAreaView style={styles.container}>
       {/* <Text style={styles.mainText}>DFChecker</Text> */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 10,
+        }}>
+        <Text style={{fontSize: 22, fontWeight: 'bold', color: colors.primary}}>
+          {t('Welcome.text1')}
+        </Text>
+        <LanguageDropdown />
+      </View>
       <Image
         source={require('../assets/dfcheckerImage.png')}
         style={styles.image}
@@ -27,7 +49,7 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
       <TouchableOpacity
         style={[styles.button, {backgroundColor: colors.primary}]}
         onPress={submit}>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.loginText}>{t('Welcome.login')}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

@@ -8,18 +8,15 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import { colors } from '../utils/colors';
+import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-<<<<<<< Updated upstream
 import Share from 'react-native-share'; // Import the Share module
-import { colors } from '../utils/colors';
-=======
->>>>>>> Stashed changes
 
 // Navigation
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../App';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
+import {useTranslation} from 'react-i18next';
 
 type ReportProfileProps = NativeStackScreenProps<
   RootStackParamList,
@@ -150,31 +147,54 @@ const recommendations = [
   },
 ];
 
-const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
-  const { reportData, result } = route.params;
+const ReportProfile = ({route, navigation}: ReportProfileProps) => {
+  const {reportData, result} = route.params;
+  const {t} = useTranslation();
 
   const generatePDF = async () => {
     try {
       const htmlContent = `
       <h1>Report Detail</h1>
       <h2>Pre-screening Assessment</h2>
-      <p>Do you have peripheral neurological disease? ${reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'}</p>
-      <p>Have you had any amputations? ${reportData?.basic_questions?.amputation ? 'Yes' : 'No'}</p>
-      <p>How many amputations have you had? ${reportData?.basic_questions?.amputationCount || 'N/A'}</p>
-      <p>Are you currently smoking? ${reportData?.basic_questions?.smoking ? 'Yes' : 'No'}</p>
-      <p>Do you have any ulcers on your feet? ${reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}</p>
+      <p>Do you have peripheral neurological disease? ${
+        reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'
+      }</p>
+      <p>Have you had any amputations? ${
+        reportData?.basic_questions?.amputation ? 'Yes' : 'No'
+      }</p>
+      <p>How many amputations have you had? ${
+        reportData?.basic_questions?.amputationCount || 'N/A'
+      }</p>
+      <p>Are you currently smoking? ${
+        reportData?.basic_questions?.smoking ? 'Yes' : 'No'
+      }</p>
+      <p>Do you have any ulcers on your feet? ${
+        reportData?.basic_questions?.ulcer ? 'Yes' : 'No'
+      }</p>
       
       <h2>Left Foot Report</h2>
-      <p>Risk Category: ${reportData?.result?.left_foot?.risk_category || 'N/A'}</p>
+      <p>Risk Category: ${
+        reportData?.result?.left_foot?.risk_category || 'N/A'
+      }</p>
       <p>Criteria: ${reportData?.result?.left_foot?.criteria || 'N/A'}</p>
-      <p>Clinical Indicator: ${reportData?.result?.left_foot?.clinical_indicator || 'N/A'}</p>
-      <p>Screening Frequency: ${reportData?.result?.left_foot?.screening_frequency || 'N/A'}</p>
+      <p>Clinical Indicator: ${
+        reportData?.result?.left_foot?.clinical_indicator || 'N/A'
+      }</p>
+      <p>Screening Frequency: ${
+        reportData?.result?.left_foot?.screening_frequency || 'N/A'
+      }</p>
       
       <h2>Right Foot Report</h2>
-      <p>Risk Category: ${reportData?.result?.right_foot?.risk_category || 'N/A'}</p>
+      <p>Risk Category: ${
+        reportData?.result?.right_foot?.risk_category || 'N/A'
+      }</p>
       <p>Criteria: ${reportData?.result?.right_foot?.criteria || 'N/A'}</p>
-      <p>Clinical Indicator: ${reportData?.result?.right_foot?.clinical_indicator || 'N/A'}</p>
-      <p>Screening Frequency: ${reportData?.result?.right_foot?.screening_frequency || 'N/A'}</p>
+      <p>Clinical Indicator: ${
+        reportData?.result?.right_foot?.clinical_indicator || 'N/A'
+      }</p>
+      <p>Screening Frequency: ${
+        reportData?.result?.right_foot?.screening_frequency || 'N/A'
+      }</p>
       
       <h2>Recommendations</h2>
       <h3>For Left Foot:</h3>
@@ -193,7 +213,6 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
       </ul>
       `;
 
-<<<<<<< Updated upstream
       const options = {
         html: htmlContent,
         fileName: 'Foot_Health_Report',
@@ -211,23 +230,16 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
       };
 
       await Share.open(shareOptions);
-      Alert.alert('PDF generated successfully!', 'You can now share or save the PDF.');
+      Alert.alert(
+        'PDF generated successfully!',
+        'You can now share or save the PDF.',
+      );
     } catch (error) {
       console.error('Error generating or sharing PDF:', error);
-      Alert.alert('Error', 'Failed to generate or share the PDF. Please try again.');
-=======
-    const options = {
-      html: htmlContent,
-      fileName: 'Report',
-      directory: 'Documents',
-    };
-
-    try {
-      const file = await RNHTMLtoPDF.convert(options);
-      Alert.alert(`PDF saved at ${file.filePath}`);
-    } catch (error) {
-      console.error(error);
->>>>>>> Stashed changes
+      Alert.alert(
+        'Error',
+        'Failed to generate or share the PDF. Please try again.',
+      );
     }
   };
 
@@ -235,27 +247,24 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
-        style={{ alignSelf: 'flex-start', marginBottom: 10 }}>
+        style={{alignSelf: 'flex-start', marginBottom: 10}}>
         <Icon name="arrowleft" size={30} />
       </TouchableOpacity>
 
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Report Detail</Text>
+        <Text style={styles.titleTxt}>{t('Detail.title1')}</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-<<<<<<< Updated upstream
         {/* Basic Questions */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Pre-screening Assessment</Text>
+          <Text style={styles.heading}>{t('Detail.title2')}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'baseline',
             }}>
-            <Text style={styles.subHeading}>
-              Do you have peripheral neurological disease?{' '}
-            </Text>
+            <Text style={styles.subHeading}>{t('Detail.text1')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'}
             </Text>
@@ -266,7 +275,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Have you had any amputations? </Text>
+            <Text style={styles.subHeading}>{t('Detail.text2')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.amputation ? 'Yes' : 'No'}
             </Text>
@@ -277,9 +286,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>
-              How many amputations have you had?{' '}
-            </Text>
+            <Text style={styles.subHeading}>{t('Detail.text3')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.amputationCount || 'N/A'}
             </Text>
@@ -290,7 +297,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Are you currently smoking? </Text>
+            <Text style={styles.subHeading}>{t('Detail.text4')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.smoking ? 'Yes' : 'No'}
             </Text>
@@ -301,9 +308,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>
-              Do you have any ulcers on your feet?{' '}
-            </Text>
+            <Text style={styles.subHeading}>{t('Detail.text5')} </Text>
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}
             </Text>
@@ -312,14 +317,14 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
 
         {/* Left Foot Report */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Left Foot Report</Text>
+          <Text style={styles.heading}>{t('Detail.title3')}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Risk Category: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text6')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.left_foot?.risk_category || 'N/A'}
             </Text>
@@ -330,7 +335,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Criteria: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text7')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.left_foot?.criteria || 'N/A'}
             </Text>
@@ -341,7 +346,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Clinical Indicator: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text8')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.left_foot?.clinical_indicator || 'N/A'}
             </Text>
@@ -352,7 +357,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Screening Frequency: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text9')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.left_foot?.screening_frequency || 'N/A'}
             </Text>
@@ -361,14 +366,14 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
 
         {/* Right Foot Report */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Right Foot Report</Text>
+          <Text style={styles.heading}>{t('Detail.title4')}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Risk Category: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text6')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.right_foot?.risk_category || 'N/A'}
             </Text>
@@ -379,7 +384,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Criteria: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text7')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.right_foot?.criteria || 'N/A'}
             </Text>
@@ -390,7 +395,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Clinical Indicator: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text8')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.right_foot?.clinical_indicator || 'N/A'}
             </Text>
@@ -401,7 +406,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.subHeading}>Screening Frequency: </Text>
+            <Text style={styles.subHeading}>{t('Detail.text9')}: </Text>
             <Text style={styles.infoText}>
               {reportData?.result?.right_foot?.screening_frequency || 'N/A'}
             </Text>
@@ -410,7 +415,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
 
         {/* Recommendations */}
         <View style={styles.section}>
-          <Text style={styles.heading}>Recommendations</Text>
+          <Text style={styles.heading}>{t('Detail.title5')}</Text>
           <View style={styles.recommendationBox}>
             <Text
               style={{
@@ -421,10 +426,10 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
                 borderBottomColor: 'black',
                 width: '40%',
               }}>
-              For Left Foot:
+              {t('Detail.title6')}:
             </Text>
             {recommendations
-              .filter((item) => item.id === result.left)
+              .filter(item => item.id === result.left)
               .map((item, index) => (
                 <Text key={index} style={styles.recommendationText}>
                   • {item.text}
@@ -441,10 +446,10 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
                 borderBottomColor: 'black',
                 width: '45%',
               }}>
-              For Right Foot:
+              {t('Detail.title7')}:
             </Text>
             {recommendations
-              .filter((item) => item.id === result.right)
+              .filter(item => item.id === result.right)
               .map((item, index) => (
                 <Text key={index} style={styles.recommendationText}>
                   • {item.text}
@@ -452,136 +457,12 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               ))}
           </View>
         </View>
+
+        {/* Download PDF Button */}
+        <TouchableOpacity style={styles.downloadButton} onPress={generatePDF}>
+          <Text style={styles.downloadButtonText}>{t('Report.btn2')}</Text>
+        </TouchableOpacity>
       </ScrollView>
-=======
-  {/* Basic Questions Section */}
-  <View style={styles.section}>
-    <Text style={styles.heading}>Pre-screening Assessment</Text>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
-      <Text style={styles.subHeading}>Do you have peripheral neurological disease? </Text>
-      <Text style={styles.infoText}>
-        {reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Have you had any amputations? </Text>
-      <Text style={styles.infoText}>
-        {reportData?.basic_questions?.amputation ? 'Yes' : 'No'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>How many amputations have you had? </Text>
-      <Text style={styles.infoText}>
-        {reportData?.basic_questions?.amputationCount || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Are you currently smoking? </Text>
-      <Text style={styles.infoText}>
-        {reportData?.basic_questions?.smoking ? 'Yes' : 'No'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Do you have any ulcers on your feet? </Text>
-      <Text style={styles.infoText}>
-        {reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}
-      </Text>
-    </View>
-  </View>
-
-  {/* Left Foot Report Section */}
-  <View style={styles.section}>
-    <Text style={styles.heading}>Left Foot Report</Text>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Risk Category: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.left_foot?.risk_category || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Criteria: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.left_foot?.criteria || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Clinical Indicator: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.left_foot?.clinical_indicator || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Screening Frequency: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.left_foot?.screening_frequency || 'N/A'}
-      </Text>
-    </View>
-  </View>
-
-  {/* Right Foot Report Section */}
-  <View style={styles.section}>
-    <Text style={styles.heading}>Right Foot Report</Text>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Risk Category: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.right_foot?.risk_category || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Criteria: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.right_foot?.criteria || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Clinical Indicator: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.right_foot?.clinical_indicator || 'N/A'}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Text style={styles.subHeading}>Screening Frequency: </Text>
-      <Text style={styles.infoText}>
-        {reportData?.result?.right_foot?.screening_frequency || 'N/A'}
-      </Text>
-    </View>
-  </View>
-
-  {/* Recommendations Section */}
-  <View style={styles.section}>
-    <Text style={styles.heading}>Recommendations</Text>
-    <View style={styles.recommendationBox}>
-      <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 15, borderBottomWidth: 2, borderBottomColor: 'black', width: '40%' }}>
-        For Left Foot:
-      </Text>
-      {recommendations
-        .filter(item => item.id === result.left)
-        .map((item, index) => (
-          <Text key={index} style={styles.recommendationText}>
-            • {item.text}
-          </Text>
-        ))}
-    </View>
-    <View style={styles.recommendationBox}>
-      <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 15, borderBottomWidth: 2, borderBottomColor: 'black', width: '45%' }}>
-        For Right Foot:
-      </Text>
-      {recommendations
-        .filter(item => item.id === result.right)
-        .map((item, index) => (
-          <Text key={index} style={styles.recommendationText}>
-            • {item.text}
-          </Text>
-        ))}
-    </View>
-  </View>
->>>>>>> Stashed changes
-
-  {/* Download PDF Button */}
-  <TouchableOpacity style={styles.downloadButton} onPress={generatePDF}>
-    <Text style={styles.downloadButtonText}>Download Report as PDF</Text>
-  </TouchableOpacity>
-</ScrollView>
     </SafeAreaView>
   );
 };

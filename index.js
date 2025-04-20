@@ -3,6 +3,7 @@ import {AppRegistry} from 'react-native';
 import App from './src/App';
 import {name as appName} from './app.json';
 import notifee, {EventType} from '@notifee/react-native';
+import './src/i18n/i18n.config';
 
 // Background event handler
 notifee.onBackgroundEvent(async ({type, detail}) => {
