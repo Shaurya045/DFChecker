@@ -5,25 +5,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'footwear1',
-    text: 'After removal of the footwear are there any reddened ares on the foot?',
-  },
-  {
-    id: 'footwear2',
-    text: 'Shoes are inappropriate because they do not provide protection or support for the foot?',
-  },
-  {
-    id: 'footwear3',
-    text: 'Shoes are causing trauma (redness or ulceration)',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const FootwearQuestion = ({
   answers,
@@ -32,14 +19,101 @@ const FootwearQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'footwear1',
+      text: t('Foot.qes1'),
+    },
+    {
+      id: 'footwear2',
+      text: t('Foot.qes2'),
+    },
+    {
+      id: 'footwear3',
+      text: t('Foot.qes3'),
+    },
+  ];
+  const validateAnswers = () => {
+    // 1. Check if at least one option is selected for any question (left OR right)
+    const hasAnyAnswers = questions.some(
+      question =>
+        answers[question.id]?.left === true ||
+        answers[question.id]?.right === true,
+    );
+
+    if (!hasAnyAnswers) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text4'),
+      );
+      return false;
+    }
+
+    // 2. Check if at least one left foot and one right foot option is selected
+    const hasLeftFootSelection = questions.some(
+      question => answers[question.id]?.left === true,
+    );
+    const hasRightFootSelection = questions.some(
+      question => answers[question.id]?.right === true,
+    );
+
+    if (!hasLeftFootSelection || !hasRightFootSelection) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text3'),
+      );
+      return false;
+    }
+
+    // 3. Check if nails1 is checked (either left or right)
+    const isNails1Checked =
+      answers['footwear1']?.left || answers['footwear1']?.right;
+
+    // 4. Check if nails2 and nails3 are not checked (both left and right)
+    const areOtherQuestionsUnchecked = ['footwear2', 'footwear3'].every(
+      questionId => !answers[questionId]?.left && !answers[questionId]?.right,
+    );
+
+    // 5. If nails1 is checked and other questions are unchecked, allow proceeding
+    if (isNails1Checked && areOtherQuestionsUnchecked) {
+      return true;
+    }
+
+    // if at least one left foot and one right foot option is selected, allow proceeding
+    if (hasLeftFootSelection && hasRightFootSelection) {
+      return true;
+    }
+
+    // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
+    const isAllAnswered = questions.every(
+      question =>
+        answers[question.id]?.left !== undefined ||
+        answers[question.id]?.right !== undefined,
+    );
+
+    if (!isAllAnswered) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text2'),
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleNext = () => {
+    if (!validateAnswers()) {
+      return; // Stop if validation fails
+    }
+
+    setCurrentStep('tempCold'); // Proceed to the next step
+  };
+
   return (
     <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={popUp}
-        // onRequestClose={onClose}
-      >
+      <Modal animationType="fade" transparent={true} visible={popUp}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text
@@ -53,61 +127,59 @@ const FootwearQuestion = ({
             </Text>
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Fit & Comfort</Text>
+                <Text style={{fontWeight: 'bold'}}>{t('Foot.title1')}</Text>
                 <View style={{paddingLeft: 6}}>
                   <Text
                     style={{
                       fontSize: 14,
                       color: '#333',
                     }}>
-                    • Wear shoes and walk.
+                    • {t('Foot.text1')}
                   </Text>
                   <Text
                     style={{
                       fontSize: 14,
                       color: '#333',
                     }}>
-                    • Check for a snug fit (not tight), space for toes, and
-                    secure heel.
+                    • {t('Foot.text2')}
                   </Text>
                 </View>
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Protection & Support</Text>
+                <Text style={{fontWeight: 'bold'}}>{t('Foot.title2')}</Text>
                 <View style={{paddingLeft: 6}}>
                   <Text
                     style={{
                       fontSize: 14,
                       color: '#333',
                     }}>
-                    • Inspect materials: Are they durable and protective?
+                    • {t('Foot.text3')}
                   </Text>
                   <Text
                     style={{
                       fontSize: 14,
                       color: '#333',
                     }}>
-                    • Ensure good cushioning, arch support, and slip-resistant
-                    soles.
+                    • {t('Foot.text4')}
                   </Text>
                 </View>
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Foot Check After Use</Text>
+                <Text style={{fontWeight: 'bold'}}>{t('Foot.title3')}</Text>
                 <View style={{paddingLeft: 6}}>
                   <Text
                     style={{
                       fontSize: 14,
                       color: '#333',
                     }}>
-                    • Wear shoes for a while.
+                    • {t('Foot.text5')}
                   </Text>
                   <Text
                     style={{
                       fontSize: 14,
                       color: '#333',
                     }}>
-                    • After removing, check for redness, blisters, or pain.
+                    • {t('Foot.text6')}
                   </Text>
                 </View>
               </Text>
@@ -115,13 +187,13 @@ const FootwearQuestion = ({
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.modalButtonText}>{t('Skin.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Footwear</Text>
+        <Text style={styles.titleTxt}>{t('Foot.title8')}</Text>
       </View>
       <View>
         <Text
@@ -131,7 +203,7 @@ const FootwearQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Look at the shoes what you are wearing
+          {t('Foot.text10')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -139,47 +211,82 @@ const FootwearQuestion = ({
           style={{flexDirection: 'row', gap: 5}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={22} color="black" />
-          <Text style={styles.headingTxt}>Click For Instructions</Text>
+          <Text style={styles.headingTxt}>{t('Skin.btn2')}</Text>
         </TouchableOpacity>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
       {questions.map(item => (
         <View style={styles.heading} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
+            {/* Left Checkbox */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>
+              onPress={() => {
+                // If footwear1 is being checked, uncheck all other left checkboxes
+                if (item.id === 'footwear1' && !answers[item.id]?.left) {
+                  questions.forEach(question => {
+                    if (question.id !== 'footwear1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        left: false,
+                      });
+                    }
+                  });
+                }
+                // Toggle the current checkbox
                 handleAnswer(item.id, {
                   ...answers[item.id],
                   left: !answers[item.id]?.left,
-                })
-              }>
+                });
+              }}
+              disabled={answers['footwear1']?.left && item.id !== 'footwear1'}>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.left && styles.checkboxChecked,
+                  answers['footwear1']?.left &&
+                    item.id !== 'footwear1' &&
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.left && (
                   <Text style={styles.checkmark}>✓</Text>
                 )}
               </View>
             </TouchableOpacity>
+
+            {/* Right Checkbox */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>
+              onPress={() => {
+                // If footwear1 is being checked, uncheck all other right checkboxes
+                if (item.id === 'footwear1' && !answers[item.id]?.right) {
+                  questions.forEach(question => {
+                    if (question.id !== 'footwear1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        right: false,
+                      });
+                    }
+                  });
+                }
+                // Toggle the current checkbox
                 handleAnswer(item.id, {
                   ...answers[item.id],
                   right: !answers[item.id]?.right,
-                })
-              }>
+                });
+              }}
+              disabled={answers['footwear1']?.right && item.id !== 'footwear1'}>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
+                  answers['footwear1']?.right &&
+                    item.id !== 'footwear1' &&
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.right && (
                   <Text style={styles.checkmark}>✓</Text>
@@ -189,22 +296,35 @@ const FootwearQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('deformity')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
-        onPress={() => setCurrentStep('tempCold')}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        onPress={handleNext}>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );
 };
-
-export default FootwearQuestion;
 
 const styles = StyleSheet.create({
   titleBox: {
@@ -241,11 +361,9 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     gap: 30,
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
     borderRadius: '50%',
     width: 30,
@@ -271,7 +389,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
@@ -293,6 +410,10 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
+  },
+  disabledCheckbox: {
+    backgroundColor: '#e0e0e0',
+    borderColor: '#e0e0e0',
   },
   checkmark: {
     color: 'white',
@@ -324,4 +445,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
 });
+
+export default FootwearQuestion;

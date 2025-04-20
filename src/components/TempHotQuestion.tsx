@@ -1,25 +1,15 @@
 import {
-  FlatList,
   Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'tempHot1',
-    text: 'Foot is of "normal" temperature for environment?',
-  },
-  {
-    id: 'tempHot2',
-    text: 'Foot is hot-compared to other foot or compared to the environment?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const TempHotQuestion = ({
   answers,
@@ -28,6 +18,95 @@ const TempHotQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'tempHot1',
+      text: t('Hot.qes1'),
+    },
+    {
+      id: 'tempHot2',
+      text: t('Hot.qes2'),
+    },
+  ];
+  // Function to check if a checkbox should be disabled
+  const validateAnswers = () => {
+    // 1. Check if at least one option is selected for any question (left OR right)
+    const hasAnyAnswers = questions.some(
+      question =>
+        answers[question.id]?.left === true ||
+        answers[question.id]?.right === true,
+    );
+
+    if (!hasAnyAnswers) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text4'),
+      );
+      return false;
+    }
+
+    // 2. Check if at least one left foot and one right foot option is selected
+    const hasLeftFootSelection = questions.some(
+      question => answers[question.id]?.left === true,
+    );
+    const hasRightFootSelection = questions.some(
+      question => answers[question.id]?.right === true,
+    );
+
+    if (!hasLeftFootSelection || !hasRightFootSelection) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text3'),
+      );
+      return false;
+    }
+
+    // 3. Check if tempCold1 is checked (either left or right)
+    const istempCold1Checked =
+      answers['tempHot1']?.left || answers['tempHot1']?.right;
+
+    // 4. Check if tempCold2 is not checked (both left and right)
+    const areOtherQuestionsUnchecked = ['tempHot2'].every(
+      questionId => !answers[questionId]?.left && !answers[questionId]?.right,
+    );
+
+    // 5. If tempCold1 is checked and tempCold2 is unchecked, allow proceeding
+    if (istempCold1Checked && areOtherQuestionsUnchecked) {
+      return true;
+    }
+
+    // if at least one left foot and one right foot option is selected, allow proceeding
+    if (hasLeftFootSelection && hasRightFootSelection) {
+      return true;
+    }
+
+    // 6. Otherwise, check if all questions have at least one checkbox selected (left or right)
+    const isAllAnswered = questions.every(
+      question =>
+        answers[question.id]?.left !== undefined ||
+        answers[question.id]?.right !== undefined,
+    );
+
+    if (!isAllAnswered) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text2'),
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleNext = () => {
+    if (!validateAnswers()) {
+      return; // Stop if validation fails
+    }
+
+    setCurrentStep('motion'); // Proceed to the next step
+  };
+
   return (
     <>
       <Modal
@@ -45,38 +124,32 @@ const TempHotQuestion = ({
                 fontWeight: '600',
                 marginBottom: 10,
               }}>
-              Instructions
+              I{t('Hot.inst')}
             </Text>
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>
-                  Compare foot temperature:
-                </Text>{' '}
-                feel the foot and compare it to the other foot or the
-                surrounding environment.
+                <Text style={{fontWeight: 'bold'}}>{t('Hot.title1')}:</Text>{' '}
+                {t('Hot.text1')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Normal temperature:</Text>{' '}
-                the foot is at a normal temperature for the current environment.
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Hot.title2')}:</Text>{' '}
+                {t('Hot.text2')}
               </Text>
-              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>Hot foot:</Text> the foot
-                feels hotter than the other foot or hotter than expected for the
-                environment.
+              <Text style={{fontSize: 15, fontWeight: '400'}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Hot.title3')}:</Text>{' '}
+                {t('Hot.text3')}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.modalButtonText}>{t('Skin.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>
-          Diabetic Foot Test - Temperature(Hot)
-        </Text>
+        <Text style={styles.titleTxt}>{t('Hot.title8')}</Text>
       </View>
       <View>
         <Text
@@ -86,8 +159,7 @@ const TempHotQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Does the foot feel hotter than the other foots or its hotter than it
-          should be considering the environment?
+          {t('Hot.text10')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -95,47 +167,82 @@ const TempHotQuestion = ({
           style={{flexDirection: 'row', gap: 5}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={22} color="black" />
-          <Text style={styles.headingTxt}>Click For Instructions</Text>
+          <Text style={styles.headingTxt}>{t('Skin.btn2')}</Text>
         </TouchableOpacity>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
       {questions.map(item => (
         <View style={styles.heading} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
+            {/* Left Checkbox */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>
+              onPress={() => {
+                // If tempHot1 is being checked, uncheck all other left checkboxes
+                if (item.id === 'tempHot1' && !answers[item.id]?.left) {
+                  questions.forEach(question => {
+                    if (question.id !== 'tempHot1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        left: false,
+                      });
+                    }
+                  });
+                }
+                // Toggle the current checkbox
                 handleAnswer(item.id, {
                   ...answers[item.id],
                   left: !answers[item.id]?.left,
-                })
-              }>
+                });
+              }}
+              disabled={answers['tempHot1']?.left && item.id !== 'tempHot1'}>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.left && styles.checkboxChecked,
+                  answers['tempHot1']?.left &&
+                    item.id !== 'tempHot1' &&
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.left && (
                   <Text style={styles.checkmark}>✓</Text>
                 )}
               </View>
             </TouchableOpacity>
+
+            {/* Right Checkbox */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() =>
+              onPress={() => {
+                // If tempHot1 is being checked, uncheck all other right checkboxes
+                if (item.id === 'tempHot1' && !answers[item.id]?.right) {
+                  questions.forEach(question => {
+                    if (question.id !== 'tempHot1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        right: false,
+                      });
+                    }
+                  });
+                }
+                // Toggle the current checkbox
                 handleAnswer(item.id, {
                   ...answers[item.id],
                   right: !answers[item.id]?.right,
-                })
-              }>
+                });
+              }}
+              disabled={answers['tempHot1']?.right && item.id !== 'tempHot1'}>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
+                  answers['tempHot1']?.right &&
+                    item.id !== 'tempHot1' &&
+                    styles.disabledCheckbox,
                 ]}>
                 {answers[item.id]?.right && (
                   <Text style={styles.checkmark}>✓</Text>
@@ -145,16 +252,31 @@ const TempHotQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('tempCold')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
-        onPress={() => setCurrentStep('motion')}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        onPress={handleNext}>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );
@@ -197,11 +319,9 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     gap: 30,
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
     borderRadius: '50%',
     width: 30,
@@ -227,7 +347,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
@@ -249,6 +368,10 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: '#007AFF',
     borderColor: '#007AFF',
+  },
+  disabledCheckbox: {
+    backgroundColor: '#e0e0e0',
+    borderColor: '#e0e0e0',
   },
   checkmark: {
     color: 'white',
@@ -279,5 +402,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });

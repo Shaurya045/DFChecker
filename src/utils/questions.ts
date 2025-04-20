@@ -1,28 +1,32 @@
+import {useTranslation} from 'react-i18next';
+
+const {t} = useTranslation();
+
 export const initialQuestions = [
   {
     id: 'neurologicalDisease',
-    text: 'Do you have peripheral neurological disease?',
+    text: t('BasicQes.qes1'),
     type: 'boolean',
   },
   {
     id: 'amputation',
-    text: 'Have you had any amputations?',
+    text: t('BasicQes.qes2'),
     type: 'boolean',
   },
   {
     id: 'amputationCount',
-    text: 'How many amputations have you had?',
+    text: t('BasicQes.qes3'),
     type: 'number',
     condition: (answers: Record<string, any>) => answers.amputation === true,
   },
   {
     id: 'smoking',
-    text: 'Are you currently smoking?',
+    text: t('BasicQes.qes4'),
     type: 'boolean',
   },
   {
     id: 'ulcer',
-    text: 'Do you have any ulcers on your feet?',
+    text: t('BasicQes.qes5'),
     type: 'boolean',
   },
 ];

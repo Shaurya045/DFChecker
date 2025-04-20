@@ -9,13 +9,7 @@ import {
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'pedal',
-    text: 'Pulses present?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const PedalQuestion = ({
   answers,
@@ -25,6 +19,13 @@ const PedalQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'pedal',
+      text: t('Pedal.qes1'),
+    },
+  ];
   return (
     <>
       <Modal
@@ -42,33 +43,33 @@ const PedalQuestion = ({
                 fontWeight: '600',
                 marginBottom: 10,
               }}>
-              Instructions
+              {t('Pedal.inst')}
             </Text>
             <View style={{marginBottom: 15}}>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>
-                  Check pulse on top of the foot:
-                </Text>{' '}
-                gently feel for the pulse on the top of the foot.
+                <Text style={{fontWeight: 'bold'}}>{t('Pedal.title1')}:</Text>{' '}
+                {t('Pedal.text1')}
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
-                <Text style={{fontWeight: 'bold'}}>
-                  Alternative pulse check:
-                </Text>{' '}
-                if you can't feel the pulse on top, feel for the pulse just
-                below the inner ankle.
+                <Text style={{fontWeight: 'bold'}}>{t('Pedal.title2')}:</Text>{' '}
+                {t('Pedal.text2')}
+              </Text>
+              {/* Additional instructions for users */}
+              <Text style={{fontSize: 15, fontWeight: '400', marginBottom: 7}}>
+                <Text style={{fontWeight: 'bold'}}>{t('Pedal.title3')}:</Text>{' '}
+                {t('Pedal.text3')}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.modalButtonText}>{t('Skin.btn1')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Pedal Pulses</Text>
+        <Text style={styles.titleTxt}>{t('Pedal.title8')}</Text>
       </View>
       <View>
         <Text
@@ -78,9 +79,7 @@ const PedalQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Place your fingers on the top of the foot to feel for a pulse. If you
-          can't find it, try feeling for a pulse just below the inside of the
-          ankle
+          {t('Pedal.text10')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -88,11 +87,11 @@ const PedalQuestion = ({
           style={{flexDirection: 'row', gap: 5}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={22} color="black" />
-          <Text style={styles.headingTxt}>Click For Instructions</Text>
+          <Text style={styles.headingTxt}>{t('Skin.btn2')}</Text>
         </TouchableOpacity>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
       {questions.map(item => (
@@ -138,18 +137,38 @@ const PedalQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add "Yes" and "No" options below the question */}
+      <View style={styles.yesNoContainer}>
+        <Text style={styles.yesNoText}></Text>
+        <Text style={styles.yesNoText}></Text>
+      </View>
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() =>
           ipSwich ? setCurrentStep('ipSwich') : setCurrentStep('monofilamentQ')
         }>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
         onPress={() => setCurrentStep('rubor')}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );
@@ -192,11 +211,9 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     gap: 30,
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
     borderRadius: '50%',
     width: 30,
@@ -222,7 +239,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
@@ -231,7 +247,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     position: 'absolute',
-    bottom: -10,
+    bottom: 5,
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -264,15 +280,50 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     borderRadius: 10,
-    padding: 15,
+    padding: 0,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
     backgroundColor: '#f0f0f0',
   },
   modalButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  yesNoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 40,
+    marginRight: 0,
+    marginTop: -5,
+  },
+  yesNoText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: 'black',
+  },
+  instructionBox: {
+    marginTop: -20,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });

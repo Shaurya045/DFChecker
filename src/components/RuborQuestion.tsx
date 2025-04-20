@@ -9,13 +9,7 @@ import {
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'rubor',
-    text: 'The feet turn very red after 60 seconds when they are lowered and become pale after 60 seconds when they are raised?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const RuborQuestion = ({
   answers,
@@ -24,6 +18,13 @@ const RuborQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'rubor',
+      text: t('Rubor.qes1'),
+    },
+  ];
   return (
     <>
       <Modal
@@ -63,9 +64,7 @@ const RuborQuestion = ({
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>
-          Diabetic Foot Test - Dependent Rubor
-        </Text>
+        <Text style={styles.titleTxt}>{t('Rubor.title8')}</Text>
       </View>
       <View>
         <Text
@@ -75,8 +74,7 @@ const RuborQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Elevation of the leg when the patient laying down on his back for 1
-          min and then bring the leg down as in sitting posture.
+          {t('Rubor.text3')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -84,11 +82,11 @@ const RuborQuestion = ({
           style={{flexDirection: 'row', gap: 10}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={25} color="black" /> */}
-        <Text style={styles.headingTxt}>Questions</Text>
+        <Text style={styles.headingTxt}>{t('Rubor.text1')}</Text>
         {/* </TouchableOpacity> */}
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
       {questions.map(item => (
@@ -134,16 +132,31 @@ const RuborQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('pedal')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
         onPress={() => setCurrentStep('erythema')}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );
@@ -268,5 +281,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });

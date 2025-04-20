@@ -6,14 +6,16 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {initialQuestions} from '../utils/questions';
+// import {initialQuestions} from '../utils/questions';
 import {colors} from '../utils/colors';
 import MediaPopup from './MediaPopUp';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
+import {useTranslation} from 'react-i18next';
 
 const {high, wide} = Dimensions.get('window');
 
@@ -30,6 +32,36 @@ const BasicQuestions = ({
     left: string | null;
     right: string | null;
   }>({left: null, right: null});
+  const {t} = useTranslation();
+
+  const initialQuestions = [
+    {
+      id: 'neurologicalDisease',
+      text: t('BasicQes.qes1'),
+      type: 'boolean',
+    },
+    {
+      id: 'amputation',
+      text: t('BasicQes.qes2'),
+      type: 'boolean',
+    },
+    {
+      id: 'amputationCount',
+      text: t('BasicQes.qes3'),
+      type: 'number',
+      condition: (answers: Record<string, any>) => answers.amputation === true,
+    },
+    {
+      id: 'smoking',
+      text: t('BasicQes.qes4'),
+      type: 'boolean',
+    },
+    {
+      id: 'ulcer',
+      text: t('BasicQes.qes5'),
+      type: 'boolean',
+    },
+  ];
 
   const handleTakePhoto = () => {
     ImagePicker.openCamera({
@@ -39,7 +71,6 @@ const BasicQuestions = ({
       avoidEmptySpaceAroundImage: true,
       freeStyleCropEnabled: true,
     }).then(img => {
-      // console.log(img);
       if (foot === 'Left') {
         setFootImage({...footImage, left: img});
       } else {
@@ -57,7 +88,6 @@ const BasicQuestions = ({
       avoidEmptySpaceAroundImage: true,
       freeStyleCropEnabled: true,
     }).then(img => {
-      // console.log(img);
       if (foot === 'Left') {
         setFootImage({...footImage, left: img});
       } else {
@@ -86,7 +116,6 @@ const BasicQuestions = ({
     });
 
     try {
-      // Retrieve the token from AsyncStorage
       const token = await AsyncStorage.getItem('token');
 
       if (!token) {
@@ -110,10 +139,8 @@ const BasicQuestions = ({
   };
 
   useEffect(() => {
-    // Fetch images from the backend
     const fetchImages = async () => {
       try {
-        // Retrieve the token from AsyncStorage
         const token = await AsyncStorage.getItem('token');
 
         if (!token) {
@@ -127,7 +154,6 @@ const BasicQuestions = ({
           },
         });
         let data = await response.json();
-        // console.log(data.data.imageL); // Log the data received
         if (data.data.imageL) {
           setFootImage({
             ...footImage,
@@ -163,13 +189,20 @@ const BasicQuestions = ({
                   styles.button,
                   answers[question.id] === true && styles.selectedButton,
                 ]}
-                onPress={() => handleAnswer(question.id, true)}>
+                onPress={() => {
+                  // Toggle the Yes button
+                  const currentValue = answers[question.id];
+                  handleAnswer(
+                    question.id,
+                    currentValue === true ? undefined : true,
+                  );
+                }}>
                 <Text
                   style={[
                     styles.buttonText,
                     answers[question.id] === true && styles.selectedButtonText,
                   ]}>
-                  Y
+                  {t('BasicQes.y')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -177,13 +210,20 @@ const BasicQuestions = ({
                   styles.button,
                   answers[question.id] === false && styles.selectedButton,
                 ]}
-                onPress={() => handleAnswer(question.id, false)}>
+                onPress={() => {
+                  // Toggle the No button
+                  const currentValue = answers[question.id];
+                  handleAnswer(
+                    question.id,
+                    currentValue === false ? undefined : false,
+                  );
+                }}>
                 <Text
                   style={[
                     styles.buttonText,
                     answers[question.id] === false && styles.selectedButtonText,
                   ]}>
-                  N
+                  {t('BasicQes.n')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -206,6 +246,42 @@ const BasicQuestions = ({
     }
   };
 
+  const validateAnswers = () => {
+    // Check if all required questions are answered
+    const requiredQuestions = initialQuestions.filter(
+      q => !q.condition || q.condition(answers),
+    );
+    const isAllAnswered = requiredQuestions.every(
+      q => answers[q.id] !== undefined,
+    );
+
+    if (!isAllAnswered) {
+      Alert.alert(
+        t('Alert.title2'),
+        t('Alert.text2'),
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleNext = () => {
+    if (!validateAnswers()) {
+      return; // Stop if validation fails
+    }
+
+    setPopUp(true);
+    submitImage();
+    setCurrentStep('skin');
+    if ((footImage.left || footImage.right) && answers.ulcer) {
+      Alert.alert(
+        t('Alert.title1'),
+        t('Alert.text1'),
+      );
+    }
+  };
+
   return (
     <>
       <View
@@ -223,7 +299,7 @@ const BasicQuestions = ({
             textAlign: 'center',
             padding: 8,
           }}>
-          Pre Screening Questions
+          {t('BasicQes.title')}
         </Text>
       </View>
       {initialQuestions.map(renderQuestion)}
@@ -238,7 +314,7 @@ const BasicQuestions = ({
                 setFoot('Left');
               }}>
               <Text style={[styles.buttonText, {color: 'white'}]}>
-                Take Photo of Left Foot
+                {t('BasicQes.btn1')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -248,7 +324,7 @@ const BasicQuestions = ({
                 setFoot('Right');
               }}>
               <Text style={[styles.buttonText, {color: 'white'}]}>
-                Take Photo of Right Foot
+                {t('BasicQes.btn2')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -256,7 +332,7 @@ const BasicQuestions = ({
             {footImage.left && (
               <View style={styles.imageContainer}>
                 <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
-                  Left Foot Image:
+                  {t('BasicQes.text1')}:
                 </Text>
                 <Image
                   source={{
@@ -273,7 +349,7 @@ const BasicQuestions = ({
             {footImage.right && (
               <View style={styles.imageContainer}>
                 <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
-                  Right Foot Image:
+                  {t('BasicQes.text2')}:
                 </Text>
                 <Image
                   source={{
@@ -296,15 +372,23 @@ const BasicQuestions = ({
         onTakePhoto={handleTakePhoto}
         onChooseFromGallery={handleChooseFromGallery}
       />
-
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={() => {
-          setCurrentStep('skin');
-          setPopUp(true);
-          submitImage();
-        }}>
-        <Text style={styles.nextButtonText}>Next</Text>
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          <Text> {t('BasicQes.text4')}</Text>
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          <Text> {t('BasicQes.text5')}</Text>
+        </Text>
+      </View>
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.nextButtonText}>{t('BasicQes.btn3')}</Text>
       </TouchableOpacity>
     </>
   );
@@ -376,26 +460,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '45%',
   },
-  cameraView: {
-    height: 300,
-    marginBottom: 20,
-  },
-  camera: {
-    flex: 1,
-  },
-  cameraBtnContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    marginBottom: 20,
-  },
-  cameraBtn: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-  },
   imgContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -411,43 +475,39 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'contain',
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  footQuestionContainer: {
-    marginBottom: 15,
-  },
-  footQuestion: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  checkboxGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  checkbox: {
-    borderWidth: 1,
-    borderColor: '#000',
-    padding: 10,
-    borderRadius: 5,
-  },
-  checkedBox: {
-    backgroundColor: colors.primary,
-  },
   nextButton: {
     backgroundColor: colors.primary,
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
     fontWeight: 'bold',
   },
 });

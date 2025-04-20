@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {colors} from '../utils/colors';
 import {url} from '../utils/constants';
@@ -14,13 +15,16 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/AntDesign';
+import LanguageDropdown from './LanguageDropdown';
+import {useTranslation} from 'react-i18next';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 const ProfileScreen = ({navigation}: ProfileProps) => {
   const [profile, setProfile] = useState<{name?: string; email?: string}>({});
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState<any[]>([]);
   const {logout} = useAuth();
+  const {t} = useTranslation();
 
   const getUserProfile = async () => {
     try {
@@ -53,6 +57,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
       console.error('Error fetching profile:', error);
     }
   };
+
   const getAllReports = async () => {
     try {
       // Retrieve the token from AsyncStorage
@@ -72,11 +77,9 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
       if (data.success) {
         const report = data.data;
         setReports(report);
-        console.log('Reports:', report[0].createdAt);
-        // console.log('Reports:', report[0].result.riskCategory);
+        console.log('Reports:', report[0]);
       } else {
         setReports([]);
-        // console.error('Failed to fetch reports:', data.message);
       }
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -89,7 +92,6 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Add your authentication header here
         },
       });
 
@@ -111,42 +113,50 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
   useEffect(() => {
     getUserProfile();
     getAllReports();
-  }, []); //This was the line that needed to be updated.  The empty array [] was causing the issue.
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
         style={{alignSelf: 'flex-start'}}>
         <Icon name="arrowleft" size={30} />
       </TouchableOpacity>
       <View style={{width: '100%'}}>
-        <Text style={styles.headingText}>Profile</Text>
+        <Text style={styles.headingText}>{t('Profile.title')}</Text>
+        <View
+          style={styles.profileItem}>
+          <Text
+            style={styles.profileText}>
+            {t('Welcome.text1')}:
+          </Text>
+          <LanguageDropdown />
+        </View>
         <View style={styles.profileItem}>
-          <Text style={styles.profileText}>Username: </Text>
+          <Text style={styles.profileText}>{t('Profile.text1')}: </Text>
           <Text style={styles.profileTextAns}>{profile.name}</Text>
         </View>
         <View style={styles.profileItem}>
-          <Text style={styles.profileText}>Email: </Text>
+          <Text style={styles.profileText}>{t('Profile.text2')}: </Text>
           <Text style={styles.profileTextAns}>{profile.email}</Text>
         </View>
         <TouchableOpacity style={styles.buttonStyle} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Logout</Text>
+          <Text style={styles.buttonText}>{t('Profile.btn1')}</Text>
         </TouchableOpacity>
       </View>
       <View style={{marginTop: 30, flex: 1, width: '100%'}}>
         <Text
           style={{
             fontSize: 23,
-            fontWeight: 500,
+            fontWeight: '500',
             marginBottom: 15,
             textAlign: 'center',
             color: colors.secondary,
           }}>
-          Previous Test Result
+          {t('Profile.text3')}
         </Text>
-        {reports[0] ? (
-          <ScrollView>
+        {reports.length > 0 ? (
+          <ScrollView showsVerticalScrollIndicator={false}>
             {reports.map((item, index) => {
               const formattedDate = new Date(
                 item?.createdAt,
@@ -157,57 +167,100 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
               });
 
               return (
-                <View
+                <TouchableOpacity
                   key={index}
-                  style={{
-                    backgroundColor: colors.primary,
-                    padding: 15,
-                    borderRadius: 10,
-                    marginBottom: 17,
-                  }}>
+                  onPress={() =>
+                    navigation.navigate('ReportProfile', {
+                      reportData: item,
+                      result: {
+                        left: item?.result?.left_foot?.risk_category?.replace(
+                          /^(.*?)\s-\sCategory\s\d+$/,
+                          '$1',
+                        ),
+                        right: item?.result?.right_foot?.risk_category?.replace(
+                          /^(.*?)\s-\sCategory\s\d+$/,
+                          '$1',
+                        ),
+                      },
+                    })
+                  }>
                   <View
                     style={{
-                      flexDirection: 'column',
-                      gap: 5,
+                      backgroundColor: colors.primary,
+                      padding: 15,
+                      borderRadius: 10,
+                      marginBottom: 17,
                     }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '600',
-                          color: colors.gray,
-                        }}>
-                        RESULT:{' '}
-                      </Text>
-                      <Text style={{color: colors.white, fontSize: 18}}>
-                        {item?.result.riskCategory
-                          .replace(/\(Category \d+\)/, '')
-                          .trim()}
-                      </Text>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '600',
-                          color: colors.gray,
-                        }}>
-                        DATE OF TEST:{' '}
-                      </Text>
-                      <Text style={{color: colors.white, fontSize: 18}}>
-                        {formattedDate}
-                      </Text>
+                    <View style={{flexDirection: 'column', gap: 5}}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'baseline'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: colors.gray,
+                          }}>
+                          {t('Profile.text4')}:{' '}
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.white,
+                            fontSize: 16,
+                            maxWidth: '70%',
+                          }}>
+                          {item?.result?.left_foot?.risk_category?.replace(
+                            /^(.*?)\s-\sCategory\s\d+$/,
+                            '$1',
+                          )}
+                        </Text>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'baseline'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: colors.gray,
+                          }}>
+                          {t('Profile.text5')}:{' '}
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.white,
+                            fontSize: 16,
+                            maxWidth: '70%',
+                          }}>
+                          {item?.result?.right_foot?.risk_category?.replace(
+                            /^(.*?)\s-\sCategory\s\d+$/,
+                            '$1',
+                          )}
+                        </Text>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '600',
+                            color: colors.gray,
+                          }}>
+                          {t('Profile.text6')}:{' '}
+                        </Text>
+                        <Text style={{color: colors.white, fontSize: 16}}>
+                          {formattedDate}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
         ) : (
-          <Text style={{textAlign: 'center', fontSize: 18}}>No Test Taken</Text>
+          <Text style={{textAlign: 'center', fontSize: 18}}>{t('Profile.text7')}</Text>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -231,13 +284,13 @@ const styles = StyleSheet.create({
   },
   profileText: {
     fontSize: 20,
-    fontWeight: 500,
+    fontWeight: '500',
     color: '#1D1616',
   },
   profileTextAns: {
     color: colors.secondary,
     fontSize: 20,
-    fontWeight: 400,
+    fontWeight: '400',
   },
   buttonStyle: {
     backgroundColor: colors.primary,

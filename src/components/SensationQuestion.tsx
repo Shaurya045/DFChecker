@@ -9,25 +9,7 @@ import {
 import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const questions = [
-  {
-    id: 'sensation1',
-    text: 'Are your feet ever numb?',
-  },
-  {
-    id: 'sensation2',
-    text: 'Do they ever tingle?',
-  },
-  {
-    id: 'sensation3',
-    text: 'Do they ever burn?',
-  },
-  {
-    id: 'sensation4',
-    text: 'Do they ever feel like insects are crawling on them?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const SensationQuestion = ({
   answers,
@@ -36,6 +18,25 @@ const SensationQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const {t} = useTranslation();
+  const questions = [
+    {
+      id: 'sensation1',
+      text: t('Sensation.qes1'),
+    },
+    {
+      id: 'sensation2',
+      text: t('Sensation.qes2'),
+    },
+    {
+      id: 'sensation3',
+      text: t('Sensation.qes3'),
+    },
+    {
+      id: 'sensation4',
+      text: t('Sensation.qes4'),
+    },
+  ];
   return (
     <>
       <Modal
@@ -69,13 +70,13 @@ const SensationQuestion = ({
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setPopUp(false)}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
+              <Text style={styles.modalButtonText}>Okay</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Sensation</Text>
+        <Text style={styles.titleTxt}>{t('Sensation.title8')}</Text>
       </View>
       <View>
         <Text
@@ -85,7 +86,7 @@ const SensationQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Answer the following question based on your sensation
+          {t('Sensation.text10')}
         </Text>
       </View>
       <View style={styles.heading}>
@@ -93,11 +94,11 @@ const SensationQuestion = ({
           style={{flexDirection: 'row', gap: 10}}
           onPress={() => setPopUp(true)}>
           <Icon name="questioncircle" size={25} color="black" /> */}
-        <Text style={styles.headingTxt}>Questions</Text>
+        <Text style={styles.headingTxt}>{t('Sensation.text1')}</Text>
         {/* </TouchableOpacity> */}
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title9')}</Text>
+          <Text style={styles.headingTxt}>{t('Skin.title10')}</Text>
         </View>
       </View>
       {questions.map(item => (
@@ -143,10 +144,25 @@ const SensationQuestion = ({
           </View>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+      <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.yes')}":
+          </Text>
+          {t('Skin.text8')} (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>
+            {t('BasicQes.text3')} "{t('BasicQes.no')}":
+          </Text>
+          {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('motion')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -155,7 +171,7 @@ const SensationQuestion = ({
           setCurrentStep('monofilament');
           setPopUp(true);
         }}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
     </>
   );
@@ -280,5 +296,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 20,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });

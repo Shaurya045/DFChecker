@@ -1,22 +1,24 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
   Modal,
+  Alert,
+  SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
 import Icon from 'react-native-vector-icons/AntDesign';
-
-// Navigation
+import notifee, {AndroidImportance, TriggerType} from '@notifee/react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import Share from 'react-native-share';
+import {useTranslation} from 'react-i18next';
 
 type ReportProps = NativeStackScreenProps<RootStackParamList, 'Report'>;
 
@@ -37,7 +39,6 @@ const recommendations = [
     id: 'Healthy Foot - Need Self Care',
     text: 'Well-fitting footwear.',
   },
-
   {
     id: 'Very Low Risk',
     text: 'Daily inspection of feet.',
@@ -146,13 +147,13 @@ const recommendations = [
 
 const ReportScreen = ({navigation}: ReportProps) => {
   const [loading, setLoading] = useState(true);
-  const [reportData, setReportData] = useState([]);
-  const [result, setResult] = useState('');
+  const [reportData, setReportData] = useState<any>(null);
+  const [result, setResult] = useState({left: null, right: null});
+  const {t} = useTranslation();
+
   const getReport = async () => {
     try {
-      // Retrieve the token from AsyncStorage
       const token = await AsyncStorage.getItem('token');
-
       if (!token) {
         console.error('No token found. Please log in.');
         return null;
@@ -167,12 +168,8 @@ const ReportScreen = ({navigation}: ReportProps) => {
       });
 
       const data = await response.json();
-
       if (data.success) {
-        const report = data.data.result;
-        console.log('Report:', report);
-        setReportData(report);
-        // console.log(reportData);
+        setReportData(data.data.result);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -183,37 +180,233 @@ const ReportScreen = ({navigation}: ReportProps) => {
       console.error('Error fetching report:', error);
     }
   };
+
   const checkreport = () => {
     if (reportData) {
-      const category = reportData.riskCategory;
-      if (category === 'Low Risk - Category 0') {
-        setResult('Very Low Risk');
-      } else if (
-        category === 'Low Risk - Category 1' ||
-        category === 'Low Risk'
-      ) {
-        setResult('Low Risk');
-      } else if (category === 'Moderate Risk - Category 2') {
-        setResult('Moderate Risk');
-      } else if (category === 'High Risk - Category 3') {
-        setResult('High Risk');
-      } else if (category === 'Urgent Risk') {
-        setResult('Urgent Risk');
-      } else if (category === 'Healthy Foot - Need Self Care') {
-        setResult('Healthy Foot - Need Self Care');
-      }
+      handleTestSubmission();
+      const categoryL = reportData.left_foot.risk_category;
+      const categoryR = reportData.right_foot.risk_category;
+
+      const getSimplifiedResult = (category: string) => {
+        switch (category) {
+          case 'Very Low Risk - Category 0':
+            return 'Very Low Risk';
+          case 'Low Risk - Category 1':
+            return 'Low Risk';
+          case 'Moderate Risk - Category 2':
+            return 'Moderate Risk';
+          case 'High Risk - Category 3':
+            return 'High Risk';
+          case 'Urgent Risk':
+            return 'Urgent Risk';
+          case 'Healthy Foot - Need Self Care':
+            return 'Healthy Foot - Need Self Care';
+          default:
+            return null;
+        }
+      };
+
+      setResult({
+        left: getSimplifiedResult(categoryL),
+        right: getSimplifiedResult(categoryR),
+      });
     }
   };
+
+  async function requestPermissions() {
+    const settings = await notifee.requestPermission();
+    if (!settings.authorizationStatus) {
+      console.log('User denied notifications');
+    }
+  }
+
+  async function createNotificationChannel() {
+    await notifee.createChannel({
+      id: 'test-retest',
+      name: 'Test Retake Reminders',
+      importance: AndroidImportance.HIGH,
+    });
+  }
+
+  async function scheduleNotification(duration: number) {
+    const delay = duration * 1000; // Convert seconds to milliseconds
+
+    if (duration >= 7 * 24 * 60 * 60) {
+      // If duration is 7 days or more, schedule notification 7 days before
+      const notificationTime =
+        Date.now() + (duration - 7 * 24 * 60 * 60) * 1000;
+      await notifee.createTriggerNotification(
+        {
+          title: 'Retake Your Test',
+          body: 'Time to retake your test for better results!',
+          android: {
+            channelId: 'test-retest',
+            pressAction: {
+              id: 'test-retest',
+              launchActivity: 'default',
+            },
+          },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: notificationTime,
+        },
+      );
+    } else {
+      // If duration is less than 7 days, schedule daily notifications
+      const dailyNotificationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours from now
+      await notifee.createTriggerNotification(
+        {
+          title: 'Retake Your Test',
+          body: 'Time to retake your test for better results!',
+          android: {
+            channelId: 'test-retest',
+            pressAction: {
+              id: 'test-retest',
+              launchActivity: 'default',
+            },
+          },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: dailyNotificationTime,
+          repeatFrequency: 1, // Repeat daily
+        },
+      );
+    }
+  }
+
+  const handleTestSubmission = () => {
+    let freqLeft = reportData.left_foot.screening_frequency;
+    let freqRight = reportData.right_foot.screening_frequency;
+
+    freqLeft = freqLeft.match(/\d+/)
+      ? parseInt(freqLeft.match(/\d+/)[0], 10)
+      : null;
+    freqRight = freqRight.match(/\d+/)
+      ? parseInt(freqRight.match(/\d+/)[0], 10)
+      : null;
+
+    if (freqLeft === null || freqRight === null) {
+      console.error('Invalid screening frequency data');
+      return;
+    }
+
+    let freq = Math.min(freqLeft, freqRight);
+    if (freq > 0) {
+      scheduleNotification(freq * 1000 * 60 * 60 * 24);
+    } else {
+      console.error('Invalid frequency value:', freq);
+    }
+  };
+
+  const generatePDF = async () => {
+    try {
+      if (!reportData) {
+        Alert.alert('Error', 'No report data available to generate PDF.');
+        return;
+      }
+
+      const htmlContent = `
+        <h1>Report Detail</h1>
+        <h2>Pre-screening Assessment</h2>
+        <p>Do you have peripheral neurological disease? ${
+          reportData?.basic_questions?.neurologicalDisease ? 'Yes' : 'No'
+        }</p>
+        <p>Have you had any amputations? ${
+          reportData?.basic_questions?.amputation ? 'Yes' : 'No'
+        }</p>
+        <p>How many amputations have you had? ${
+          reportData?.basic_questions?.amputationCount || 'N/A'
+        }</p>
+        <p>Are you currently smoking? ${
+          reportData?.basic_questions?.smoking ? 'Yes' : 'No'
+        }</p>
+        <p>Do you have any ulcers on your feet? ${
+          reportData?.basic_questions?.ulcer ? 'Yes' : 'No'
+        }</p>
+        
+        <h2>Left Foot Report</h2>
+        <p>Risk Category: ${reportData?.left_foot?.risk_category || 'N/A'}</p>
+        <p>Criteria: ${reportData?.left_foot?.criteria || 'N/A'}</p>
+        <p>Clinical Indicator: ${
+          reportData?.left_foot?.clinical_indicator || 'N/A'
+        }</p>
+        <p>Screening Frequency: ${
+          reportData?.left_foot?.screening_frequency || 'N/A'
+        }</p>
+        
+        <h2>Right Foot Report</h2>
+        <p>Risk Category: ${reportData?.right_foot?.risk_category || 'N/A'}</p>
+        <p>Criteria: ${reportData?.right_foot?.criteria || 'N/A'}</p>
+        <p>Clinical Indicator: ${
+          reportData?.right_foot?.clinical_indicator || 'N/A'
+        }</p>
+        <p>Screening Frequency: ${
+          reportData?.right_foot?.screening_frequency || 'N/A'
+        }</p>
+        
+        <h2>Recommendations</h2>
+        <h3>For Left Foot:</h3>
+        <ul>
+          ${recommendations
+            .filter(item => item.id === result.left)
+            .map(item => `<li>${item.text}</li>`)
+            .join('')}
+        </ul>
+        <h3>For Right Foot:</h3>
+        <ul>
+          ${recommendations
+            .filter(item => item.id === result.right)
+            .map(item => `<li>${item.text}</li>`)
+            .join('')}
+        </ul>
+      `;
+
+      const options = {
+        html: htmlContent,
+        fileName: 'Foot_Health_Report',
+        directory: 'Documents',
+      };
+
+      // Generate the PDF
+      const file = await RNHTMLtoPDF.convert(options);
+
+      // Share the PDF using react-native-share
+      const shareOptions = {
+        title: 'Share Foot Health Report',
+        url: `file://${file.filePath}`, // Use the file path with the file:// prefix
+        type: 'application/pdf',
+      };
+
+      await Share.open(shareOptions);
+      Alert.alert(
+        'PDF generated successfully!',
+        'You can now share or save the PDF.',
+      );
+    } catch (error) {
+      console.error('Error generating or sharing PDF:', error);
+      Alert.alert(
+        'Error',
+        'Failed to generate or share the PDF. Please try again.',
+      );
+    }
+  };
+
   useEffect(() => {
     getReport();
+    requestPermissions();
+    createNotificationChannel();
   }, []);
+
   useEffect(() => {
-    if (reportData && reportData.riskCategory) {
+    if (reportData && (reportData.left_foot || reportData.right_foot)) {
       checkreport();
     }
-  }, [reportData]); // Runs only when reportData changes
+  }, [reportData]);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Modal animationType="fade" transparent={false} visible={loading}>
         <View
           style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}>
@@ -230,39 +423,113 @@ const ReportScreen = ({navigation}: ReportProps) => {
         <Icon name="arrowleft" size={30} />
       </TouchableOpacity>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Assessment Report</Text>
+        <Text style={styles.titleTxt}>{t('Report.title1')}</Text>
       </View>
-      <Text
+      <View
         style={{
-          fontSize: 30,
-          fontWeight: 500,
-          color: 'green',
-          textAlign: 'center',
+          flexDirection: 'row',
+          gap: 25,
+          justifyContent: 'center',
+          marginHorizontal: 10,
         }}>
-        {result}
-      </Text>
-      <Text
-        style={{
-          marginTop: 40,
-          fontSize: 25,
-          fontWeight: 'bold',
-          color: colors.primary,
-          textAlign: 'center',
-        }}>
-        Recommendations!
-      </Text>
-      <View style={{marginTop: 15}}>
-        {recommendations.map((item, index) =>
-          item.id === result ? (
+        <View style={{maxWidth: '50%'}}>
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              padding: 10,
+              borderRadius: 10,
+              marginBottom: 15,
+            }}>
             <Text
-              key={index}
-              style={{fontSize: 16, fontWeight: '500', marginBottom: 8}}>
-              • {item.text}
+              style={{
+                textAlign: 'center',
+                color: colors.white,
+                fontSize: 16,
+                fontWeight: '500',
+              }}>
+              {t('Report.title2')}
             </Text>
-          ) : null,
-        )}
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: 'green',
+              textAlign: 'center',
+            }}>
+            {result.left}
+          </Text>
+        </View>
+        <View style={{maxWidth: '50%'}}>
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              padding: 10,
+              borderRadius: 10,
+              marginBottom: 15,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.white,
+                fontSize: 16,
+                fontWeight: '500',
+              }}>
+              {t('Report.title2')}
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              color: 'green',
+              textAlign: 'center',
+            }}>
+            {result.right}
+          </Text>
+        </View>
       </View>
-    </View>
+      <TouchableOpacity
+        style={{
+          backgroundColor: colors.primary,
+          padding: 10,
+          borderRadius: 10,
+          position: 'absolute',
+          bottom: 80,
+        }}
+        onPress={() =>
+          navigation.replace('ReportDetail', {reportData, result})
+        }>
+        <Text
+          style={{
+            fontSize: 23,
+            fontWeight: 600,
+            color: colors.white,
+            textAlign: 'center',
+          }}>
+          {t('Report.btn1')}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          backgroundColor: colors.primary,
+          padding: 10,
+          borderRadius: 10,
+          position: 'absolute',
+          bottom: 20,
+        }}
+        onPress={generatePDF}>
+        <Text
+          style={{
+            fontSize: 23,
+            fontWeight: 600,
+            color: colors.white,
+            textAlign: 'center',
+          }}>
+          {t('Report.btn2')}
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 

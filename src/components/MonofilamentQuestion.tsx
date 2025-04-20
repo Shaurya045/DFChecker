@@ -1,21 +1,14 @@
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from 'react-native';
+import React, {useState} from 'react';
 import {colors} from '../utils/colors';
-
-const questions = [
-  {
-    id: 'monofilament1',
-    text: 'Sensation present at all 10 sites?',
-  },
-  {
-    id: 'monofilament2',
-    text: 'Sensation present at 7 - 9 sites?',
-  },
-  {
-    id: 'monofilament3',
-    text: 'Sensation present at 0 - 6 sites?',
-  },
-];
+import {useTranslation} from 'react-i18next';
 
 const MonofilamentQuestion = ({
   answers,
@@ -24,10 +17,28 @@ const MonofilamentQuestion = ({
   popUp,
   setPopUp,
 }) => {
+  const [isImageVisible, setIsImageVisible] = useState(false);
+  const {t} = useTranslation();
+
+  const questions = [
+    {
+      id: 'monofilament1',
+      text: t('MonofilamentQes.qes1'),
+    },
+    {
+      id: 'monofilament2',
+      text: t('MonofilamentQes.qes2'),
+    },
+    {
+      id: 'monofilament3',
+      text: t('MonofilamentQes.qes3'),
+    },
+  ];
+
   return (
     <>
       <View style={styles.titleBox}>
-        <Text style={styles.titleTxt}>Diabetic Foot Test - Monofilament</Text>
+        <Text style={styles.titleTxt}>{t('MonofilamentQes.title8')}</Text>
       </View>
       <View>
         <Text
@@ -36,8 +47,7 @@ const MonofilamentQuestion = ({
             fontSize: 18,
             fontWeight: '400',
           }}>
-          Please make sure that you have your physician or your family member to
-          conduct this test. Lie down comfortably and close your eyes.
+          {t('MonofilamentQes.text3')}
         </Text>
         <Text
           style={{
@@ -46,75 +56,86 @@ const MonofilamentQuestion = ({
             fontWeight: '400',
             marginBottom: 20,
           }}>
-          Using the 5.07 monofilament please test the site as shown in picture.
+          {t('MonofilamentQes.text4')}
         </Text>
+        <TouchableOpacity
+          style={styles.imageButton}
+          onPress={() => setIsImageVisible(true)}>
+          <Text style={styles.imageButtonText}>
+            {t('MonofilamentQes.btn1')}
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.heading}>
-        {/* <TouchableOpacity
-                style={{flexDirection: 'row', gap: 10}}
-                onPress={() => setPopUp(true)}>
-                <Icon name="questioncircle" size={25} color="black" /> */}
-        <Text style={styles.headingTxt}>Questions</Text>
-        {/* </TouchableOpacity> */}
+        <Text style={styles.headingTxt}>{t('MonofilamentQes.text1')}</Text>
         <View style={styles.rightHeading}>
-          <Text style={styles.headingTxt}>Left</Text>
-          <Text style={styles.headingTxt}>Right</Text>
+          <Text style={styles.headingTxt}>{t('MonofilamentQes.text2')}</Text>
         </View>
       </View>
       {questions.map(item => (
-        <View style={styles.heading} key={item.id}>
+        <View style={styles.questionRow} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  left: !answers[item.id]?.left,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.left && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  right: !answers[item.id]?.right,
-                })
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.right && styles.checkboxChecked,
-                ]}>
-                {answers[item.id]?.right && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              handleAnswer(item.id, {
+                ...answers[item.id],
+                value: !answers[item.id]?.value,
+              })
+            }>
+            <View
+              style={[
+                styles.checkbox,
+                answers[item.id]?.value && styles.checkboxChecked,
+              ]}>
+              {answers[item.id]?.value && (
+                <Text style={styles.checkmark}>✓</Text>
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
       ))}
+      {/* Add instructions for checkbox interaction */}
+      {/* <View style={styles.instructionBox}>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "Yes":</Text> 
+          Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
+        </Text>
+        <Text style={styles.instructionText}>
+          <Text style={styles.boldText}>For "No":</Text> 
+          Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
+        </Text>
+      </View> */}
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
-        <Text style={styles.nextButtonText}>Previous</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn3')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.nextButton, {marginBottom: 40}]}
         onPress={() => setCurrentStep('pedal')}>
-        <Text style={styles.nextButtonText}>Next</Text>
+        <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
+
+      <Modal
+        visible={isImageVisible}
+        transparent={true}
+        onRequestClose={() => setIsImageVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Image
+              source={require('../assets/monofilament-6.png')}
+              style={styles.image}
+            />
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setIsImageVisible(false)}>
+              <Text style={styles.modalButtonText}>{t('Skin.btn1')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
@@ -143,24 +164,23 @@ const styles = StyleSheet.create({
   },
   rightHeading: {
     flexDirection: 'row',
-    gap: 20,
   },
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
   },
+  questionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
-    maxWidth: '60%',
-  },
-  buttonGroup: {
-    flexDirection: 'row',
-    // justifyContent: 'space-between',
-    gap: 30,
+    maxWidth: '80%',
   },
   button: {
-    // backgroundColor: '#e0e0e0',
     padding: 0,
     borderRadius: '50%',
     width: 30,
@@ -186,7 +206,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    // marginBottom: 40,
   },
   nextButtonText: {
     color: '#fff',
@@ -194,8 +213,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   checkbox: {
-    position: 'absolute',
-    bottom: -10,
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -213,6 +230,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  imageButton: {
+    backgroundColor: colors.primary,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  imageButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -226,6 +255,12 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
+  image: {
+    width: '100%',
+    height: 300,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
   modalButton: {
     borderRadius: 10,
     padding: 15,
@@ -238,5 +273,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  instructionBox: {
+    marginTop: 5,
+    marginBottom: 10,
+    paddingHorizontal: -200,
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#555',
+    marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  checkmarkSymbol: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  },
+  uncheckedSymbol: {
+    color: '#000',
+    fontWeight: 'bold',
   },
 });
