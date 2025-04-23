@@ -475,7 +475,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
                 fontSize: 16,
                 fontWeight: '500',
               }}>
-              {t('Report.title2')}
+              {t('Report.title3')}
             </Text>
           </View>
           <Text

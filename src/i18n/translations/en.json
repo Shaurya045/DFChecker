@@ -69,7 +69,8 @@
         "qes2": "Have you had any amputations?",
         "qes3": "How many amputations have you had?",
         "qes4": "Are you currently smoking?",
-        "qes5": "Do you have any ulcers on your feet?"
+        "qes5": "Do you have any ulcers on your feet?",
+        "qes6": "Do you have history of end-stage renal failure ?"
     },
     "Skin":{
         "inst": "Instructions",
@@ -267,7 +268,7 @@
         "text1": "Questions",
         "title8": "Diabetic Foot Test - Dependent Rubor",
         "qes1": "The feet turn very red after 60 seconds when they are lowered and become pale after 60 seconds when they are raised?",
-        "text3": "Elevation of the leg when the patient laying down on his back for 1 min and then bring the leg down as in sitting posture."
+        "text3": "Elevation of the leg when the patient laying down on his back on the bed for 1 min and then bring the leg down as in sitting posture."
     },
     "Erythema":{
         "text1": "Questions",
@@ -276,7 +277,7 @@
         "text3": "Look for redness of the skin that does not change when the foot is elevated?",
         "btn1": "Submit",
         "title1": "Confirm Submission",
-        "text2": "Are you sure you wantto submit the form?",
+        "text2": "Are you sure you want to submit the form?",
         "btn2": "Cancel",
         "btn3": "Done"
     },

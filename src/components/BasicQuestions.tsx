@@ -61,6 +61,11 @@ const BasicQuestions = ({
       text: t('BasicQes.qes5'),
       type: 'boolean',
     },
+    {
+      id: 'renalFailure',
+      text: t('BasicQes.qes6'), // Add translation key for "End-stage renal failure"
+      type: 'boolean',
+    },
   ];
 
   const handleTakePhoto = () => {
