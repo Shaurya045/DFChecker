@@ -296,6 +296,7 @@
         "text3": "How many amputations have you had?",
         "text4": "Are you currently smoking?",
         "text5": "Do you have any ulcers on your feet?",
+        "text10": "Do you have history of end-stage renal failure ?",
         "title3": "Left Foot Report",
         "title4": "Right Foot Report",
         "text6": "Risk Category",
