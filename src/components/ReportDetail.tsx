@@ -221,6 +221,10 @@ const ReportDetail = ({route, navigation}: ReportDetailProps) => {
             <Text style={styles.infoText}>
               {reportData?.basic_questions?.ulcer ? 'Yes' : 'No'}
             </Text>
+            <Text style={styles.subHeading}>{t('Detail.text10')} </Text>
+            <Text style={styles.infoText}>
+              {reportData?.basic_questions?.renalFailure ? 'Yes' : 'No'}
+            </Text>
           </View>
         </View>
 
