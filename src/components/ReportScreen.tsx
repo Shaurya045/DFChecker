@@ -148,7 +148,7 @@ const recommendations = [
 const ReportScreen = ({navigation}: ReportProps) => {
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState<any>(null);
-  const [result, setResult] = useState({left: null, right: null});
+  const [result, setResult] = useState<{left: string | null; right: string | null}>({left: null, right: null});
   const {t} = useTranslation();
 
   const getReport = async () => {
@@ -457,7 +457,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
               color: 'green',
               textAlign: 'center',
             }}>
-            {result.left}
+            {result.left ? t(`Report.${result.left}`) : 'غير متوفر'}
           </Text>
         </View>
         <View style={{maxWidth: '50%'}}>
@@ -485,7 +485,7 @@ const ReportScreen = ({navigation}: ReportProps) => {
               color: 'green',
               textAlign: 'center',
             }}>
-            {result.right}
+            {result.right ? t(`Report.${result.right}`) : 'غير متوفر'}
           </Text>
         </View>
       </View>

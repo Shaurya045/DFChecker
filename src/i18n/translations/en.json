@@ -46,7 +46,13 @@
         "text4": "Left Foot Result",
         "text5": "Right Foot Result",
         "text6": "Date of Test",
-        "text7": "No Test Taken"
+        "text7": "No Test Taken",
+        "Very Low Risk": "Very Low Risk",
+        "Low Risk": "Low Risk",
+        "Moderate Risk": "Moderate Risk",
+        "High Risk": "High Risk",
+        "Urgent Risk": "Urgent Risk",
+        "Healthy Foot - Need Self Care":"Healthy Foot - Need Self Care"
     },
     "Question":{
         "title": "Foot Health Questionnaire"
@@ -286,7 +292,13 @@
         "title2": "Left Foot",
         "title3": "Right Foot",
         "btn1": "Click here for detailed report",
-        "btn2": "Download Report as PDF"
+        "btn2": "Download Report as PDF",
+        "Very Low Risk": "Very Low Risk",
+        "Low Risk": "Low Risk", 
+        "Moderate Risk": "Moderate Risk",
+        "High Risk": "High Risk",
+        "Urgent Risk": "Urgent Risk",
+        "Healthy Foot - Need Self Care":"Healthy Foot - Need Self Care"
     },
     "Detail":{
         "title1": "Report Detail",
@@ -305,7 +317,8 @@
         "text9": "Screening Frequency",
         "title5": "Recommendations",
         "title6": "For Left Foot",
-        "title7": "For Right Foot"
+        "title7": "For Right Foot",
+        "interpretation": "Interpretation"
     },
     "Alert":{
         "title1": "Image uploaded successfully",
@@ -314,5 +327,129 @@
         "text2": "Please answer all the questions before proceeding.",
         "text3": "Please select at least one option for each foot (left and right).",
         "text4": "Please select at least one option before proceeding."
+    },
+    "risk_category": {
+        "Urgent Risk": "Urgent Risk",
+        "High Risk - Category 3": "High Risk - Category 3",
+        "Moderate Risk - Category 2": "Moderate Risk - Category 2",
+        "Low Risk - Category 1": "Low Risk - Category 1",
+        "Low Risk - Category 0": "Low Risk - Category 0",
+        "Very Low Risk - Category 0": "Very Low Risk - Category 0",
+        "Healthy Foot - Need Self Care": "Healthy Foot - Need Self Care"
+    },
+    "clinical_indicator": {
+        "Urgent care required, immediate intervention needed": "Urgent care required, immediate intervention needed",
+        "LOPS (neuropathy) + history of foot ulcer": "LOPS (neuropathy) + history of foot ulcer",
+        "LOPS (neuropathy) + history of lower limb amputation": "LOPS (neuropathy) + history of lower limb amputation",
+        "LOPS (neuropathy) + end stage renal failure": "LOPS (neuropathy) + end stage renal failure",
+        "Peripheral arterial disease + History of foot ulcer": "Peripheral arterial disease + History of foot ulcer",
+        "Peripheral arterial disease + History of lower limb amputation": "Peripheral arterial disease + History of lower limb amputation",
+        "Peripheral arterial disease + end stage renal failure": "Peripheral arterial disease + History stage renal failure",
+        "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation+ end stage renal failure": "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation + History end stage renal failure",
+        "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation": "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation",
+        "Peripheral arterial disease + History of foot ulcer + end stage renal failure": "Peripheral arterial disease + History of foot ulcer + History stage renal failure",
+        "Peripheral arterial disease + History of lower limb amputation+ end stage renal failure": "Peripheral arterial disease + History of lower limb amputation + History end stage renal failure",
+        "LOPS + foot deformity": "LOPS + foot deformity",
+        "LOPS + foot deformity, or PAD + foot deformity": "LOPS + foot deformity, or PAD + foot deformity",
+        "LOPS + PAD": "LOPS + PAD",
+        "Indicative of callus formation": "Indicative of callus formation",
+        "Need retest every 3 days to check the ulcer": "Need retest every 3 days to check the ulcer",
+        "Need retest every 3 days to check the nails": "Need retest every 3 days to check the nails",
+        "Peripheral arterial disease": "Peripheral arterial disease",
+        "Loss of sensation-neuropathy": "Loss of sensation - neuropathy",
+        "Monitor for ulcers": "Monitor for ulcers",
+        "No LOPS + No PAD": "No LOPS + No PAD"
+    },
+    "criteria": {
+        "Active ulcer/infection/active Charcot detected": "Active ulcer/infection/active Charcot detected",
+        "Previous hx of ulceration": "Previous history of ulceration",
+        "previous hx of amputation": "Previous history of amputation",
+        "previous hx of end stage renal failure": "Previous history of end stage renal failure",
+        "Previous hx of ulceration, previous hx of amputation and previous hx of end stage renal failure": "Previous history of ulceration, previous history of amputation and previous history of end stage renal failure",
+        "Previous hx of ulceration and previous hx of amputation": "Previous history of ulceration and previous history of amputation",
+        "previous hx of amputation and previous hx of end stage renal failure": "previous hx of amputation and previous history of end stage renal failure",
+        "Previous hx of ulceration and previous hx of end stage renal failure": "Previous history of ulceration and previous history of end stage renal failure",
+        "PreviousHxOfUlceration2": "Previous history of ulceration",
+        "PreviousHxOfAmputation2": "Previous history of amputation",
+        "PreviousHxOfESRF2": "Previous history of end stage renal failure",
+        "Boney changes parameter ( Charcot changes) + loss of sensation": "Boney changes parameter ( Charcot changes) + loss of sensation",
+        "BonyChangesLOPS2": "Bony changes parameter (Charcot changes) + loss of sensation",
+        "Boney changes parameter (Charcot changes) + peripheral arterial disease parameters.": "Bony changes parameter (Charcot changes) + peripheral arterial disease parameters",
+        "Loss of sensation (neuropathy) +peripheral arterial disease": "Loss of sensation (neuropathy) + peripheral arterial disease",
+        "Normal – no neuropathy": "Normal – no neuropathy",
+        "NormalNoNeuropathy2": "Normal – no neuropathy",
+        "NormalNoNeuropathy3": "Normal – no neuropathy",
+        "Loss of protective sensation": "Loss of protective sensation",
+        "LossOfProtectiveSensation2": "Loss of protective sensation",
+        "Healthy foot, but self-care needed": "Healthy foot, but self-care needed",
+        "Normal No Neuropathy": "Normal No Neuropathy"
+    },
+    "screening_frequency": {
+        "Every 3 Days": "Every 3 Days",
+        "Screen every 1 months": "Screen every 1 months",
+        "Screen every 3 months": "Screen every 3 months",
+        "Screen every 6 months": "Screen every 6 months",
+        "Screen Every 12 months": "Screen Every 12 months",
+        "Every 12 months": "Every 12 months"
+    },
+    "interpretation": {
+        "Infected ulcer, no complications. See physician for dressing and antibiotics.": "Infected ulcer, no complications. See physician for dressing and antibiotics.",
+        "indication of peripheral arterial disease.": "Indication of peripheral arterial disease.",
+        "indication of loss of protective sensation (neuropathy).": "Indication of loss of protective sensation (neuropathy).",
+        "indication of Charcot changes.": "Indication of Charcot changes.",
+        "indication of PAD + LOPS(neuropathy).": "Indication of PAD + LOPS (neuropathy).",
+        "indication of charcot changes + indication of peripheral arterial disease.": "Indication of Charcot changes + indication of peripheral arterial disease.",
+        "indication of infected nails.": "Indication of infected nails.",
+        "indication of infected ulcer.": "Indication of infected ulcer.",
+        "indication of callous formation.": "Indication of callous formation.",
+        "indication of self care deficit": "Indication of self-care deficit.",
+        "notAvailable": "Interpretation not available.",
+        "notdata": "No data available."
+    },
+    
+    "recommendations": {
+        "HighRisk": "Refer to podiatry clinic or treating physician",
+        "HealthyFootNeedSelfCare": [
+        "Daily inspection of feet.",
+        "Trimming toenails straight.",
+        "Well-fitting footwear."
+        ],
+        "VeryLowRisk": [
+        "Daily inspection of feet.",
+        "Appropriate foot and nail care.",
+        "Well-fitting footwear.",
+        "Trimming toenails straight.",
+        "Don’t remove any calluses by yourself.",
+        "Seek medical care if you notice scaly peeling or cracked skin between toes."
+        ],
+        "LowRisk": [
+        "Daily inspection of feet.",
+        "Appropriate foot and nail care.",
+        "Well-fitting footwear.",
+        "Trimming toenails straight.",
+        "Don’t remove any calluses by yourself.",
+        "Seek medical care if you notice scaly peeling or cracked skin between toes.",
+        "Reduce weight if high BMI, stop smoking, control diabetes and hypertension if present.",
+        "Seek rehab specialist to provide fitness plan for feet."
+        ],
+        "ModerateRisk": [
+        "Well-fitting orthopaedic footwear and medical socks.",
+        "Don’t remove any calluses by yourself.",
+        "Seek medical care if you notice scaly peeling or cracked skin between toes.",
+        "Reduce weight if high BMI, stop smoking, control diabetes and hypertension if present.",
+        "Seek rehab specialist to provide fitness plan for feet.",
+        "Seek blood vessels care consultation.",
+        "Seek a rehab specialist for consultation on fitness exercises for feet."
+        ],
+        "UrgentRisk": [
+        "Seek immediate medical attention from a podiatrist or physician.",
+        "Avoid walking or putting pressure on the affected foot.",
+        "Keep the foot clean and dry to prevent infection.",
+        "Do not attempt home treatments such as cutting calluses or draining wounds.",
+        "Visit an emergency care center if pain, swelling, or signs of infection (redness, pus, fever) occur."
+        ]
     }
+      
+    
+
 }

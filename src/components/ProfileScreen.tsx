@@ -124,12 +124,8 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
       </TouchableOpacity>
       <View style={{width: '100%'}}>
         <Text style={styles.headingText}>{t('Profile.title')}</Text>
-        <View
-          style={styles.profileItem}>
-          <Text
-            style={styles.profileText}>
-            {t('Welcome.text1')}:
-          </Text>
+        <View style={styles.profileItem}>
+          <Text style={styles.profileText}>{t('Welcome.text1')}:</Text>
           <LanguageDropdown />
         </View>
         <View style={styles.profileItem}>
@@ -208,10 +204,10 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                             fontSize: 16,
                             maxWidth: '70%',
                           }}>
-                          {item?.result?.left_foot?.risk_category?.replace(
+                          {t(`Profile.${item?.result?.left_foot?.risk_category?.replace(
                             /^(.*?)\s-\sCategory\s\d+$/,
-                            '$1',
-                          )}
+                            '$1'
+                          )}`)}
                         </Text>
                       </View>
                       <View
@@ -230,10 +226,10 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                             fontSize: 16,
                             maxWidth: '70%',
                           }}>
-                          {item?.result?.right_foot?.risk_category?.replace(
+                          {t(`Profile.${item?.result?.right_foot?.risk_category?.replace(
                             /^(.*?)\s-\sCategory\s\d+$/,
-                            '$1',
-                          )}
+                            '$1'
+                          )}`)}
                         </Text>
                       </View>
                       <View
@@ -257,7 +253,9 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
             })}
           </ScrollView>
         ) : (
-          <Text style={{textAlign: 'center', fontSize: 18}}>{t('Profile.text7')}</Text>
+          <Text style={{textAlign: 'center', fontSize: 18}}>
+            {t('Profile.text7')}
+          </Text>
         )}
       </View>
     </SafeAreaView>

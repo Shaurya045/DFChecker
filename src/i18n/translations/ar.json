@@ -46,7 +46,13 @@
         "text4": "نتيجة القدم اليسرى",
         "text5": "نتيجة القدم اليمنى",
         "text6": "تاريخ الاختبار",
-        "text7": "لا توجد اختبارات مسجلة"
+        "text7": "لا توجد اختبارات مسجلة",
+        "Very Low Risk": "خطر منخفض جدًا",
+        "Low Risk": "خطر منخفض",
+        "Moderate Risk": "خطر معتدل",
+        "High Risk": "خطر مرتفع",
+        "Urgent Risk": "خطر عاجل",
+        "Healthy Foot - Need Self Care": "قدم صحية - تحتاج إلى رعاية ذاتية"
     },
     "Question": {
         "title": "استبيان صحة القدم"
@@ -286,27 +292,36 @@
         "title2": "القدم اليسرى",
         "title3": "القدم اليمنى",
         "btn1": "انقر هنا للتقرير التفصيلي",
-        "btn2": "تحميل التقرير كـ PDF"
+        "btn2": "تحميل التقرير كـ PDF",
+        "Very Low Risk": "خطر منخفض جدًا",
+        "Low Risk": "خطر منخفض",
+        "Moderate Risk": "خطر معتدل",
+        "High Risk": "خطر مرتفع",
+
+        "Urgent Risk": "خطر عاجل",
+        "Healthy Foot - Need Self Care": "قدم صحية - تحتاج إلى رعاية ذاتية"
     },
     "Detail": {
         "title1": "تفاصيل التقرير",
-        "title2": "Pre-screening Assessment",
-        "text1": "Do you have peripheral neurological disease?",
-        "text2": "Have you had any amputations?",
-        "text3": "How many amputations have you had?",
-        "text4": "Are you currently smoking?",
-        "text5": "Do you have any ulcers on your feet?",
-        "text10": "Do you have history of end-stage renal failure ?",
-        "title3": "Left Foot Report",
-        "title4": "Right Foot Report",
-        "text6": "Risk Category",
-        "text7": "Criteria",
-        "text8": "Clinical Indicator",
-        "text9": "Screening Frequency",
-        "title5": "Recommendations",
-        "title6": "For Left Foot",
-        "title7": "For Right Foot"
-    },
+        "title2": "تقييم ما قبل الفحص",
+        "text1": "هل تعاني من مرض الأعصاب المحيطية؟",
+        "text2": "هل خضعت لأي عمليات بتر؟",
+        "text3": "كم عدد عمليات البتر التي خضعت لها؟",
+        "text4": "هل تدخن حاليًا؟",
+        "text5": "هل لديك قرح على قدميك؟",
+        "text10": "هل لديك تاريخ من الفشل الكلوي المرحلة النهائية؟",
+        "title3": "تقرير القدم اليسرى",
+        "title4": "تقرير القدم اليمنى",
+        "text6": "فئة الخطر",
+        "text7": "المعايير",
+        "text8": "المؤشر السريري",
+        "text9": "تكرار الفحص",
+        "title5": "التوصيات",
+        "title6": "للقدم اليسرى",
+        "title7": "للقدم اليمنى",
+        "interpretation": "تفسير"
+      },
+      
     "Alert": {
         "title1": "تم رفع الصورة بنجاح",
         "text1": "سيتم تحليل صورتك بواسطة الذكاء الاصطناعي وسيتم إنشاء التقرير خلال 24 ساعة.",
@@ -314,5 +329,131 @@
         "text2": "الرجاء الإجابة على جميع الأسئلة قبل المتابعة.",
         "text3": "الرجاء اختيار خيار واحد على الأقل لكل قدم (اليسرى واليمنى).",
         "text4": "الرجاء اختيار خيار واحد على الأقل قبل المتابعة."
-    }
+    },
+    
+    "riskCategories": {
+        "Urgent Risk": "خطر عاجل",
+        "High Risk - Category 3": "خطر عالٍ - الفئة 3",
+        "Moderate Risk - Category 2": "خطر متوسط - الفئة 2",
+        "Low Risk - Category 1": "خطر منخفض - الفئة 1",
+        "Low Risk - Category 0": "خطر منخفض - الفئة 0",
+        "Very Low Risk - Category 0": "خطر منخفض جدًا - الفئة 0",
+        "Healthy Foot - Need Self Care": "قدم صحية - تحتاج إلى عناية ذاتية"
+    },
+
+    "clinicalIndicators": {
+        "Urgent care required, immediate intervention needed": "رعاية عاجلة مطلوبة، تدخل فوري ضروري",
+        "LOPS (neuropathy) + history of foot ulcer": "فقدان الإحساس (اعتلال الأعصاب) + تاريخ من قرحة القدم",
+        "LOPS (neuropathy) + history of lower limb amputation": "فقدان الإحساس (اعتلال الأعصاب) + تاريخ من بتر الطرف السفلي",
+        "LOPS (neuropathy) + end stage renal failure": "فقدان الإحساس (اعتلال الأعصاب) + الفشل الكلوي المرحلة النهائية",
+        "Peripheral arterial disease + History of foot ulcer": "مرض الشريان المحيطي + تاريخ من قرحة القدم",
+        "Peripheral arterial disease + History of lower limb amputation": "مرض الشريان المحيطي + تاريخ من بتر الطرف السفلي",
+        "Peripheral arterial disease + end stage renal failure": "مرض الشريان المحيطي + الفشل الكلوي المرحلة النهائية",
+        "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation+ end stage renal failure": "مرض الشريان المحيطي + تاريخ من قرحة القدم + تاريخ من بتر الطرف السفلي + الفشل الكلوي المرحلة النهائية",
+        "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation": "مرض الشريان المحيطي + تاريخ من قرحة القدم + تاريخ من بتر الطرف السفلي",
+        "Peripheral arterial disease + History of foot ulcer + end stage renal failure": "مرض الشريان المحيطي + تاريخ من قرحة القدم + الفشل الكلوي المرحلة النهائية",
+        "Peripheral arterial disease + History of lower limb amputation+ end stage renal failure": "مرض الشريان المحيطي + تاريخ من بتر الطرف السفلي + الفشل الكلوي المرحلة النهائية",
+        "LOPS + foot deformity": "فقدان الإحساس + تشوه القدم",
+        "LOPS + foot deformity, or PAD + foot deformity": "فقدان الإحساس + تشوه القدم، أو مرض الشريان المحيطي + تشوه القدم",
+        "LOPS + PAD": "فقدان الإحساس + مرض الشريان المحيطي",
+        "Indicative of callus formation": "يدل على تكوين الكالو",
+        "Need retest every 3 days to check the ulcer": "الحاجة إلى إعادة الاختبار كل 3 أيام للتحقق من القرحة",
+        "Need retest every 3 days to check the nails": "الحاجة إلى إعادة الاختبار كل 3 أيام للتحقق من الأظافر",
+        "Peripheral arterial disease": "مرض الشريان المحيطي",
+        "Loss of sensation-neuropathy": "فقدان الإحساس - اعتلال الأعصاب",
+        "Monitor for ulcers": "مراقبة القروح",
+        "No LOPS + No PAD": "لا فقدان إحساس + لا مرض شريان محيطي"
+    },
+    "criteria": {
+        "Active ulcer/infection/active Charcot detected": "قرحة/ عدوى/ مرض شاركوت النشط المكتشف",
+        "Previous hx of ulceration": "تاريخ سابق من التقرح",
+        "previous hx of amputation": "تاريخ سابق من البتر",
+        "previous hx of end stage renal failure": "تاريخ سابق من الفشل الكلوي المرحلة النهائية",
+        "Previous hx of ulceration, previous hx of amputation and previous hx of end stage renal failure": "تاريخ سابق من التقرح، تاريخ سابق من البتر وتاريخ سابق من الفشل الكلوي المرحلة النهائية",
+        "Previous hx of ulceration and previous hx of amputation": "تاريخ سابق من التقرح وتاريخ سابق من البتر",
+        "previous hx of amputation and previous hx of end stage renal failure": "تاريخ سابق من البتر وتاريخ سابق من الفشل الكلوي المرحلة النهائية",
+        "Previous hx of ulceration and previous hx of end stage renal failure": "تاريخ سابق من التقرح وتاريخ سابق من الفشل الكلوي المرحلة النهائية",
+        "PreviousHxOfUlceration2": "تاريخ سابق من التقرح",
+        "PreviousHxOfAmputation2": "تاريخ سابق من البتر",
+        "PreviousHxOfESRF2": "تاريخ سابق من الفشل الكلوي المرحلة النهائية",
+        "Boney changes parameter ( Charcot changes) + loss of sensation": "تغيرات العظام (تغيرات شاركوت) + فقدان الإحساس",
+        "BonyChangesLOPS2": "تغيرات العظام (تغيرات شاركوت) + فقدان الإحساس",
+        "Boney changes parameter (Charcot changes) + peripheral arterial disease parameters.": "تغيرات العظام (تغيرات شاركوت) + معايير مرض الشريان المحيطي",
+        "Loss of sensation (neuropathy) +peripheral arterial disease": "فقدان الإحساس (اعتلال الأعصاب) + مرض الشريان المحيطي",
+        "Normal – no neuropathy": "طبيعي - لا اعتلال للأعصاب",
+        "NormalNoNeuropathy2": "طبيعي - لا اعتلال للأعصاب",
+        "NormalNoNeuropathy3": "طبيعي - لا اعتلال للأعصاب",
+        "Loss of protective sensation": "فقدان الإحساس الوقائي",
+        "LossOfProtectiveSensation2": "فقدان الإحساس الوقائي",
+        "Healthy foot, but self-care needed": "قدم صحية، ولكن هناك حاجة للعناية الذاتية",
+        "Normal No Neuropathy": "طبيعي لا اعتلال للأعصاب"
+    },
+    "screening_frequency": {
+        "Every 3 Days": "كل 3 أيام",
+        "Screen every 1 month": "فحص كل شهر",
+        "Screen every 3 months": "فحص كل 3 أشهر",
+        "Screen Every 12 months": "فحص كل 12 شهرًا",
+        "Every 12 months": "كل 12 شهرًا",
+        "Screen every 6 months": "فحص كل 6 أشهر"
+    },
+    "interpretation": {
+        "Infected ulcer, no complications. See physician for dressing and antibiotics.": "قرحة مصابة، لا مضاعفات. استشر الطبيب للتضميد والمضادات الحيوية.",
+        "indication of peripheral arterial disease.": "دليل على مرض الشريان المحيطي.",
+        "indication of loss of protective sensation (neuropathy).": "دليل على فقدان الإحساس الوقائي (اعتلال الأعصاب).",
+        "indication of Charcot changes.": "دليل على تغيرات شاركوت.",
+        "indication of PAD + LOPS(neuropathy).": "دليل على مرض الشريان المحيطي + فقدان الإحساس الوقائي (اعتلال الأعصاب).",
+        "indication of charcot changes + indication of peripheral arterial disease.": "دليل على تغيرات شاركوت + دليل على مرض الشريان المحيطي.",
+        "indication of infected nails.": "دليل على إصابة الأظافر.",
+        "indication of infected ulcer.": "دليل على إصابة القرحة.",
+        "indication of callous formation.": "دليل على تكوين الكالو.",
+        "indication of self care deficit": "دليل على نقص الرعاية الذاتية.",
+        "notAvailable":"التفسير غير متاح.",
+        "notdata":"لا توجد بيانات متاحة."
+
+    },
+    "recommendations": {
+    "HighRisk": "إحالة إلى عيادة القدم أو الطبيب المعالج",
+    "HealthyFootNeedSelfCare": [
+      "فحص يومي للقدمين.",
+      "قص الأظافر بشكل مستقيم.",
+      "أحذية مناسبة."
+    ],
+    "VeryLowRisk": [
+      "فحص يومي للقدمين.",
+      "رعاية مناسبة للقدمين والأظافر.",
+      "أحذية مناسبة.",
+      "قص الأظافر بشكل مستقيم.",
+      "لا تقم بإزالة أي كالو بنفسك.",
+      "اطلب الرعاية الطبية إذا لاحظت تقشير أو تشققات بين الأصابع."
+    ],
+    "LowRisk": [
+      "فحص يومي للقدمين.",
+      "رعاية مناسبة للقدمين والأظافر.",
+      "أحذية مناسبة.",
+      "قص الأظافر بشكل مستقيم.",
+      "لا تقم بإزالة أي كالو بنفسك.",
+      "اطلب الرعاية الطبية إذا لاحظت تقشير أو تشققات بين الأصابع.",
+      "تقليل الوزن إذا كان مؤشر كتلة الجسم مرتفعًا، والإقلاع عن التدخين، ومراقبة السكري وارتفاع ضغط الدم إذا كان موجودًا.",
+      "اطلب من أخصائي إعادة التأهيل تقديم خطة لياقة للقدمين."
+    ],
+    "ModerateRisk": [
+      "أحذية تقويمية طبية وجوارب طبية.",
+      "لا تقم بإزالة أي كالو بنفسك.",
+      "اطلب الرعاية الطبية إذا لاحظت تقشير أو تشققات بين الأصابع.",
+      "تقليل الوزن إذا كان مؤشر كتلة الجسم مرتفعًا، والإقلاع عن التدخين، ومراقبة السكري وارتفاع ضغط الدم إذا كان موجودًا.",
+      "اطلب من أخصائي إعادة التأهيل تقديم خطة لياقة للقدمين.",
+      "اطلب استشارة رعاية الأوعية الدموية.",
+      "اطلب استشارة من أخصائي إعادة التأهيل حول تمارين اللياقة للقدمين."
+    ],
+    "UrgentRisk": [
+      "اطلب الرعاية الطبية الفورية من أخصائي القدم أو الطبيب.",
+      "تجنب المشي أو الضغط على القدم المصابة.",
+      "حافظ على نظافة القدم وجفافها لمنع العدوى.",
+      "لا تحاول علاجات منزلية مثل قص الكالو أو تصريف الجروح.",
+      "زر مركز الرعاية الطارئة إذا حدث ألم أو تورم أو علامات عدوى (احمرار، صديد، حمى)."
+    ]
+  }
+
+
+    
 }
