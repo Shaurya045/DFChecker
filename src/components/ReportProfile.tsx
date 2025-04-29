@@ -86,13 +86,13 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.result?.left_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.result?.left_foot?.screening_frequency)}</p>
           
-          <h3>${t('Detail.scores')}:</h3>
-          ${Object.entries(reportData?.result?.left_foot?.scores || {}).map(([key, value]) => `
-            <div class="score-row">
-              <span>${t(`scores.${key}`)}:</span>
-              <span>${value}</span>
-            </div>
-          `).join('')}
+          // <h3>${t('Detail.scores')}:</h3>
+          // ${Object.entries(reportData?.result?.left_foot?.scores || {}).map(([key, value]) => `
+          //   <div class="score-row">
+          //     <span>${t(`scores.${key}`)}:</span>
+          //     <span>${value}</span>
+          //   </div>
+          // `).join('')}
           
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
@@ -107,13 +107,13 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.result?.right_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.result?.right_foot?.screening_frequency)}</p>
           
-          <h3>${t('Detail.scores')}:</h3>
-          ${Object.entries(reportData?.result?.right_foot?.scores || {}).map(([key, value]) => `
-            <div class="score-row">
-              <span>${t(`scores.${key}`)}:</span>
-              <span>${value}</span>
-            </div>
-          `).join('')}
+          // <h3>${t('Detail.scores')}:</h3>
+          // ${Object.entries(reportData?.result?.right_foot?.scores || {}).map(([key, value]) => `
+          //   <div class="score-row">
+          //     <span>${t(`scores.${key}`)}:</span>
+          //     <span>${value}</span>
+          //   </div>
+          // `).join('')}
           
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
