@@ -79,7 +79,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <p>${t('Detail.text2')} ${reportData?.basic_questions?.amputation ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           <p>${t('Detail.text4')} ${reportData?.basic_questions?.smoking ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           <p>${t('Detail.text5')} ${reportData?.basic_questions?.ulcer ? t('BasicQes.yes') : t('BasicQes.no')}</p>
-          <p>${t('Detail.text10')} ${reportData?.basic_questions?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}</p>
+          <p>${t('Detail.text10')} ${reportData?.formId?.data?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           
           <h2>${t('Detail.title3')}</h2>
           <p>${t('Detail.text6')}: ${translateFootReportField('risk_category', reportData?.left_foot?.risk_category)}</p>
@@ -87,13 +87,13 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.left_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.left_foot?.screening_frequency)}</p>
           
-          <h3>${t('Detail.scores')}:</h3>
-          ${Object.entries(reportData?.left_foot?.scores || {}).map(([key, value]) => `
-            <div class="score-row">
-              <span>${t(`scores.${key}`)}:</span>
-              <span>${value}</span>
-            </div>
-          `).join('')}
+          // <h3>${t('Detail.scores')}:</h3>
+          // ${Object.entries(reportData?.left_foot?.scores || {}).map(([key, value]) => `
+          //   <div class="score-row">
+          //     <span>${t(`scores.${key}`)}:</span>
+          //     <span>${value}</span>
+          //   </div>
+          // `).join('')}
           
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
@@ -108,13 +108,13 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.right_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.right_foot?.screening_frequency)}</p>
           
-          <h3>${t('Detail.scores')}:</h3>
-          ${Object.entries(reportData?.right_foot?.scores || {}).map(([key, value]) => `
-            <div class="score-row">
-              <span>${t(`scores.${key}`)}:</span>
-              <span>${value}</span>
-            </div>
-          `).join('')}
+          // <h3>${t('Detail.scores')}:</h3>
+          // ${Object.entries(reportData?.right_foot?.scores || {}).map(([key, value]) => `
+          //   <div class="score-row">
+          //     <span>${t(`scores.${key}`)}:</span>
+          //     <span>${value}</span>
+          //   </div>
+          // `).join('')}
           
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
@@ -221,7 +221,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text10')}</Text>
             <Text style={styles.infoText}>
-              {reportData?.basic_questions?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}
+              {reportData?.formId?.data?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}
             </Text>
           </View>
         </View>

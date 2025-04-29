@@ -49,6 +49,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
 
     return translated !== translationKey ? translated : value;
   };
+  
 
   const generatePDF = async () => {
     try {
@@ -78,7 +79,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <p>${t('Detail.text2')} ${reportData?.basic_questions?.amputation ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           <p>${t('Detail.text4')} ${reportData?.basic_questions?.smoking ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           <p>${t('Detail.text5')} ${reportData?.basic_questions?.ulcer ? t('BasicQes.yes') : t('BasicQes.no')}</p>
-          <p>${t('Detail.text10')} ${reportData?.basic_questions?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}</p>
+          <p>${t('Detail.text10')} ${reportData?.formId?.data?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           
           <h2>${t('Detail.title3')}</h2>
           <p>${t('Detail.text6')}: ${translateFootReportField('risk_category', reportData?.result?.left_foot?.risk_category)}</p>
@@ -176,7 +177,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
       </Text>
     ));
   };
-
+ console.log('Report Data:', reportData.formId.data.renalFailure);
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -220,9 +221,12 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text10')}</Text>
             <Text style={styles.infoText}>
-              {reportData?.result?.basic_questions?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}
+              {reportData?.formId?.data?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}
+              
             </Text>
+            
           </View>
+          
         </View>
 
         {/* Left Foot Report */}

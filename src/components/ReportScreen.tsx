@@ -325,6 +325,9 @@ const ReportScreen = ({navigation}: ReportProps) => {
         <p>Do you have any ulcers on your feet? ${
           reportData?.basic_questions?.ulcer ? 'Yes' : 'No'
         }</p>
+        <p>Do you have history of end-stage renal failure ? ${
+          reportData?.basic_questions?.renalFailure ? 'Yes' : 'No'
+        }</p>
         
         <h2>Left Foot Report</h2>
         <p>Risk Category: ${reportData?.left_foot?.risk_category || 'N/A'}</p>
