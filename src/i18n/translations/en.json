@@ -349,7 +349,7 @@
         "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation": "Peripheral arterial disease + History of foot ulcer + History of lower limb amputation",
         "Peripheral arterial disease + History of foot ulcer + end stage renal failure": "Peripheral arterial disease + History of foot ulcer + History stage renal failure",
         "Peripheral arterial disease + History of lower limb amputation+ end stage renal failure": "Peripheral arterial disease + History of lower limb amputation + History end stage renal failure",
-        "LOPS + foot deformity": "LOPS + foot deformity",
+        "LOPS+foot deformity": "LOPS + foot deformity",
         "LOPS + foot deformity, or PAD + foot deformity": "LOPS + foot deformity, or PAD + foot deformity",
         "LOPS + PAD": "LOPS + PAD",
         "Indicative of callus formation": "Indicative of callus formation",
@@ -386,7 +386,7 @@
     },
     "screening_frequency": {
         "Every 3 Days": "Every 3 Days",
-        "Screen every 1 months": "Screen every 1 months",
+        "Screen every 1 months": "Screen every 1 month",
         "Screen every 3 months": "Screen every 3 months",
         "Screen every 6 months": "Screen every 6 months",
         "Screen Every 12 months": "Screen Every 12 months",

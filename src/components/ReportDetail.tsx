@@ -12,16 +12,11 @@ import { colors } from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
-
-// Navigation
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useTranslation } from 'react-i18next';
 
-type ReportDetailProps = NativeStackScreenProps<
-  RootStackParamList,
-  'ReportDetail'
->;
+type ReportDetailProps = NativeStackScreenProps<RootStackParamList, 'ReportDetail'>;
 
 const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
   const [detailedReport, setDetailedReport] = useState<any>({});
@@ -51,14 +46,31 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
     return translated !== translationKey ? translated : value;
   };
 
+  // Safe way to get recommendations that handles all cases
+  const getRecommendations = (riskLevel: string | undefined): string[] => {
+    if (!riskLevel) return [t('interpretation.notAvailable')];
+    
+    try {
+      const key = riskLevel.replace(/ - /g, '').replace(/ /g, '');
+      const recommendations = t(`recommendations.${key}`, { returnObjects: true });
+      
+      if (Array.isArray(recommendations)) {
+        return Array.isArray(recommendations) ? recommendations.filter(item => typeof item === 'string') : [t('interpretation.notAvailable')];
+      }
+      if (typeof recommendations === 'string') {
+        return [recommendations];
+      }
+      return [t('interpretation.notAvailable')];
+    } catch (error) {
+      console.error('Error getting recommendations:', error);
+      return [t('interpretation.notAvailable')];
+    }
+  };
+
   const generatePDF = async () => {
     try {
-      const leftRecommendations = result.left 
-        ? (t(`recommendations.${result.left.replace(/ - /g, '').replace(/ /g, '')}`, { returnObjects: true }) as string[])
-        : [];
-      const rightRecommendations = result.right
-        ? (t(`recommendations.${result.right.replace(/ - /g, '').replace(/ /g, '')}`, { returnObjects: true }) as string[])
-        : [];
+      const leftRecommendations = getRecommendations(result.left ?? undefined);
+      const rightRecommendations = getRecommendations(result.right ?? undefined);
 
       const htmlContent = `
       <html>
@@ -87,14 +99,6 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.left_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.left_foot?.screening_frequency)}</p>
           
-          // <h3>${t('Detail.scores')}:</h3>
-          // ${Object.entries(reportData?.left_foot?.scores || {}).map(([key, value]) => `
-          //   <div class="score-row">
-          //     <span>${t(`scores.${key}`)}:</span>
-          //     <span>${value}</span>
-          //   </div>
-          // `).join('')}
-          
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
             ${(reportData?.left_foot?.interpretation || []).map((item: string) => `
@@ -108,14 +112,6 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.right_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.right_foot?.screening_frequency)}</p>
           
-          // <h3>${t('Detail.scores')}:</h3>
-          // ${Object.entries(reportData?.right_foot?.scores || {}).map(([key, value]) => `
-          //   <div class="score-row">
-          //     <span>${t(`scores.${key}`)}:</span>
-          //     <span>${value}</span>
-          //   </div>
-          // `).join('')}
-          
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
             ${(reportData?.right_foot?.interpretation || []).map((item: string) => `
@@ -126,11 +122,11 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
           <h2>${t('Detail.title5')}</h2>
           <h3>${t('Detail.title6')}:</h3>
           <ul>
-            ${leftRecommendations.length > 0 ? leftRecommendations.map(item => `<li>${item}</li>`).join('') : '<li>N/A</li>'}
+            ${leftRecommendations.map(item => `<li>${item}</li>`).join('')}
           </ul>
           <h3>${t('Detail.title7')}:</h3>
           <ul>
-            ${rightRecommendations.length > 0 ? rightRecommendations.map(item => `<li>${item}</li>`).join('') : '<li>N/A</li>'}
+            ${rightRecommendations.map(item => `<li>${item}</li>`).join('')}
           </ul>
         </body>
       </html>
@@ -254,11 +250,6 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             </Text>
           </View>
           
-          {/* <Text style={styles.subHeading}>{t('Detail.scores')}</Text>
-          <View style={styles.scoresContainer}>
-            {renderScores(reportData?.left_foot?.scores)}
-          </View> */}
-          
           <Text style={styles.subHeading}>{t('Detail.interpretation')}</Text>
           {renderInterpretation(reportData?.left_foot?.interpretation)}
         </View>
@@ -291,11 +282,6 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             </Text>
           </View>
           
-          {/* <Text style={styles.subHeading}>{t('Detail.scores')}</Text>
-          <View style={styles.scoresContainer}>
-            {renderScores(reportData?.right_foot?.scores)}
-          </View> */}
-          
           <Text style={styles.subHeading}>{t('Detail.interpretation')}</Text>
           {renderInterpretation(reportData?.right_foot?.interpretation)}
         </View>
@@ -307,31 +293,21 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             <Text style={styles.recommendationTitle}>
               {t('Detail.title6')}
             </Text>
-            {result.left ? (
-              (t(`recommendations.${result.left.replace(/ - /g, '').replace(/ /g, '')}`, 
-                { returnObjects: true }) as string[]).map((item, index) => (
-                <Text key={index} style={styles.recommendationText}>
-                  • {item}
-                </Text>
-              ))
-            ) : (
-              <Text style={styles.recommendationText}>• {t('interpretation.notAvailable')}</Text>
-            )}
+            {getRecommendations(result.left ?? undefined).map((item, index) => (
+              <Text key={index} style={styles.recommendationText}>
+                • {item}
+              </Text>
+            ))}
           </View>
           <View style={styles.recommendationBox}>
             <Text style={styles.recommendationTitle}>
               {t('Detail.title7')}
             </Text>
-            {result.right ? (
-              (t(`recommendations.${result.right.replace(/ - /g, '').replace(/ /g, '')}`, 
-                { returnObjects: true }) as string[]).map((item, index) => (
-                <Text key={index} style={styles.recommendationText}>
-                  • {item}
-                </Text>
-              ))
-            ) : (
-              <Text style={styles.recommendationText}>• {t('interpretation.notAvailable')}</Text>
-            )}
+            {getRecommendations(result.right ?? undefined).map((item, index) => (
+              <Text key={index} style={styles.recommendationText}>
+                • {item}
+              </Text>
+            ))}
           </View>
         </View>
 

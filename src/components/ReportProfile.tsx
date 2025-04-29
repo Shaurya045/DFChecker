@@ -49,16 +49,27 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
 
     return translated !== translationKey ? translated : value;
   };
-  
+
+  // Safe way to get recommendations
+  const getRecommendations = (riskLevel: string | undefined): string[] => {
+    if (!riskLevel) return [t('interpretation.notAvailable')];
+    
+    const key = riskLevel.replace(/ - /g, '').replace(/ /g, '');
+    const recommendations = t(`recommendations.${key}`, { returnObjects: true });
+    
+    if (Array.isArray(recommendations)) {
+      return Array.isArray(recommendations) ? recommendations.filter(item => typeof item === 'string') : [recommendations];
+    }
+    if (typeof recommendations === 'string') {
+      return [recommendations];
+    }
+    return [t('interpretation.notAvailable')];
+  };
 
   const generatePDF = async () => {
     try {
-      const leftRecommendations = result.left 
-        ? (t(`recommendations.${result.left.replace(/ - /g, '').replace(/ /g, '')}`, { returnObjects: true }) as string[])
-        : [];
-      const rightRecommendations = result.right
-        ? (t(`recommendations.${result.right.replace(/ - /g, '').replace(/ /g, '')}`, { returnObjects: true }) as string[])
-        : [];
+      const leftRecommendations = getRecommendations(result.left);
+      const rightRecommendations = getRecommendations(result.right);
 
       const htmlContent = `
       <html>
@@ -75,10 +86,10 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
         <body>
           <h1>${t('Detail.title1')}</h1>
           <h2>${t('Detail.title2')}</h2>
-          <p>${t('Detail.text1')} ${reportData?.basic_questions?.neurologicalDisease ? t('BasicQes.yes') : t('BasicQes.no')}</p>
-          <p>${t('Detail.text2')} ${reportData?.basic_questions?.amputation ? t('BasicQes.yes') : t('BasicQes.no')}</p>
-          <p>${t('Detail.text4')} ${reportData?.basic_questions?.smoking ? t('BasicQes.yes') : t('BasicQes.no')}</p>
-          <p>${t('Detail.text5')} ${reportData?.basic_questions?.ulcer ? t('BasicQes.yes') : t('BasicQes.no')}</p>
+          <p>${t('Detail.text1')} ${reportData?.result.basic_questions?.neurologicalDisease ? t('BasicQes.yes') : t('BasicQes.no')}</p>
+          <p>${t('Detail.text2')} ${reportData?.result.basic_questions?.amputation ? t('BasicQes.yes') : t('BasicQes.no')}</p>
+          <p>${t('Detail.text4')} ${reportData?.result.basic_questions?.smoking ? t('BasicQes.yes') : t('BasicQes.no')}</p>
+          <p>${t('Detail.text5')} ${reportData?.result.basic_questions?.ulcer ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           <p>${t('Detail.text10')} ${reportData?.formId?.data?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}</p>
           
           <h2>${t('Detail.title3')}</h2>
@@ -86,14 +97,6 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <p>${t('Detail.text7')}: ${translateFootReportField('criteria', reportData?.result?.left_foot?.criteria)}</p>
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.result?.left_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.result?.left_foot?.screening_frequency)}</p>
-          
-          // <h3>${t('Detail.scores')}:</h3>
-          // ${Object.entries(reportData?.result?.left_foot?.scores || {}).map(([key, value]) => `
-          //   <div class="score-row">
-          //     <span>${t(`scores.${key}`)}:</span>
-          //     <span>${value}</span>
-          //   </div>
-          // `).join('')}
           
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
@@ -108,14 +111,6 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <p>${t('Detail.text8')}: ${translateFootReportField('clinical_indicator', reportData?.result?.right_foot?.clinical_indicator)}</p>
           <p>${t('Detail.text9')}: ${translateFootReportField('screening_frequency', reportData?.result?.right_foot?.screening_frequency)}</p>
           
-          // <h3>${t('Detail.scores')}:</h3>
-          // ${Object.entries(reportData?.result?.right_foot?.scores || {}).map(([key, value]) => `
-          //   <div class="score-row">
-          //     <span>${t(`scores.${key}`)}:</span>
-          //     <span>${value}</span>
-          //   </div>
-          // `).join('')}
-          
           <h3>${t('Detail.interpretation')}:</h3>
           <ul>
             ${(reportData?.result?.right_foot?.interpretation || []).map((item: string) => `
@@ -126,11 +121,11 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <h2>${t('Detail.title5')}</h2>
           <h3>${t('Detail.title6')}:</h3>
           <ul>
-            ${leftRecommendations.length > 0 ? leftRecommendations.map(item => `<li>${item}</li>`).join('') : '<li>N/A</li>'}
+            ${leftRecommendations.map(item => `<li>${item}</li>`).join('')}
           </ul>
           <h3>${t('Detail.title7')}:</h3>
           <ul>
-            ${rightRecommendations.length > 0 ? rightRecommendations.map(item => `<li>${item}</li>`).join('') : '<li>N/A</li>'}
+            ${rightRecommendations.map(item => `<li>${item}</li>`).join('')}
           </ul>
         </body>
       </html>
@@ -177,7 +172,7 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
       </Text>
     ));
   };
- console.log('Report Data:', reportData.formId.data.renalFailure);
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -197,36 +192,33 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text1')}</Text>
             <Text style={styles.infoText}>
-              {reportData?.result?.basic_questions?.neurologicalDisease ? t('BasicQes.yes') : t('BasicQes.no')}
+              {reportData?.result.basic_questions?.neurologicalDisease ? t('BasicQes.yes') : t('BasicQes.no')}
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text2')}</Text>
             <Text style={styles.infoText}>
-              {reportData?.result?.basic_questions?.amputation ? t('BasicQes.yes') : t('BasicQes.no')}
+              {reportData?.result.basic_questions?.amputation ? t('BasicQes.yes') : t('BasicQes.no')}
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text4')}</Text>
             <Text style={styles.infoText}>
-              {reportData?.result?.basic_questions?.smoking ? t('BasicQes.yes') : t('BasicQes.no')}
+              {reportData?.result.basic_questions?.smoking ? t('BasicQes.yes') : t('BasicQes.no')}
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text5')}</Text>
             <Text style={styles.infoText}>
-              {reportData?.result?.basic_questions?.ulcer ? t('BasicQes.yes') : t('BasicQes.no')}
+              {reportData?.result.basic_questions?.ulcer ? t('BasicQes.yes') : t('BasicQes.no')}
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.subHeading}>{t('Detail.text10')}</Text>
             <Text style={styles.infoText}>
               {reportData?.formId?.data?.renalFailure ? t('BasicQes.yes') : t('BasicQes.no')}
-              
             </Text>
-            
           </View>
-          
         </View>
 
         {/* Left Foot Report */}
@@ -256,11 +248,6 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
               {translateFootReportField('screening_frequency', reportData?.result?.left_foot?.screening_frequency)}
             </Text>
           </View>
-          
-          {/* <Text style={styles.subHeading}>{t('Detail.scores')}</Text>
-          <View style={styles.scoresContainer}>
-            {renderScores(reportData?.result?.left_foot?.scores)}
-          </View> */}
           
           <Text style={styles.subHeading}>{t('Detail.interpretation')}</Text>
           {renderInterpretation(reportData?.result?.left_foot?.interpretation)}
@@ -294,11 +281,6 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
             </Text>
           </View>
           
-          {/* <Text style={styles.subHeading}>{t('Detail.scores')}</Text>
-          <View style={styles.scoresContainer}>
-            {renderScores(reportData?.result?.right_foot?.scores)}
-          </View> */}
-          
           <Text style={styles.subHeading}>{t('Detail.interpretation')}</Text>
           {renderInterpretation(reportData?.result?.right_foot?.interpretation)}
         </View>
@@ -310,31 +292,21 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
             <Text style={styles.recommendationTitle}>
               {t('Detail.title6')}
             </Text>
-            {result.left ? (
-              (t(`recommendations.${result.left.replace(/ - /g, '').replace(/ /g, '')}`, 
-                { returnObjects: true }) as string[]).map((item, index) => (
-                <Text key={index} style={styles.recommendationText}>
-                  • {item}
-                </Text>
-              ))
-            ) : (
-              <Text style={styles.recommendationText}>• {t('interpretation.notAvailable')}</Text>
-            )}
+            {getRecommendations(result.left).map((item, index) => (
+              <Text key={index} style={styles.recommendationText}>
+                • {item}
+              </Text>
+            ))}
           </View>
           <View style={styles.recommendationBox}>
             <Text style={styles.recommendationTitle}>
               {t('Detail.title7')}
             </Text>
-            {result.right ? (
-              (t(`recommendations.${result.right.replace(/ - /g, '').replace(/ /g, '')}`, 
-                { returnObjects: true }) as string[]).map((item, index) => (
-                <Text key={index} style={styles.recommendationText}>
-                  • {item}
-                </Text>
-              ))
-            ) : (
-              <Text style={styles.recommendationText}>• {t('interpretation.notAvailable')}</Text>
-            )}
+            {getRecommendations(result.right).map((item, index) => (
+              <Text key={index} style={styles.recommendationText}>
+                • {item}
+              </Text>
+            ))}
           </View>
         </View>
 
