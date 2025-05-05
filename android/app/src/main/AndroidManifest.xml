@@ -1,10 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
       android:name=".MainApplication"
@@ -14,24 +10,6 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
-      <!-- <activity
-        android:name=".SplashActivity"
-        android:label="@string/app_name"
-        android:theme="@style/SplashTheme"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-      </activity> -->
-      <!-- Background Notification Service -->
-      <service
-        android:name="com.notifee.background.NotifeeFirebaseMessagingService"
-        android:permission="android.permission.BIND_JOB_SERVICE">
-        <!-- <intent-filter>
-            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-        </intent-filter> -->
-      </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

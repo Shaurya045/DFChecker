@@ -557,4 +557,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 8,
   },
+  
 });
