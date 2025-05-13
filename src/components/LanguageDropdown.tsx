@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 
 const LanguageDropdown = () => {
   const {t, i18n} = useTranslation();
@@ -26,26 +27,45 @@ const LanguageDropdown = () => {
   };
 
   const changeLanguage = async (languageCode: string) => {
-    try {
-      // Change language in i18next
+
+  try {
+
+    const selectedLanguage = languages.find(lang => lang.code === languageCode);
+ 
+    if (selectedLanguage) {
+
+      const isRTL = selectedLanguage.isRTL;
+ 
       await i18n.changeLanguage(languageCode);
 
-      // Save to AsyncStorage
       await AsyncStorage.setItem('user-language', languageCode);
+ 
+      if (I18nManager.isRTL !== isRTL) {
 
-      // Handle RTL if needed
-      const selectedLanguage = languages.find(
-        lang => lang.code === languageCode,
-      );
-      if (selectedLanguage) {
-        I18nManager.forceRTL(selectedLanguage.isRTL);
+        I18nManager.forceRTL(isRTL);
+
+        I18nManager.allowRTL(isRTL);
+ 
+        // Restart the app
+
+        RNRestart.Restart(); // or Updates.reloadAsync() if using Expo
+
       }
-    } catch (error) {
-      console.error('Error changing language:', error);
-    } finally {
-      setVisible(false);
+
     }
-  };
+
+  } catch (error) {
+
+    console.error('Error changing language:', error);
+
+  } finally {
+
+    setVisible(false);
+
+  }
+
+};
+ 
 
   const renderDropdown = () => {
     return (

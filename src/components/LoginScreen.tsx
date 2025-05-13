@@ -23,7 +23,8 @@ const LoginScreen = ({navigation}: LoginProps) => {
   const isFormValid = email.length >= 9 && password.length >= 6;
   const {login} = useAuth();
 
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
 
   const handleSubmit = async () => {
     if (isFormValid) {
@@ -40,56 +41,65 @@ const LoginScreen = ({navigation}: LoginProps) => {
 
         if (data.success) {
           await login(data.token);
-          Alert.alert('Success', 'Login successful!');
+          Alert.alert(t('Login success'));
         } else {
-          Alert.alert('Error', 'Login failed!');
+          Alert.alert(t('Login.error'), t('Login.loginFailed'));
         }
       } catch (error) {
         console.error('Error Logging in:', error);
-        Alert.alert('Error', 'An error occurred. Please try again.');
+        Alert.alert(t('Login.error'), t('Login.tryAgain'));
       }
     } else {
-      Alert.alert('Error', 'Please fill all the fields');
+      Alert.alert(t('Login.error'), t('Login.fillAllFields'));
     }
   };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <View style={{paddingHorizontal: 30}}>
+    <SafeAreaView style={[styles.mainContainer, isRTL && styles.rtlContainer]}>
+      {/* Back Button - Fixed position and direction */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.navigate('Welcome')}
+        accessible
+        accessibilityLabel={t('Login.goBack')}>
+        <Text style={styles.backButtonText}>←</Text>
+      </TouchableOpacity>
+      
+      <View style={[styles.contentContainer, isRTL && styles.rtlContentContainer]}>
         <Text style={styles.mainHeader}>{t('Login.title')}</Text>
         <View style={styles.inputContainer}>
           <Text style={styles.labels}>{t('Login.text1')}</Text>
           <TextInput
-            style={styles.inputStyle}
+            style={[styles.inputStyle, isRTL && styles.rtlInput]}
             autoCapitalize="none"
             autoCorrect={false}
             value={email}
             onChangeText={setEmail}
+            textAlign={isRTL ? 'right' : 'left'}
           />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.labels}>{t('Login.text2')}</Text>
           <TextInput
-            style={styles.inputStyle}
+            style={[styles.inputStyle, isRTL && styles.rtlInput]}
             autoCapitalize="none"
             autoCorrect={false}
             secureTextEntry={true}
             value={password}
             onChangeText={setPassword}
+            textAlign={isRTL ? 'right' : 'left'}
           />
         </View>
         <TouchableOpacity
           style={[
             styles.buttonStyle,
             {backgroundColor: isFormValid ? colors.primary : 'grey'},
-            {
-              marginTop: 50,
-            },
+            {marginTop: 50},
           ]}
           disabled={!isFormValid}
           onPress={handleSubmit}
           accessible
-          accessibilityLabel="Login button">
+          accessibilityLabel={t('Login.loginButton')}>
           <Text style={styles.buttonText}>{t('Login.btn1')}</Text>
         </TouchableOpacity>
         <Text style={[styles.description, {marginTop: 20}]}>
@@ -110,8 +120,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     height: '100%',
-    //paddingHorizontal: 30,
     backgroundColor: '#fff',
+  },
+  rtlContainer: {
+    direction: 'rtl',
+  },
+  contentContainer: {
+    paddingHorizontal: 30,
+  },
+  rtlContentContainer: {
+    direction: 'rtl',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 70,
+    left: 20, // Always on the left
+    zIndex: 1,
+    padding: 10,
+  },
+  backButtonText: {
+    fontSize: 35,
+    color: colors.primary,
+    fontWeight: '900',
   },
   mainHeader: {
     fontSize: 30,
@@ -120,6 +150,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     textAlign: 'center',
     fontFamily: 'bold',
+    writingDirection: 'auto',
   },
   description: {
     fontSize: 20,
@@ -127,6 +158,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     lineHeight: 25,
     fontFamily: 'regular',
+    textAlign: 'center',
+    writingDirection: 'auto',
   },
   inputContainer: {
     marginTop: 20,
@@ -138,16 +171,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     lineHeight: 25,
     fontFamily: 'regular',
+    textAlign: 'left', // Will be overridden by writingDirection
+    writingDirection: 'auto',
   },
   inputStyle: {
     borderWidth: 1,
     color: 'black',
-    borderColor: 'rgba(0,0,0,0.3',
+    borderColor: 'rgba(0,0,0,0.3)',
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 10,
     fontFamily: 'regular',
     fontSize: 18,
+    textAlign: 'left', // Default, will be overridden by component prop
+    writingDirection: 'auto',
+  },
+  rtlInput: {
+    textAlign: 'right',
   },
   buttonStyle: {
     backgroundColor: 'blue',
@@ -160,6 +200,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontSize: 18,
+    writingDirection: 'auto',
   },
 });
 

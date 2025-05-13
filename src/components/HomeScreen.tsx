@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import {colors} from '../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {url} from '../utils/constants';
+
+// Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 import {useTranslation} from 'react-i18next';
@@ -20,12 +22,12 @@ import {useTranslation} from 'react-i18next';
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({navigation}: HomeProps) => {
-  const [profile, setProfile] = useState<Record<string, any>>({});
+  const [profile, setProfile] = useState({});
   const [showPulseModal, setShowPulseModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const {t} = useTranslation();
 
-  const getUserProfile = useCallback(async () => {
+  const getUserProfile = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
@@ -51,42 +53,36 @@ const HomeScreen = ({navigation}: HomeProps) => {
     } catch (error) {
       console.error('Error fetching profile:', error);
     }
-  }, []);
+  };
 
-  const handleBackPress = useCallback(() => {
-    Alert.alert(
-      t('Home.exitTitle'), 
-      t('Home.exitMessage'),
-      [
-        {
-          text: t('Home.cancel'),
-          onPress: () => null,
-          style: 'cancel',
-        },
-        {
-          text: t('Home.exit'),
-          onPress: () => BackHandler.exitApp(),
-        },
-      ]
-    );
+  const handleBackPress = () => {
+    Alert.alert('Exit App', 'Are you sure you want to exit?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'Exit',
+        onPress: () => BackHandler.exitApp(),
+      },
+    ]);
     return true;
-  }, [t]);
+  };
 
-  const handleTestButtonPress = useCallback(() => {
+  const handleTestButtonPress = () => {
     setShowConfirmation(true);
-  }, []);
+  };
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       getUserProfile();
-      
-      const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        handleBackPress
-      );
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-      return () => backHandler.remove();
-    }, [getUserProfile, handleBackPress])
+      return () => {
+        backHandler.remove();
+      };
+    }, []),
   );
 
   return (
@@ -123,7 +119,7 @@ const HomeScreen = ({navigation}: HomeProps) => {
       {/* Confirmation Modal */}
       <Modal
         visible={showConfirmation}
-        transparent
+        transparent={true}
         animationType="fade"
         onRequestClose={() => setShowConfirmation(false)}>
         <View style={styles.confirmationModalContainer}>
@@ -162,11 +158,12 @@ const HomeScreen = ({navigation}: HomeProps) => {
       {/* Pulse Check Instructions Modal */}
       <Modal
         visible={showPulseModal}
-        transparent
+        transparent={true}
         animationType="slide"
         onRequestClose={() => setShowPulseModal(false)}>
         <View style={styles.modalBackdrop}>
           <View style={styles.instructionModalContainer}>
+            {/* Header with icon */}
             <View style={styles.modalHeader}>
               <View style={styles.pulseIconContainer}>
                 <Text style={styles.pulseIcon}>💓</Text>
@@ -174,7 +171,9 @@ const HomeScreen = ({navigation}: HomeProps) => {
               <Text style={styles.modalTitle}>{t('Home.title2')}</Text>
             </View>
 
+            {/* Content with step-by-step instructions */}
             <View style={styles.instructionContent}>
+              {/* Step 1 */}
               <View style={styles.instructionStep}>
                 <View style={styles.stepIndicator}>
                   <Text style={styles.stepNumber}>1</Text>
@@ -185,8 +184,10 @@ const HomeScreen = ({navigation}: HomeProps) => {
                 </View>
               </View>
 
+              {/* Divider */}
               <View style={styles.stepDivider} />
 
+              {/* Step 2 */}
               <View style={styles.instructionStep}>
                 <View style={styles.stepIndicator}>
                   <Text style={styles.stepNumber}>2</Text>
@@ -197,12 +198,14 @@ const HomeScreen = ({navigation}: HomeProps) => {
                 </View>
               </View>
 
+              {/* Important Note */}
               <View style={styles.noteContainer}>
                 <Text style={styles.noteTitle}>{t('Home.title5')}</Text>
                 <Text style={styles.noteText}>{t('Home.text5')}</Text>
               </View>
             </View>
 
+            {/* Footer with button */}
             <TouchableOpacity
               style={styles.gotItButton}
               onPress={() => setShowPulseModal(false)}>
@@ -309,6 +312,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+
+  // Confirmation Modal Styles
   confirmationModalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -379,6 +384,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
+
+  // Pulse Instruction Modal Styles
   modalBackdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

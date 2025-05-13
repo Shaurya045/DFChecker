@@ -117,11 +117,11 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-<TouchableOpacity
-  onPress={() => navigation.navigate('Home')}
-  style={styles.homeButton}>  {/* Added proper styling */}
-  <Icon name="home" size={30} color={colors.primary} />  {/* Fixed lowercase + color */}
-</TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+        style={{alignSelf: 'flex-start', }}>
+        <Icon name="arrowleft" size={30} />
+      </TouchableOpacity>
       <View style={{width: '100%'}}>
         <Text style={styles.headingText}>{t('Profile.title')}</Text>
         <View style={styles.profileItem}>
@@ -303,13 +303,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  homeButton: {  // Add this new style
-    position: 'absolute',
-    top: 43,
-    left: -12,
-    zIndex: 1,
-    padding: 10,
   },
 });
 

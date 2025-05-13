@@ -17,9 +17,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
 import {useTranslation} from 'react-i18next';
 
-const {high, wide} = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
-const BasicQuestions = ({
+interface BasicQuestionsProps {
+  answers: Record<string, any>;
+  handleAnswer: (id: string, value: any) => void;
+  setCurrentStep: (step: string) => void;
+  popUp: boolean;
+  setPopUp: (value: boolean) => void;
+}
+
+const BasicQuestions: React.FC<BasicQuestionsProps> = ({
   answers,
   handleAnswer,
   setCurrentStep,
@@ -29,8 +37,8 @@ const BasicQuestions = ({
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [foot, setFoot] = useState('');
   const [footImage, setFootImage] = useState<{
-    left: string | null;
-    right: string | null;
+    left: any | null;
+    right: any | null;
   }>({left: null, right: null});
   const {t} = useTranslation();
 
@@ -171,7 +179,11 @@ const BasicQuestions = ({
           throw new Error('Failed to fetch images');
         }
       } catch (error) {
-        console.error('Error fetching images:', error.message);
+        if (error instanceof Error) {
+          console.error('Error fetching images:', error.message);
+        } else {
+          console.error('Error fetching images:', error);
+        }
       }
     };
 
@@ -420,6 +432,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginBottom: 10,
     maxWidth: '60%',
+    textAlign: 'left',
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -457,7 +470,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 20,
-    width: wide,
+    width: width,
   },
   cameraButton: {
     backgroundColor: '#2196F3',
@@ -469,7 +482,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 10,
-    width: wide,
+    width: width,
   },
   imageContainer: {
     marginBottom: 5,

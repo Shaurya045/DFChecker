@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '80%',
+    textAlign: 'left',
   },
   button: {
     padding: 0,

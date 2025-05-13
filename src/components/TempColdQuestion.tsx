@@ -26,7 +26,7 @@ const TempColdQuestion = ({
     },
     {
       id: 'tempCold2',
-      text: t('Cold.qes1'),
+      text: t('Cold.qes2'),
     },
   ];
   const validateAnswers = () => {
@@ -310,11 +310,13 @@ const styles = StyleSheet.create({
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
+    justifyContent: 'space-between',
   },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '60%',
+    textAlign: 'left',
   },
   buttonGroup: {
     flexDirection: 'row',

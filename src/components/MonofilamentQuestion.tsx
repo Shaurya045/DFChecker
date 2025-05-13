@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
+    justifyContent: 'space-between',
   },
   questionRow: {
     flexDirection: 'row',
@@ -179,6 +180,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '80%',
+    textAlign: 'left',
   },
   button: {
     padding: 0,

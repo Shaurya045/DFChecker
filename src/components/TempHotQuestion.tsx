@@ -308,14 +308,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
   },
-  headingTxt: {
+ headingTxt: {
     fontSize: 18,
     fontWeight: '600',
+    justifyContent: 'space-between',
   },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '60%',
+    textAlign: 'left',
   },
   buttonGroup: {
     flexDirection: 'row',

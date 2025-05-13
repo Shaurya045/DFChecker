@@ -313,11 +313,13 @@ const styles = StyleSheet.create({
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
+    justifyContent: 'space-between',
   },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '60%',
+    textAlign: 'left',
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -357,7 +359,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     position: 'absolute',
-    bottom: -10,
+    bottom: -1,
     width: 24,
     height: 24,
     borderRadius: 12,

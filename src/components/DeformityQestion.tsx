@@ -38,10 +38,7 @@ const DeformityQestion = ({
       id: 'deformity4',
       text: t('Deformity.qes4'),
     },
-    {
-      id: 'deformity5',
-      text: t('Deformity.qes5'),
-    },
+
   ];
   const validateAnswers = () => {
     // 1. Check if at least one option is selected for any question
@@ -216,115 +213,116 @@ const DeformityQestion = ({
           <Text style={styles.questionTxt}>{item.text}</Text>
           <View style={styles.buttonGroup}>
             {/* Left Checkbox */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                // If deformity1 or deformity4 is being checked, uncheck all other left checkboxes
-                if (
-                  (item.id === 'deformity1' || item.id === 'deformity4') &&
-                  !answers[item.id]?.left
-                ) {
-                  questions.forEach(question => {
-                    if (
-                      question.id !== 'deformity1' &&
-                      question.id !== 'deformity4'
-                    ) {
-                      handleAnswer(question.id, {
-                        ...answers[question.id],
-                        left: false,
-                      });
-                    }
-                  });
-                  // Also uncheck the other special deformity checkbox if it's not the current one
-                  const otherDeformity =
-                    item.id === 'deformity1' ? 'deformity4' : 'deformity1';
-                  handleAnswer(otherDeformity, {
-                    ...answers[otherDeformity],
-                    left: false,
-                  });
-                }
-                // Toggle the current checkbox
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  left: !answers[item.id]?.left,
-                });
-              }}
-              disabled={
-                (answers['deformity1']?.left || answers['deformity4']?.left) &&
-                item.id !== 'deformity1' &&
-                item.id !== 'deformity4'
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.left && styles.checkboxChecked,
-                  (answers['deformity1']?.left ||
-                    answers['deformity4']?.left) &&
-                    item.id !== 'deformity1' &&
-                    item.id !== 'deformity4' &&
-                    styles.disabledCheckbox,
-                ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
+<TouchableOpacity
+  style={styles.button}
+  onPress={() => {
+    // If deformity1 or deformity4 is being checked, uncheck all other left checkboxes
+    if (
+      (item.id === 'deformity1' || item.id === 'deformity4') &&
+      !answers[item.id]?.left
+    ) {
+      questions.forEach(question => {
+        if (
+          question.id !== 'deformity1' &&
+          question.id !== 'deformity4'
+        ) {
+          handleAnswer(question.id, {
+            ...answers[question.id],
+            left: false,
+          });
+        }
+      });
+      // Also uncheck the other special deformity checkbox if it's not the current one
+      const otherDeformity =
+        item.id === 'deformity1' ? 'deformity4' : 'deformity1';
+      handleAnswer(otherDeformity, {
+        ...answers[otherDeformity],
+        left: false,
+      });
+    }
+    // Toggle the current checkbox
+    handleAnswer(item.id, {
+      ...answers[item.id],
+      left: !answers[item.id]?.left,
+    });
+  }}
+  disabled={
+    // Disable all except deformity4 when deformity1 is selected
+    (answers['deformity1']?.left && item.id !== 'deformity1') ||
+    // Disable all except deformity1 when deformity4 is selected
+    (answers['deformity4']?.left && item.id !== 'deformity4')
+  }>
+  <View
+    style={[
+      styles.checkbox,
+      answers[item.id]?.left && styles.checkboxChecked,
+      // Apply disabled style based on the same conditions
+      ((answers['deformity1']?.left && item.id !== 'deformity1') ||
+      (answers['deformity4']?.left && item.id !== 'deformity4'))
+        ? styles.disabledCheckbox
+        : null,
+    ]}>
+    {answers[item.id]?.left && (
+      <Text style={styles.checkmark}>✓</Text>
+    )}
+  </View>
+</TouchableOpacity>
 
             {/* Right Checkbox */}
             <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                // If deformity1 or deformity4 is being checked, uncheck all other right checkboxes
-                if (
-                  (item.id === 'deformity1' || item.id === 'deformity4') &&
-                  !answers[item.id]?.right
-                ) {
-                  questions.forEach(question => {
-                    if (
-                      question.id !== 'deformity1' &&
-                      question.id !== 'deformity4'
-                    ) {
-                      handleAnswer(question.id, {
-                        ...answers[question.id],
-                        right: false,
-                      });
-                    }
-                  });
-                  // Also uncheck the other special deformity checkbox if it's not the current one
-                  const otherDeformity =
-                    item.id === 'deformity1' ? 'deformity4' : 'deformity1';
-                  handleAnswer(otherDeformity, {
-                    ...answers[otherDeformity],
-                    right: false,
-                  });
-                }
-                // Toggle the current checkbox
-                handleAnswer(item.id, {
-                  ...answers[item.id],
-                  right: !answers[item.id]?.right,
-                });
-              }}
-              disabled={
-                (answers['deformity1']?.right ||
-                  answers['deformity4']?.right) &&
-                item.id !== 'deformity1' &&
-                item.id !== 'deformity4'
-              }>
-              <View
-                style={[
-                  styles.checkbox,
-                  answers[item.id]?.right && styles.checkboxChecked,
-                  (answers['deformity1']?.right ||
-                    answers['deformity4']?.right) &&
-                    item.id !== 'deformity1' &&
-                    item.id !== 'deformity4' &&
-                    styles.disabledCheckbox,
-                ]}>
-                {answers[item.id]?.right && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
-              </View>
-            </TouchableOpacity>
+  style={styles.button}
+  onPress={() => {
+    // If deformity1 or deformity4 is being checked, uncheck all other right checkboxes
+    if (
+      (item.id === 'deformity1' || item.id === 'deformity4') &&
+      !answers[item.id]?.right
+    ) {
+      questions.forEach(question => {
+        if (
+          question.id !== 'deformity1' &&
+          question.id !== 'deformity4'
+        ) {
+          handleAnswer(question.id, {
+            ...answers[question.id],
+            right: false,
+          });
+        }
+      });
+      // Also uncheck the other special deformity checkbox if it's not the current one
+      const otherDeformity =
+        item.id === 'deformity1' ? 'deformity4' : 'deformity1';
+      handleAnswer(otherDeformity, {
+        ...answers[otherDeformity],
+        right: false,
+      });
+    }
+    // Toggle the current checkbox
+    handleAnswer(item.id, {
+      ...answers[item.id],
+      right: !answers[item.id]?.right,
+    });
+  }}
+  disabled={
+    // Disable all except deformity1 when deformity1 is selected
+    (answers['deformity1']?.right && item.id !== 'deformity1') ||
+    // Disable all except deformity4 when deformity4 is selected
+    (answers['deformity4']?.right && item.id !== 'deformity4')
+  }>
+  <View
+    style={[
+      styles.checkbox,
+      answers[item.id]?.right && styles.checkboxChecked,
+      // Apply disabled style based on the same conditions
+      ((answers['deformity1']?.right && item.id !== 'deformity1') ||
+       (answers['deformity4']?.right && item.id !== 'deformity4'))
+        ? styles.disabledCheckbox
+        : null,
+    ]}>
+    {answers[item.id]?.right && (
+      <Text style={styles.checkmark}>✓</Text>
+    )}
+  </View>
+</TouchableOpacity>
           </View>
         </View>
       ))}
@@ -387,11 +385,13 @@ const styles = StyleSheet.create({
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
+    justifyContent: 'space-between',
   },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '60%',
+    textAlign: 'left',
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     position: 'absolute',
-    bottom: -10,
+    bottom: 4,
     width: 24,
     height: 24,
     borderRadius: 12,

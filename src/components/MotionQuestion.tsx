@@ -199,17 +199,15 @@ const MotionQuestion = ({
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                // If motion1 is being checked, uncheck motion2 and motion3
+                // If motion1 is being checked, uncheck all other left checkboxes
                 if (item.id === 'motion1' && !answers[item.id]?.left) {
-                  handleAnswer('motion2', {
-                    ...answers['motion2'],
-                    left: false,
-                    right: false,
-                  });
-                  handleAnswer('motion3', {
-                    ...answers['motion3'],
-                    left: false,
-                    right: false,
+                  questions.forEach(question => {
+                    if (question.id !== 'motion1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        left: false,
+                      });
+                    }
                   });
                 }
                 // If motion4 is being checked, uncheck all other left checkboxes
@@ -230,23 +228,19 @@ const MotionQuestion = ({
                 });
               }}
               disabled={
-                (answers['motion4']?.left && item.id !== 'motion4') ||
-                (answers['motion1']?.left && (item.id === 'motion2' || item.id === 'motion3')) ||
-                (answers['motion1']?.right && (item.id === 'motion2' || item.id === 'motion3'))
+                (answers['motion1']?.left && item.id !== 'motion1') ||
+                (answers['motion4']?.left && item.id !== 'motion4')
               }>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.left && styles.checkboxChecked,
-                  (answers['motion4']?.left && item.id !== 'motion4') ||
-                  (answers['motion1']?.left && (item.id === 'motion2' || item.id === 'motion3')) ||
-                  (answers['motion1']?.right && (item.id === 'motion2' || item.id === 'motion3'))
+                  ((answers['motion1']?.left && item.id !== 'motion1') ||
+                  (answers['motion4']?.left && item.id !== 'motion4'))
                     ? styles.disabledCheckbox
                     : null,
                 ]}>
-                {answers[item.id]?.left && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
+                {answers[item.id]?.left && <Text style={styles.checkmark}>✓</Text>}
               </View>
             </TouchableOpacity>
 
@@ -254,17 +248,15 @@ const MotionQuestion = ({
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                // If motion1 is being checked, uncheck motion2 and motion3
+                // If motion1 is being checked, uncheck all other right checkboxes
                 if (item.id === 'motion1' && !answers[item.id]?.right) {
-                  handleAnswer('motion2', {
-                    ...answers['motion2'],
-                    left: false,
-                    right: false,
-                  });
-                  handleAnswer('motion3', {
-                    ...answers['motion3'],
-                    left: false,
-                    right: false,
+                  questions.forEach(question => {
+                    if (question.id !== 'motion1') {
+                      handleAnswer(question.id, {
+                        ...answers[question.id],
+                        right: false,
+                      });
+                    }
                   });
                 }
                 // If motion4 is being checked, uncheck all other right checkboxes
@@ -285,23 +277,19 @@ const MotionQuestion = ({
                 });
               }}
               disabled={
-                (answers['motion4']?.right && item.id !== 'motion4') ||
-                (answers['motion1']?.left && (item.id === 'motion2' || item.id === 'motion3')) ||
-                (answers['motion1']?.right && (item.id === 'motion2' || item.id === 'motion3'))
+                (answers['motion1']?.right && item.id !== 'motion1') ||
+                (answers['motion4']?.right && item.id !== 'motion4')
               }>
               <View
                 style={[
                   styles.checkbox,
                   answers[item.id]?.right && styles.checkboxChecked,
-                  (answers['motion4']?.right && item.id !== 'motion4') ||
-                  (answers['motion1']?.left && (item.id === 'motion2' || item.id === 'motion3')) ||
-                  (answers['motion1']?.right && (item.id === 'motion2' || item.id === 'motion3'))
+                  ((answers['motion1']?.right && item.id !== 'motion1') ||
+                  (answers['motion4']?.right && item.id !== 'motion4'))
                     ? styles.disabledCheckbox
                     : null,
                 ]}>
-                {answers[item.id]?.right && (
-                  <Text style={styles.checkmark}>✓</Text>
-                )}
+                {answers[item.id]?.right && <Text style={styles.checkmark}>✓</Text>}
               </View>
             </TouchableOpacity>
           </View>
@@ -366,11 +354,13 @@ const styles = StyleSheet.create({
   headingTxt: {
     fontSize: 18,
     fontWeight: '600',
+    justifyContent: 'space-between',
   },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
     maxWidth: '60%',
+    textAlign: 'left',
   },
   buttonGroup: {
     flexDirection: 'row',
