@@ -7,9 +7,10 @@ import {
   Image,
   Dimensions,
   Alert,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
-// import {initialQuestions} from '../utils/questions';
 import {colors} from '../utils/colors';
 import MediaPopup from './MediaPopUp';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -71,83 +72,138 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
     },
     {
       id: 'renalFailure',
-      text: t('BasicQes.qes6'), // Add translation key for "End-stage renal failure"
+      text: t('BasicQes.qes6'),
       type: 'boolean',
     },
   ];
 
-  const handleTakePhoto = () => {
-    ImagePicker.openCamera({
-      width: 300,
-      height: 300,
-      cropping: true,
-      avoidEmptySpaceAroundImage: true,
-      freeStyleCropEnabled: true,
-    }).then(img => {
-      if (foot === 'Left') {
-        setFootImage({...footImage, left: img});
-      } else {
-        setFootImage({...footImage, right: img});
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'This app needs access to your camera',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
       }
-      setIsPopupVisible(false);
-    });
+    }
+    return true; // iOS handles permissions through Info.plist
   };
 
-  const handleChooseFromGallery = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-      avoidEmptySpaceAroundImage: true,
-      freeStyleCropEnabled: true,
-    }).then(img => {
+  const handleTakePhoto = async () => {
+    const hasPermission = await requestCameraPermission();
+    if (!hasPermission) {
+      Alert.alert(
+        'Permission required',
+        'Camera permission is required to take photos',
+      );
+      return;
+    }
+
+    try {
+      const img = await ImagePicker.openCamera({
+        width: 300,
+        height: 300,
+        cropping: true,
+        avoidEmptySpaceAroundImage: true,
+        freeStyleCropEnabled: true,
+      });
+      
       if (foot === 'Left') {
         setFootImage({...footImage, left: img});
       } else {
         setFootImage({...footImage, right: img});
       }
+    } catch (error) {
+      console.log('Camera error:', error);
+      if (error instanceof Error) {
+        Alert.alert('Error', error.message);
+      }
+    } finally {
       setIsPopupVisible(false);
-    });
+    }
+  };
+
+  const handleChooseFromGallery = async () => {
+    try {
+      const img = await ImagePicker.openPicker({
+        width: 300,
+        height: 300,
+        cropping: true,
+        avoidEmptySpaceAroundImage: true,
+        freeStyleCropEnabled: true,
+      });
+      
+      if (foot === 'Left') {
+        setFootImage({...footImage, left: img});
+      } else {
+        setFootImage({...footImage, right: img});
+      }
+    } catch (error) {
+      console.log('Gallery error:', error);
+      if (error instanceof Error) {
+        Alert.alert('Error', error.message);
+      }
+    } finally {
+      setIsPopupVisible(false);
+    }
   };
 
   const submitImage = async () => {
-    if (!footImage.left || !footImage.right) {
-      console.error('Both images are required.');
+    if ((!footImage.left || !footImage.right) && (answers.ulcer === true)) {
+      Alert.alert('Error', 'Both foot images are required');
       return;
     }
 
     const formData = new FormData();
     formData.append('imageL', {
-      uri: footImage.left.path,
+      uri: footImage.left.sourceURL,
       name: 'left-foot.jpg',
       type: footImage.left.mime,
     });
     formData.append('imageR', {
-      uri: footImage.right.path,
+      uri: footImage.right.sourceURL,
       name: 'right-foot.jpg',
       type: footImage.right.mime,
     });
 
     try {
       const token = await AsyncStorage.getItem('token');
-
+      console.log('Token:', token);
+      console.log(footImage);
       if (!token) {
-        console.error('No token found. Please log in.');
-        return null;
+        Alert.alert('Error', 'Authentication required');
+        return;
       }
-      let response = await fetch(`${url}/upload-images`, {
+
+      const response = await fetch(`${url}/upload-images`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
+      console.log('Response:', response);
+      if (!response.ok) {
+        throw new Error('Failed to upload images');
+      }
 
       const result = await response.json();
-      console.log(result);
+      setCurrentStep('skin');
+      console.log('Upload success:', result);
     } catch (error) {
       console.error('Error uploading images:', error);
+      Alert.alert('Error', 'Failed to upload images');
     }
   };
 
@@ -289,13 +345,19 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
     }
 
     setPopUp(true);
-    submitImage();
-    setCurrentStep('skin');
-    if ((footImage.left || footImage.right) && answers.ulcer) {
+    if ((!footImage.left || !footImage.right) && answers.ulcer) {
+      setCurrentStep('initial');
       Alert.alert(
-        t('Alert.title1'),
-        t('Alert.text1'),
+        t('Alert.title3'),
+        t('Alert.text5'),
       );
+    }
+    else if (answers.ulcer && footImage.left && footImage.right) {
+      submitImage();
+      
+    }
+    else if (!answers.ulcer) {
+      setCurrentStep('skin');
     }
   };
 
@@ -470,7 +532,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 20,
-    width: width,
+    width: width-40,
+    marginRight: 20,
   },
   cameraButton: {
     backgroundColor: '#2196F3',
@@ -482,7 +545,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 10,
-    width: width,
+    width: width-40,
   },
   imageContainer: {
     marginBottom: 5,

@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
+import RNFS from 'react-native-fs'; // Add this import
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useTranslation } from 'react-i18next';
@@ -67,8 +70,58 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
     }
   };
 
+  // Request storage permissions for Android
+  const requestStoragePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        if (Platform.Version >= 33) {
+          // For Android 13 and above
+          const permissions = [
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+          ];
+          
+          const granted = await PermissionsAndroid.requestMultiple(permissions);
+          
+          return Object.values(granted).every(
+            status => status === PermissionsAndroid.RESULTS.GRANTED
+          );
+        } else {
+          // For Android 12 and below
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            {
+              title: t('Permissions.storageTitle'),
+              message: t('Permissions.storageMessage'),
+              buttonNeutral: t('Permissions.askLater'),
+              buttonNegative: t('Permissions.cancel'),
+              buttonPositive: t('Permissions.ok'),
+            }
+          );
+          return granted === PermissionsAndroid.RESULTS.GRANTED;
+        }
+      } catch (err) {
+        console.error('Permission request error:', err);
+        return false;
+      }
+    }
+    return true; // iOS doesn't need this permission
+  };
+
   const generatePDF = async () => {
     try {
+      // Check storage permissions first
+      const hasPermission = await requestStoragePermission();
+      
+      if (!hasPermission) {
+        Alert.alert(
+          t('Alert.permissionDenied'),
+          t('Alert.storagePermissionRequired')
+        );
+        return;
+      }
+
       const leftRecommendations = getRecommendations(result.left ?? undefined);
       const rightRecommendations = getRecommendations(result.right ?? undefined);
 
@@ -132,17 +185,54 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
       </html>
       `;
 
+      // Use appropriate directory based on platform
+      const directory = Platform.select({
+        ios: 'Documents',
+        android: 'Download',
+      });
+      
+      const filename = `Foot_Health_Report_${new Date().getTime()}`;
+      
       const options = {
         html: htmlContent,
-        fileName: 'Foot_Health_Report',
-        directory: 'Documents',
+        fileName: filename,
+        directory: directory,
+        base64: true, // Add this option
       };
 
       const file = await RNHTMLtoPDF.convert(options);
+      
+      if (!file.filePath) {
+        throw new Error('PDF file path is empty');
+      }
 
+      // For Android, ensure the file is discoverable in the Downloads folder
+      if (Platform.OS === 'android') {
+        // Copy the file to the external Downloads directory to make it visible in file explorer
+        const downloadPath = `${RNFS.DownloadDirectoryPath}/${filename}.pdf`;
+        
+        // Check if file exists first
+        const fileExists = await RNFS.exists(file.filePath);
+        
+        if (fileExists) {
+          try {
+            // Copy PDF to downloads folder
+            await RNFS.copyFile(file.filePath, downloadPath);
+            
+            // Make file visible in gallery/downloads
+            await RNFS.scanFile(downloadPath);
+            
+            console.log('File saved to:', downloadPath);
+          } catch (copyError) {
+            console.error('Error copying file:', copyError);
+          }
+        }
+      }
+      
+      // Share the PDF file
       const shareOptions = {
         title: t('Report.btn2'),
-        url: `file://${file.filePath}`,
+        url: Platform.OS === 'ios' ? file.filePath : `file://${file.filePath}`,
         type: 'application/pdf',
       };
 
@@ -150,7 +240,8 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
       Alert.alert(t('Alert.title1'), t('Alert.text1'));
     } catch (error) {
       console.error('Error generating or sharing PDF:', error);
-      Alert.alert(t('Alert.error'), t('Alert.pdfError'));
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      Alert.alert(t('Alert.error'), `${t('Alert.pdfError')}: ${errorMsg}`);
     }
   };
 
@@ -179,7 +270,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
         style={styles.backButton}>
-        <Icon name="arrowleft" size={30} />
+        <Icon name="arrowleft" size={30} color={colors.primary} />
       </TouchableOpacity>
 
       <View style={styles.titleBox}>
@@ -329,6 +420,7 @@ const styles = StyleSheet.create({
   backButton: {
     alignSelf: 'flex-start',
     marginBottom: 10,
+    color: colors.primary,
   },
   titleBox: {
     width: '100%',

@@ -267,6 +267,7 @@ const TempHotQuestion = ({
           {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
         </Text>
       </View>
+      <View style={styles.buttonWrapper}>`
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('tempCold')}>
@@ -274,10 +275,11 @@ const TempHotQuestion = ({
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.nextButton, {marginBottom: 40}]}
+        style={[styles.nextButton]}
         onPress={handleNext}>
         <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -285,6 +287,11 @@ const TempHotQuestion = ({
 export default TempHotQuestion;
 
 const styles = StyleSheet.create({
+   buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
   titleBox: {
     width: '100%',
     backgroundColor: colors.primary,
@@ -349,6 +356,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
+    width: 160,
   },
   nextButtonText: {
     color: '#fff',

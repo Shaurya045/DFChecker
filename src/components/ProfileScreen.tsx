@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 10,
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   profileText: {
     fontSize: 20,

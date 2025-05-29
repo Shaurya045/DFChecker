@@ -92,7 +92,7 @@ const ErythemaQuestion = ({
                 1. Mark the questions for both feet in their respective columns.
               </Text>
               <Text style={styles.instructionText}>
-                2. For example, if you have heavy callus build-up on both feet,
+                2. For example, if you have heavy cornes build-up on both feet,
                 select both the left and right foot. If only on the right foot,
                 select it only.
               </Text>
@@ -209,6 +209,7 @@ const ErythemaQuestion = ({
           {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
         </Text>
       </View>
+      <View style={styles.buttonWrapper}>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('rubor')}>
@@ -220,6 +221,7 @@ const ErythemaQuestion = ({
         onPress={() => setShowSubmitConfirm(true)}>
         <Text style={styles.nextButtonText}>{t('Erythema.btn1')}</Text>
       </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -227,6 +229,11 @@ const ErythemaQuestion = ({
 export default ErythemaQuestion;
 
 const styles = StyleSheet.create({
+   buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
   titleBox: {
     width: '100%',
     backgroundColor: colors.primary,
@@ -337,6 +344,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
+    width: 160,
   },
   nextButtonText: {
     color: '#fff',

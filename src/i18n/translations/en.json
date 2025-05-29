@@ -90,7 +90,7 @@
         "text4": "Look for dry, flaky skin (moccasin foot) or moist, red areas (yeast infection) between the toes.",
         "title5": "Check skin condition",
         "text5": "Feel for dry, rough, or cracked skin. Note if it's moist in any areas.",
-        "title6": "Check for calluses",
+        "title6": "Check for cornes",
         "text6": "Look for thickened skin, especially on the bottom of the feet. Note if it's light or heavy.",
         "title7": "Look for ulcers or open wounds",
         "text7": "Inspect for any open sores. Document their size and location.",
@@ -103,9 +103,9 @@
         "text9": "Leave the checkbox unfilled",
         "btn3": "Previous",
         "btn4": "Next",
-        "qes1": "Skin is intact and has no signs of trauma & ulcer. No signs of fungus or callus formation?",
-        "qes2": "Skin is dry, fungus such as a moccasin foot or interdigital yeast may be present. Some callus build-up may be noted?",
-        "qes3": "Heavy callus build up?",
+        "qes1": "Skin is intact and has no signs of trauma & ulcer. No signs of fungus or corn formation?",
+        "qes2": "Skin is dry, fungus such as a moccasin foot or interdigital yeast may be present. Some corn build-up may be noted?",
+        "qes3": "Foot corn build-up",
         "qes4": "Open skin ulceration present?"
     },
     "Nail":{
@@ -236,7 +236,8 @@
     },
     "MonofilamentQes": {
         "text1": "Questions",
-        "text2": "Select if Yes",
+        "text2": "Left",
+        "text5": "Right",
         "title8": "Diabetic Foot Test - Monofilament",
         "qes1": "Sensation present at all 10 sites?",
         "qes2": "Sensation present at 7 - 9 sites?",
@@ -321,12 +322,18 @@
         "interpretation": "Interpretation"
     },
     "Alert":{
-        "title1": "Image uploaded successfully",
-        "text1": "Your image will be analyzed by AI and report will be generated in 24 hours.",
+        "title1": "PDF sent or saved successfully",
+        "title3": "Both Images are required",
+        "text5" : "please upload both images",
+        "text1": "Your generated PDF has been sent or saved successfully.",
         "title2": "Incomplete Form",
         "text2": "Please answer all the questions before proceeding.",
         "text3": "Please select at least one option for each foot (left and right).",
-        "text4": "Please select at least one option before proceeding."
+        "text4": "Please select at least one option before proceeding.",
+        "error": "Downloading Canceled",
+        "pdfError": "you canceled the downloading process"
+
+
     },
     "risk_category": {
         "Urgent Risk": "Urgent Risk",
@@ -352,7 +359,7 @@
         "LOPS+foot deformity": "LOPS + foot deformity",
         "LOPS + foot deformity, or PAD + foot deformity": "LOPS + foot deformity, or PAD + foot deformity",
         "LOPS + PAD": "LOPS + PAD",
-        "Indicative of callus formation": "Indicative of callus formation",
+        "Indicative of corn formation": "Indicative of corn formation",
         "Need retest every 3 days to check the ulcer": "Need retest every 3 days to check the ulcer",
         "Need retest every 3 days to check the nails": "Need retest every 3 days to check the nails",
         "Peripheral arterial disease": "Peripheral arterial disease",
@@ -398,10 +405,11 @@
         "indication of loss of protective sensation (neuropathy).": "Indication of loss of protective sensation (neuropathy).",
         "indication of Charcot changes.": "Indication of Charcot changes.",
         "indication of PAD + LOPS(neuropathy).": "Indication of PAD + LOPS (neuropathy).",
+       "indication of charcot changes + indication of peripheral arterial disease + LOPS(neuropathy).": "Indication of Charcot changes + indication of peripheral arterial disease + LOPS (neuropathy).",
         "indication of charcot changes + indication of peripheral arterial disease.": "Indication of Charcot changes + indication of peripheral arterial disease.",
         "indication of infected nails.": "Indication of infected nails.",
         "indication of infected ulcer.": "Indication of infected ulcer.",
-        "indication of callous formation.": "Indication of callous formation.",
+        "indication of corn formation.": "Indication of corn formation.",
         "indication of self care deficit": "Indication of self-care deficit.",
         "notAvailable": "Interpretation not available.",
         "notdata": "No data available."
@@ -419,7 +427,7 @@
         "Appropriate foot and nail care.",
         "Well-fitting footwear.",
         "Trimming toenails straight.",
-        "Don’t remove any calluses by yourself.",
+        "Don’t remove any cornes by yourself.",
         "Seek medical care if you notice scaly peeling or cracked skin between toes."
         ],
         "LowRisk": [
@@ -427,14 +435,14 @@
         "Appropriate foot and nail care.",
         "Well-fitting footwear.",
         "Trimming toenails straight.",
-        "Don’t remove any calluses by yourself.",
+        "Don’t remove any cornes by yourself.",
         "Seek medical care if you notice scaly peeling or cracked skin between toes.",
         "Reduce weight if high BMI, stop smoking, control diabetes and hypertension if present.",
         "Seek rehab specialist to provide fitness plan for feet."
         ],
         "ModerateRisk": [
         "Well-fitting orthopaedic footwear and medical socks.",
-        "Don’t remove any calluses by yourself.",
+        "Don’t remove any cornes by yourself.",
         "Seek medical care if you notice scaly peeling or cracked skin between toes.",
         "Reduce weight if high BMI, stop smoking, control diabetes and hypertension if present.",
         "Seek rehab specialist to provide fitness plan for feet.",
@@ -445,7 +453,7 @@
         "Seek immediate medical attention from a podiatrist or physician.",
         "Avoid walking or putting pressure on the affected foot.",
         "Keep the foot clean and dry to prevent infection.",
-        "Do not attempt home treatments such as cutting calluses or draining wounds.",
+        "Do not attempt home treatments such as cutting cornes or draining wounds.",
         "Visit an emergency care center if pain, swelling, or signs of infection (redness, pus, fever) occur."
         ]
     }

@@ -61,6 +61,24 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
   const toggleRegion = (regionId: string) => {
     handleAnswer(`ipswich_${regionId}`, !answers[`ipswich_${regionId}`]);
   };
+
+  // Handle single selection for Ipswich questions
+  const handleQuestionSelect = (selectedId: string) => {
+    // Create a new answers object where only the selected question is true
+    const updatedAnswers = questions.reduce((acc, question) => {
+      acc[question.id] = {
+        ...answers[question.id],
+        value: question.id === selectedId
+      };
+      return acc;
+    }, {} as Record<string, any>);
+
+    // Update all questions at once
+    Object.entries(updatedAnswers).forEach(([id, value]) => {
+      handleAnswer(id, value);
+    });
+  };
+
   return (
     <>
       <View style={styles.titleBox}>
@@ -190,12 +208,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
           <Text style={styles.questionTxt}>{item.text}</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() =>
-              handleAnswer(item.id, {
-                ...answers[item.id],
-                value: !answers[item.id]?.value,
-              })
-            }>
+            onPress={() => handleQuestionSelect(item.id)}>
             <View
               style={[
                 styles.checkbox,
@@ -208,17 +221,7 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
           </TouchableOpacity>
         </View>
       ))}
-      {/* Add instructions for checkbox interaction */}
-      {/* <View style={styles.instructionBox}>
-        <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "Yes":</Text> 
-          Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
-        </Text>
-        <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "No":</Text> 
-          Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-        </Text>
-      </View> */}
+      <View style={styles.buttonWrapper}>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
@@ -226,12 +229,13 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.nextButton, {marginBottom: 40}]}
+        style={[styles.nextButton]}
         onPress={() => {
           setCurrentStep('pedal');
         }}>
         <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -239,6 +243,11 @@ const SensationIPswich: React.FC<SensationIPswichProps> = ({
 export default SensationIPswich;
 
 const styles = StyleSheet.create({
+   buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
   titleBox: {
     width: '100%',
     backgroundColor: colors.primary,
@@ -262,6 +271,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
+     justifyContent: 'space-between',
   },
   questionRow: {
     flexDirection: 'row',
@@ -289,6 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
+    width: 160,
   },
   nextButtonText: {
     color: '#fff',
@@ -335,29 +346,6 @@ const styles = StyleSheet.create({
   },
   regionNumber: {
     fontSize: 14,
-    fontWeight: 'bold',
-  },
-  instructionBox: {
-    marginTop: 5,
-    marginBottom: 20,
-    paddingHorizontal: -200,
-  },
-  instructionText: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#555',
-    marginBottom: 5,
-  },
-  boldText: {
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  checkmarkSymbol: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-  },
-  uncheckedSymbol: {
-    color: '#000',
     fontWeight: 'bold',
   },
 });

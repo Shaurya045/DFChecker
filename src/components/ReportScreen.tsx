@@ -57,7 +57,7 @@ const recommendations = [
   },
   {
     id: 'Very Low Risk',
-    text: 'Don’t remove any calluses by yourself.',
+    text: 'Don’t remove any  by yourself.',
   },
   {
     id: 'Very Low Risk',
@@ -81,7 +81,7 @@ const recommendations = [
   },
   {
     id: 'Low Risk',
-    text: 'Don’t remove any calluses by yourself.',
+    text: 'Don’t remove any cornes by yourself.',
   },
   {
     id: 'Low Risk',
@@ -101,7 +101,7 @@ const recommendations = [
   },
   {
     id: 'Moderate Risk',
-    text: 'Don’t remove any calluses by yourself.',
+    text: 'Don’t remove any cornes by yourself.',
   },
   {
     id: 'Moderate Risk',
@@ -137,7 +137,7 @@ const recommendations = [
   },
   {
     id: 'Urgent Risk',
-    text: 'Do not attempt home treatments such as cutting calluses or draining wounds.',
+    text: 'Do not attempt home treatments such as cutting cornes or draining wounds.',
   },
   {
     id: 'Urgent Risk',

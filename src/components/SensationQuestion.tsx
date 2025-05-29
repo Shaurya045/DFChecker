@@ -62,7 +62,7 @@ const SensationQuestion = ({
                 column
               </Text>
               <Text style={{fontSize: 15, fontWeight: '400'}}>
-                2. For example if I have heavy callus build up on both foot then
+                2. For example if I have heavy cornes build up on both foot then
                 will select both the foot left and right and if only on the
                 right foot then will select it only.
               </Text>
@@ -159,6 +159,7 @@ const SensationQuestion = ({
           {t('Skin.text9')} (<Text style={styles.uncheckedSymbol}>◻</Text>).
         </Text>
       </View>
+      <View style={styles.buttonWrapper}>
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('motion')}>
@@ -166,13 +167,14 @@ const SensationQuestion = ({
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.nextButton, {marginBottom: 40}]}
+        style={[styles.nextButton]}
         onPress={() => {
           setCurrentStep('monofilament');
           setPopUp(true);
         }}>
         <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -180,6 +182,11 @@ const SensationQuestion = ({
 export default SensationQuestion;
 
 const styles = StyleSheet.create({
+   buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
   titleBox: {
     width: '100%',
     backgroundColor: colors.primary,
@@ -246,6 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
+    width: 160,
     // marginBottom: 40,
   },
   nextButtonText: {

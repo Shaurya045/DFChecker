@@ -43,7 +43,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
           await login(data.token);
           Alert.alert(t('Login success'));
         } else {
-          Alert.alert(t('Login.error'), t('Login.loginFailed'));
+          Alert.alert(t('Login Failed'), t('Check for id and password'));
         }
       } catch (error) {
         console.error('Error Logging in:', error);

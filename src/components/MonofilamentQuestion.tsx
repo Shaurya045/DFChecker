@@ -10,13 +10,28 @@ import React, {useState} from 'react';
 import {colors} from '../utils/colors';
 import {useTranslation} from 'react-i18next';
 
+type MonofilamentAnswers = {
+  [key: string]: {
+    left?: boolean;
+    right?: boolean;
+  };
+};
+
+type MonofilamentQuestionProps = {
+  answers: MonofilamentAnswers;
+  handleAnswer: (key: string, value: { left?: boolean; right?: boolean }) => void;
+  setCurrentStep: (step: string) => void;
+  popUp: boolean;
+  setPopUp: (value: boolean) => void;
+};
+
 const MonofilamentQuestion = ({
   answers,
   handleAnswer,
   setCurrentStep,
   popUp,
   setPopUp,
-}) => {
+}: MonofilamentQuestionProps) => {
   const [isImageVisible, setIsImageVisible] = useState(false);
   const {t} = useTranslation();
 
@@ -35,27 +50,56 @@ const MonofilamentQuestion = ({
     },
   ];
 
+  const handleLeftCheckbox = (itemId: string) => {
+    const newAnswers = {...answers};
+    // Uncheck all left checkboxes first
+    questions.forEach(q => {
+      newAnswers[q.id] = {
+        ...newAnswers[q.id],
+        left: false
+      };
+    });
+    // Toggle the selected checkbox
+    newAnswers[itemId] = {
+      ...newAnswers[itemId],
+      left: !answers[itemId]?.left
+    };
+    // Update state
+    Object.keys(newAnswers).forEach(key => {
+      handleAnswer(key, newAnswers[key]);
+    });
+  };
+
+  const handleRightCheckbox = (itemId: string) => {
+    const newAnswers = {...answers};
+    // Uncheck all right checkboxes first
+    questions.forEach(q => {
+      newAnswers[q.id] = {
+        ...newAnswers[q.id],
+        right: false
+      };
+    });
+    // Toggle the selected checkbox
+    newAnswers[itemId] = {
+      ...newAnswers[itemId],
+      right: !answers[itemId]?.right
+    };
+    // Update state
+    Object.keys(newAnswers).forEach(key => {
+      handleAnswer(key, newAnswers[key]);
+    });
+  };
+
   return (
     <>
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>{t('MonofilamentQes.title8')}</Text>
       </View>
       <View>
-        <Text
-          style={{
-            color: 'black',
-            fontSize: 18,
-            fontWeight: '400',
-          }}>
+        <Text style={styles.descriptionText}>
           {t('MonofilamentQes.text3')}
         </Text>
-        <Text
-          style={{
-            color: 'black',
-            fontSize: 18,
-            fontWeight: '400',
-            marginBottom: 20,
-          }}>
+        <Text style={[styles.descriptionText, {marginBottom: 20}]}>
           {t('MonofilamentQes.text4')}
         </Text>
         <TouchableOpacity
@@ -66,46 +110,53 @@ const MonofilamentQuestion = ({
           </Text>
         </TouchableOpacity>
       </View>
+      
+      {/* Header with Left/Right labels */}
       <View style={styles.heading}>
         <Text style={styles.headingTxt}>{t('MonofilamentQes.text1')}</Text>
         <View style={styles.rightHeading}>
           <Text style={styles.headingTxt}>{t('MonofilamentQes.text2')}</Text>
+          <Text style={[styles.headingTxt, {marginLeft: 25}]}>
+            {t('MonofilamentQes.text5')}
+          </Text>
         </View>
       </View>
+
+      {/* Questions with checkboxes */}
       {questions.map(item => (
         <View style={styles.questionRow} key={item.id}>
           <Text style={styles.questionTxt}>{item.text}</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              handleAnswer(item.id, {
-                ...answers[item.id],
-                value: !answers[item.id]?.value,
-              })
-            }>
-            <View
-              style={[
+          <View style={styles.checkboxGroup}>
+            {/* Left Checkbox */}
+            <TouchableOpacity
+              onPress={() => handleLeftCheckbox(item.id)}
+              style={styles.checkboxWrapper}>
+              <View style={[
                 styles.checkbox,
-                answers[item.id]?.value && styles.checkboxChecked,
+                answers[item.id]?.left && styles.checkboxChecked
               ]}>
-              {answers[item.id]?.value && (
-                <Text style={styles.checkmark}>✓</Text>
-              )}
-            </View>
-          </TouchableOpacity>
+                {answers[item.id]?.left && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+            </TouchableOpacity>
+
+            {/* Right Checkbox */}
+            <TouchableOpacity
+              onPress={() => handleRightCheckbox(item.id)}
+              style={[styles.checkboxWrapper, {marginLeft: 25}]}>
+              <View style={[
+                styles.checkbox,
+                answers[item.id]?.right && styles.checkboxChecked
+              ]}>
+                {answers[item.id]?.right && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       ))}
-      {/* Add instructions for checkbox interaction */}
-      {/* <View style={styles.instructionBox}>
-        <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "Yes":</Text> 
-          Click the checkbox (<Text style={styles.checkmarkSymbol}>✓</Text>).
-        </Text>
-        <Text style={styles.instructionText}>
-          <Text style={styles.boldText}>For "No":</Text> 
-          Leave the checkbox unfilled (<Text style={styles.uncheckedSymbol}>◻</Text>).
-        </Text>
-      </View> */}
+
+      {/* Navigation buttons */}
+      <View style={styles.buttonWrapper}>
+        
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => setCurrentStep('sensation')}>
@@ -113,11 +164,15 @@ const MonofilamentQuestion = ({
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.nextButton, {marginBottom: 40}]}
+        style={[styles.nextButton]}
         onPress={() => setCurrentStep('pedal')}>
         <Text style={styles.nextButtonText}>{t('Skin.btn4')}</Text>
       </TouchableOpacity>
+      </View>
 
+      {/* Pop-up for additional information */}
+
+      {/* Image modal */}
       <Modal
         visible={isImageVisible}
         transparent={true}
@@ -143,76 +198,66 @@ const MonofilamentQuestion = ({
 export default MonofilamentQuestion;
 
 const styles = StyleSheet.create({
+   buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
   titleBox: {
     width: '100%',
     backgroundColor: colors.primary,
     borderRadius: 10,
     marginBottom: 30,
+    paddingVertical: 12,
   },
   titleTxt: {
     color: 'white',
     fontSize: 20,
-    fontWeight: 'semibold',
+    fontWeight: '600',
     textAlign: 'center',
-    padding: 8,
+  },
+  descriptionText: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: '400',
   },
   heading: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 1,
+    alignItems: 'center',
     marginBottom: 15,
+    marginTop: 10,
+  },
+  headingTxt: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'black',
+     justifyContent: 'space-between',
   },
   rightHeading: {
     flexDirection: 'row',
-  },
-  headingTxt: {
-    fontSize: 18,
-    fontWeight: '600',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
+    width: 120,
   },
   questionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 20,
   },
   questionTxt: {
     fontSize: 17,
     fontWeight: '400',
-    maxWidth: '80%',
+    maxWidth: '60%',
     textAlign: 'left',
   },
-  button: {
-    padding: 0,
-    borderRadius: '50%',
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+  checkboxGroup: {
+    flexDirection: 'row',
+    width: 120,
+    justifyContent: 'flex-end',
   },
-  selectedButton: {
-    backgroundColor: colors.primary,
-  },
-  selectedButtonText: {
-    color: colors.white,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: 'black',
-    flexWrap: 'wrap',
-    textAlign: 'center',
-  },
-  nextButton: {
-    backgroundColor: colors.primary,
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  nextButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+  checkboxWrapper: {
+    padding: 8,
   },
   checkbox: {
     width: 24,
@@ -225,24 +270,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkboxChecked: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   checkmark: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   imageButton: {
     backgroundColor: colors.primary,
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,
+    borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 20,
+    marginVertical: 20,
   },
   imageButtonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
+  },
+  nextButton: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+    width: 160,
+  },
+  nextButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
   modalOverlay: {
     flex: 1,
@@ -251,10 +310,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    backgroundColor: 'white',
+    borderRadius: 16,
     padding: 20,
-    width: '80%',
+    width: '90%',
     alignItems: 'center',
   },
   image: {
@@ -264,39 +323,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalButton: {
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: colors.primary,
+    padding: 12,
+    borderRadius: 8,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 10,
-    backgroundColor: '#f0f0f0',
   },
   modalButtonText: {
+    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  instructionBox: {
-    marginTop: 5,
-    marginBottom: 10,
-    paddingHorizontal: -200,
-  },
-  instructionText: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#555',
-    marginBottom: 5,
-  },
-  boldText: {
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  checkmarkSymbol: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-  },
-  uncheckedSymbol: {
-    color: '#000',
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });

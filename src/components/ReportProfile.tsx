@@ -309,12 +309,12 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
             ))}
           </View>
         </View>
-
+      </ScrollView>
         {/* Download PDF Button */}
         <TouchableOpacity style={styles.downloadButton} onPress={generatePDF}>
           <Text style={styles.downloadButtonText}>{t('Report.btn2')}</Text>
         </TouchableOpacity>
-      </ScrollView>
+      
     </SafeAreaView>
   );
 };
@@ -324,17 +324,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    
   },
   backButton: {
     alignSelf: 'flex-start',
     marginBottom: 10,
   },
   titleBox: {
-    width: '100%',
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    marginBottom: 20,
-    paddingVertical: 10,
+     backgroundColor: colors.primary,
+      padding: 11,
+      borderRadius: 10,
+      alignItems: 'center',
+      marginBottom: 30,
+      marginHorizontal: 20,
   },
   titleTxt: {
     color: 'white',
@@ -425,6 +427,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 30,
+    marginHorizontal: 20,
   },
   downloadButtonText: {
     color: 'white',
