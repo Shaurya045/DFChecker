@@ -1,7 +1,15 @@
 {
     "Welcome":{
         "login":"Login",
-        "text1": "Select Language"
+        "text1": "Select Language",
+        "heading": "Welcome to DF Checker",
+        "tagline": "Your companion for diabetic foot care",
+        "feature1": "Quick risk assessment",
+        "feature2": "Personalized reports",
+        "feature3": "Multilingual",
+        "brand": "DF Checker",
+        "infoTitle": "Your Diabetic Foot Risk, Simplified",
+        "infoSubtitle": "Answer a few questions and get a personalized risk assessment in seconds. Tap 'Login' to begin or change language from the top right."
     },
     "Login":{
         "title": "LOGIN",
@@ -9,7 +17,9 @@
         "text2": "Enter Your Password",
         "btn1": "LOGIN",
         "btn2": "REGISTER",
-        "text3": "Don't have an account?"
+        "text3": "Don't have an account?",
+        "forgotPassword": "Forgot Password?",
+        "LoginError": "Invalid email or password. Please try again."
     },
     "Register":{
         "title": "REGISTER",
@@ -35,7 +45,49 @@
         "text4": "If you can't feel it on top, move your fingers to the inner ankle, just behind the bony prominence (posterior tibial artery).",
         "title5": "Important Note",
         "text5": "If you're having difficulty finding the pulse or are unsure, please consult your healthcare provider. Accurate pulse detection is essential for proper assessment.",
-        "btn4": "I Understand"
+        "btn4": "I Understand",
+        "QuickOverview": "Quick Overview",
+        "TestsCompleted": "Tests Completed",
+        "DaysSinceLast": "Days Since Last",
+        "LastTestResult": "Last Test Result",
+        "LeftFoot": "Left Foot",
+        "RightFoot": "Right Foot",
+        "N_A": "N/A",
+        "Fast": "Fast",
+        "Accurate": "Accurate",
+        "Easy": "Easy",
+        "TotalPatients": "Total Patients",
+        "LastTest": "Last Test",
+        "NextScreening": "Next Screening",
+        "LastPatientResult": "Last Patient Result",
+        "NoData": "No Data",
+        "QuickScreening": "Quick screening in 2 min",
+        "LastTestTaken": "Last Test Taken",
+        "DyAgo": "day ago",
+        "HrAgo": "hour ago",
+        "NewTest": "New Test",
+        "HighRisk": "HIGH RISK",
+        "NoHighRisk": "No high risk patients found.",
+        "UrgentCases": "Urgent Cases",
+        "ViewDetails": "View Details",
+        "PatientList": "Patient List",
+        "NoHighRiskDesc": "All patients are currently at low risk levels.",
+        "ScreeningFrequency": "Screening Frequency",
+        "EveryXDays": "Every {{count}} days",
+        "EveryXWeeks": "Every {{count}} weeks",
+        "EveryXMonths": "Every {{count}} months",
+        "PatientDashboard": "Patient Dashboard",
+        "PatientsInYourCare": "You have {{count}} patient in your care. Select a specific patient from the dropdown to view their assessment details.",
+        "PatientsInYourCarePlural": "You have {{count}} patients in your care. Select a specific patient from the dropdown to view their assessment details.",
+        "HighRiskPatientsAttention": "You have {{count}} high risk patient that may require priority attention.",
+        "HighRiskPatientsAttentionPlural": "You have {{count}} high risk patients that may require priority attention.",
+        "AllPatientsLowerRisk": "All your patients are currently at lower risk levels.",
+        "WelcomeDoctorTitle": "Welcome to DF Checker, Doctor!",
+        "AddFirstPatient": "Add your first patient or use the Quick Test feature to start screening for diabetic foot complications.",
+        "DoctorDashboardTip": "Tip: You can easily track all your patients and their risk levels from this dashboard once you add them.",
+        "WelcomePatientTitle": "Welcome to DF Checker!",
+        "TakeFirstTest": "Take your first test to see your results here. Regular screening helps prevent complications.",
+        "PatientTestTip": "Tip: Complete the quick 2-minute test to get personalized insights about your foot health."
     },
     "Profile":{
         "title": "Profile",
@@ -47,12 +99,38 @@
         "text5": "Right Foot Result",
         "text6": "Date of Test",
         "text7": "No Test Taken",
+        "patientsResults": "Patients Results",
+        "patientName": "Patient Name",
+        "selectPatient": "Select Patient",
+        "allPatients": "All Patients",
+        "searchPatient": "Search patient...",
         "Very Low Risk": "Very Low Risk",
         "Low Risk": "Low Risk",
         "Moderate Risk": "Moderate Risk",
         "High Risk": "High Risk",
         "Urgent Risk": "Urgent Risk",
-        "Healthy Foot - Need Self Care":"Healthy Foot - Need Self Care"
+        "Healthy Foot - Need Self Care": "Healthy Foot - Need Self Care",
+        "accountSection": "Account",
+        "reportsSection": "Reports",
+        "text8": "Click the checkbox",
+        "text9": "Leave the checkbox unfilled",
+        "btn2": "Click For Instructions",
+        "title8": "Diabetic Foot Test - Skin",
+        "title9": "Left",
+        "title10": "Right",
+        "qes1": "Skin is intact and has no signs of trauma & ulcer. No signs of fungus or corn formation?",
+        "qes2": "Skin is dry, fungus such as a moccasin foot or interdigital yeast may be present. Some corn build-up may be noted?",
+        "qes3": "Foot corn build-up",
+        "qes4": "Open skin ulceration present?",
+        "text10": "Look for any bony changes that can put you at significant risk and prevent the wearing of off-the-shelf footwear",
+        "Healthy": "Healthy",
+        "Low": "Low Risk",
+        "Moderate": "Moderate Risk",
+        "High": "High Risk",
+        "Very Low Risk - Category 0": "Very Low Risk - Category 0",
+        "Low Risk - Category 0": "Low Risk - Category 0",
+        "Moderate Risk - Category 2": "Moderate Risk - Category 2",
+        "High Risk - Category 3": "High Risk - Category 3"
     },
     "Question":{
         "title": "Foot Health Questionnaire"
@@ -299,7 +377,8 @@
         "Moderate Risk": "Moderate Risk",
         "High Risk": "High Risk",
         "Urgent Risk": "Urgent Risk",
-        "Healthy Foot - Need Self Care":"Healthy Foot - Need Self Care"
+        "Healthy Foot - Need Self Care": "Healthy Foot - Need Self Care",
+        "notAvailable": "Not Available"
     },
     "Detail":{
         "title1": "Report Detail",
@@ -332,8 +411,6 @@
         "text4": "Please select at least one option before proceeding.",
         "error": "Downloading Canceled",
         "pdfError": "you canceled the downloading process"
-
-
     },
     "risk_category": {
         "Urgent Risk": "Urgent Risk",
@@ -415,6 +492,20 @@
         "notdata": "No data available."
     },
     
+    "PatientInfoForm": {
+        "title": "Patient Information",
+        "patientName": "Patient Name*",
+        "age": "Age*",
+        "gender": "Gender*",
+        "contactNumber": "Contact Number*",
+        "male": "Male",
+        "female": "Female",
+        "note": "Note:",
+        "requiredFields": "Fields marked with * are required",
+        "continueButton": "Continue to Assessment",
+        "missingInfoTitle": "Missing Information",
+        "missingInfoMessage": "Please fill in all required fields marked with *"
+    },
     "recommendations": {
         "HighRisk": "Refer to podiatry clinic or treating physician",
         "HealthyFootNeedSelfCare": [
@@ -427,7 +518,7 @@
         "Appropriate foot and nail care.",
         "Well-fitting footwear.",
         "Trimming toenails straight.",
-        "Don’t remove any cornes by yourself.",
+        "Don't remove any cornes by yourself.",
         "Seek medical care if you notice scaly peeling or cracked skin between toes."
         ],
         "LowRisk": [
@@ -435,14 +526,14 @@
         "Appropriate foot and nail care.",
         "Well-fitting footwear.",
         "Trimming toenails straight.",
-        "Don’t remove any cornes by yourself.",
+        "Don't remove any cornes by yourself.",
         "Seek medical care if you notice scaly peeling or cracked skin between toes.",
         "Reduce weight if high BMI, stop smoking, control diabetes and hypertension if present.",
         "Seek rehab specialist to provide fitness plan for feet."
         ],
         "ModerateRisk": [
         "Well-fitting orthopaedic footwear and medical socks.",
-        "Don’t remove any cornes by yourself.",
+        "Don't remove any cornes by yourself.",
         "Seek medical care if you notice scaly peeling or cracked skin between toes.",
         "Reduce weight if high BMI, stop smoking, control diabetes and hypertension if present.",
         "Seek rehab specialist to provide fitness plan for feet.",
@@ -456,8 +547,67 @@
         "Do not attempt home treatments such as cutting cornes or draining wounds.",
         "Visit an emergency care center if pain, swelling, or signs of infection (redness, pus, fever) occur."
         ]
+    },
+    "ForgotPassword": {
+        "title": "Forgot Password",
+        "email": "Email",
+        "sendOTP": "Send OTP",
+        "sending": "Sending...",
+        "success": "Success",
+        "otpSent": "OTP sent to your email.",
+        "error": "Error",
+        "enterEmail": "Please enter your email.",
+        "tryAgain": "Please try again.",
+        "iconAlt": "Mail icon for forgot password",
+        "close": "Close forgot password modal",
+        "emailInputAlt": "Email input for password reset",
+        "helperText": "We will send a verification code to your email.",
+        "emailPlaceholder": "Enter your email"
+    },
+    "ResetPassword": {
+        "title": "Reset Password",
+        "otp": "OTP",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "resetPassword": "Reset Password",
+        "reseting": "Resetting...",
+        "error": "Error",
+        "fillAllFields": "Please fill all fields.",
+        "passwordsDontMatch": "Passwords do not match.",
+        "success": "Success",
+        "passwordReset": "Password reset successful.",
+        "tryAgain": "Please try again.",
+        "iconAlt": "Shield icon for reset password",
+        "close": "Close reset password modal",
+        "otpPlaceholder": "Enter OTP",
+        "otpInputAlt": "OTP input for password reset",
+        "helperText": "Enter the OTP sent to your email.",
+        "newPasswordPlaceholder": "Enter new password",
+        "newPasswordInputAlt": "New password input",
+        "confirmPasswordPlaceholder": "Confirm new password",
+        "confirmPasswordInputAlt": "Confirm new password input",
+        "toggleNewPassword": "Toggle new password visibility",
+        "toggleConfirmPassword": "Toggle confirm password visibility"
+    },
+    "ChangePassword": {
+        "changePassword": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmNewPassword": "Confirm New Password",
+        "submit": "Submit",
+        "success": "Success",
+        "passwordChanged": "Password changed successfully.",
+        "error": "Error",
+        "fillAllFields": "Please fill all fields.",
+        "passwordsDontMatch": "Passwords do not match.",
+        "tryAgain": "Please try again."
+    },
+    "Citations": {
+        "title": "Medical Citations",
+        "explanation": "The medical information and diagnostics provided in this application are based on established clinical guidelines and research. Below are the sources used for the information in this section:",
+        "viewSource": "View Source",
+        "disclaimer": "Note: This app provides information for educational purposes only and is not intended to replace professional medical advice. Always consult with a healthcare provider for diagnosis and treatment.",
+        "buttonLabel": "View Medical Sources",
+        "modalTitle": "Medical Sources"
     }
-      
-    
-
 }

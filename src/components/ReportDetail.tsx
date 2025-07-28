@@ -18,6 +18,7 @@ import RNFS from 'react-native-fs'; // Add this import
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../AuthContext';
 
 type ReportDetailProps = NativeStackScreenProps<RootStackParamList, 'ReportDetail'>;
 
@@ -25,6 +26,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
   const [detailedReport, setDetailedReport] = useState<any>({});
   const { reportData, result } = route.params;
   const { t, i18n } = useTranslation();
+  const { isDoctor } = useAuth();
 
   useEffect(() => {
     setDetailedReport(route.params);
@@ -110,6 +112,7 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
   };
 
   const generatePDF = async () => {
+    console.log('reportData for PDF:', reportData);
     try {
       // Check storage permissions first
       const hasPermission = await requestStoragePermission();
@@ -135,9 +138,25 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
             ul { padding-left: 20px; }
             .score-container { margin-bottom: 10px; }
             .score-row { display: flex; justify-content: space-between; }
+            .patient-info-card { background:#f6fafd;padding:12px 14px;border-radius:12px;margin-bottom:18px; }
+            .patient-info-name { font-size:20px;color:#1976d2;font-weight:bold;margin-bottom:2px;text-align:center; }
+            .patient-info-row { font-size:14px;color:#666;font-weight:400;text-align:center; }
+            .patient-info-value { color:#222;font-weight:700; }
           </style>
         </head>
         <body>
+          ${isDoctor && reportData?.formId?.data ? `
+            <div class="patient-info-card">
+              <div class="patient-info-name">
+                ${t('Profile.patientName', 'Patient')}: ${reportData.formId.data.patientName || t('Profile.unknownPatient', 'Unknown Patient')}
+              </div>
+              <div class="patient-info-row">
+                ${reportData.formId.data.patientAge ? `${t('Profile.age', 'Age')}: <span class='patient-info-value'>${reportData.formId.data.patientAge}</span>` : ''}
+                ${reportData.formId.data.patientGender ? ` | ${t('Profile.gender', 'Gender')}: <span class='patient-info-value'>${reportData.formId.data.patientGender === 'male' ? t('Profile.male', 'Male') : t('Profile.female', 'Female')}</span>` : ''}
+                ${(reportData.formId.data.patientPhone || reportData.formId.data.patientContact) ? ` | ${t('Profile.phone', 'Phone')}: <span class='patient-info-value'>${reportData.formId.data.patientPhone || reportData.formId.data.patientContact}</span>` : ''}
+              </div>
+            </div>
+          ` : ''}
           <h1>${t('Detail.title1')}</h1>
           <h2>${t('Detail.title2')}</h2>
           <p>${t('Detail.text1')} ${reportData?.basic_questions?.neurologicalDisease ? t('BasicQes.yes') : t('BasicQes.no')}</p>
@@ -276,6 +295,33 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>{t('Detail.title1')}</Text>
       </View>
+      {isDoctor && (
+        <View style={styles.patientInfoCardNew}>
+          <Text style={styles.patientInfoInlineName}>
+            {t('Profile.patientName', 'Patient')}: {reportData?.formId?.data?.patientName || t('Profile.unknownPatient', 'Unknown Patient')}
+          </Text>
+          <View style={styles.patientInfoInlineRowNew}>
+            {reportData?.formId?.data?.patientAge && (
+              <>
+                <Text style={styles.patientInfoInlineLabel}> {t('Profile.age', 'Age')}:</Text>
+                <Text style={styles.patientInfoInlineValue}>{reportData?.formId?.data?.patientAge}</Text>
+              </>
+            )}
+            {reportData?.formId?.data?.patientGender && (
+              <>
+                <Text style={styles.patientInfoInlineLabel}> | {t('Profile.gender', 'Gender')}:</Text>
+                <Text style={styles.patientInfoInlineValue}>{reportData?.formId?.data?.patientGender === 'male' ? t('Profile.male', 'Male') : t('Profile.female', 'Female')}</Text>
+              </>
+            )}
+            {(reportData?.formId?.data?.patientPhone || reportData?.formId?.data?.patientContact) && (
+              <>
+                <Text style={styles.patientInfoInlineLabel}> | {t('Profile.phone', 'Phone')}:</Text>
+                <Text style={styles.patientInfoInlineValue}>{reportData?.formId?.data?.patientPhone || reportData?.formId?.data?.patientContact}</Text>
+              </>
+            )}
+          </View>
+        </View>
+      )}
       
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Basic Questions */}
@@ -523,6 +569,50 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
+  },
+  patientInfoCardNew: {
+    backgroundColor: '#f6fafd',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    marginTop: -4,
+    alignSelf: 'stretch',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  patientInfoInlineName: {
+    fontSize: 20,
+    color: colors.primary,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    textAlign: 'center',
+    alignSelf: 'center',
+    width: '100%',
+  },
+  patientInfoInlineRowNew: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  patientInfoInlineLabel: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '400',
+    marginLeft: 4,
+    marginRight: 2,
+  },
+  patientInfoInlineValue: {
+    fontSize: 14,
+    color: '#222',
+    fontWeight: '700',
+    marginRight: 8,
   },
 });
 

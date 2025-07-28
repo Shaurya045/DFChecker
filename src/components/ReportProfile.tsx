@@ -13,6 +13,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../AuthContext';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 type ReportProfileProps = {
   route: {
@@ -30,6 +32,7 @@ type ReportProfileProps = {
 const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
   const { reportData, result } = route.params;
   const { t, i18n } = useTranslation();
+  const { isDoctor } = useAuth();
 
   // Function to translate foot report fields
   const translateFootReportField = (field: string, value: string): string => {
@@ -71,6 +74,15 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
       const leftRecommendations = getRecommendations(result.left);
       const rightRecommendations = getRecommendations(result.right);
 
+      // Robust patient info extraction with fallbacks
+      const patientData = reportData?.formId?.data || {};
+      const patientName = patientData.patientName || t('Profile.unknownPatient', 'Unknown Patient');
+      const patientAge = patientData.patientAge || 'N/A';
+      const patientGender = patientData.patientGender
+        ? (patientData.patientGender === 'male' ? t('Profile.male', 'Male') : t('Profile.female', 'Female'))
+        : 'N/A';
+      const patientPhone = patientData.patientPhone || patientData.patientContact || 'N/A';
+
       const htmlContent = `
       <html>
         <head>
@@ -81,9 +93,25 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
             ul { padding-left: 20px; }
             .score-container { margin-bottom: 10px; }
             .score-row { display: flex; justify-content: space-between; }
+            .patient-info-card { background:#f6fafd;padding:12px 14px;border-radius:12px;margin-bottom:18px; }
+            .patient-info-name { font-size:20px;color:#1976d2;font-weight:bold;margin-bottom:2px;text-align:center; }
+            .patient-info-row { font-size:14px;color:#666;font-weight:400;text-align:center; }
+            .patient-info-value { color:#222;font-weight:700; }
           </style>
         </head>
         <body>
+          ${isDoctor ? `
+            <div class="patient-info-card">
+              <div class="patient-info-name">
+                ${t('Profile.patientName', 'Patient')}: ${patientName}
+              </div>
+              <div class="patient-info-row">
+                ${t('Profile.age', 'Age')}: <span class='patient-info-value'>${patientAge}</span>
+                | ${t('Profile.gender', 'Gender')}: <span class='patient-info-value'>${patientGender}</span>
+                | ${t('Profile.phone', 'Phone')}: <span class='patient-info-value'>${patientPhone}</span>
+              </div>
+            </div>
+          ` : ''}
           <h1>${t('Detail.title1')}</h1>
           <h2>${t('Detail.title2')}</h2>
           <p>${t('Detail.text1')} ${reportData?.result.basic_questions?.neurologicalDisease ? t('BasicQes.yes') : t('BasicQes.no')}</p>
@@ -176,14 +204,41 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => navigation.navigate('Profile')}
         style={styles.backButton}>
-        <Icon name="arrowleft" size={30} />
+        <Icon name="arrowleft" size={30} color={colors.primary} />
       </TouchableOpacity>
 
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>{t('Detail.title1')}</Text>
       </View>
+      {isDoctor && (
+        <View style={styles.patientInfoCardNew}>
+          <Text style={styles.patientInfoInlineName}>
+            {t('Profile.patientName', 'Patient')}: {reportData?.formId?.data?.patientName || t('Profile.unknownPatient', 'Unknown Patient')}
+          </Text>
+          <View style={styles.patientInfoInlineRowNew}>
+            {reportData?.formId?.data?.patientAge && (
+              <>
+                <Text style={styles.patientInfoInlineLabel}> {t('Profile.age', 'Age')}:</Text>
+                <Text style={styles.patientInfoInlineValue}>{reportData?.formId?.data?.patientAge}</Text>
+              </>
+            )}
+            {reportData?.formId?.data?.patientGender && (
+              <>
+                <Text style={styles.patientInfoInlineLabel}> | {t('Profile.gender', 'Gender')}:</Text>
+                <Text style={styles.patientInfoInlineValue}>{reportData?.formId?.data?.patientGender === 'male' ? t('Profile.male', 'Male') : t('Profile.female', 'Female')}</Text>
+              </>
+            )}
+            {(reportData?.formId?.data?.patientPhone || reportData?.formId?.data?.patientContact) && (
+              <>
+                <Text style={styles.patientInfoInlineLabel}> | {t('Profile.phone', 'Phone')}:</Text>
+                <Text style={styles.patientInfoInlineValue}>{reportData?.formId?.data?.patientPhone || reportData?.formId?.data?.patientContact}</Text>
+              </>
+            )}
+          </View>
+        </View>
+      )}
       
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Basic Questions */}
@@ -311,8 +366,9 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
         </View>
       </ScrollView>
         {/* Download PDF Button */}
-        <TouchableOpacity style={styles.downloadButton} onPress={generatePDF}>
-          <Text style={styles.downloadButtonText}>{t('Report.btn2')}</Text>
+        <TouchableOpacity style={styles.actionButton} onPress={generatePDF}>
+          <Icon name="download" size={22} color={colors.white} style={{marginRight: 8}} />
+          <Text style={styles.buttonText}>{t('Report.btn2')}</Text>
         </TouchableOpacity>
       
     </SafeAreaView>
@@ -324,7 +380,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
-    
   },
   backButton: {
     alignSelf: 'flex-start',
@@ -420,19 +475,73 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginLeft: 5,
   },
-  downloadButton: {
-    backgroundColor: colors.primary,
-    padding: 15,
-    borderRadius: 10,
+  actionButton: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+    minWidth: 180,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
     marginTop: 20,
     marginBottom: 30,
-    marginHorizontal: 20,
+    alignSelf: 'center',
   },
-  downloadButtonText: {
+  buttonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  patientInfoCardNew: {
+    backgroundColor: '#f6fafd',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    marginTop: -4,
+    alignSelf: 'stretch',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  patientInfoInlineName: {
+    fontSize: 20,
+    color: colors.primary,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    textAlign: 'center',
+    alignSelf: 'center',
+    width: '100%',
+  },
+  patientInfoInlineRowNew: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  patientInfoInlineLabel: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '400',
+    marginLeft: 4,
+    marginRight: 2,
+  },
+  patientInfoInlineValue: {
+    fontSize: 14,
+    color: '#222',
+    fontWeight: '700',
+    marginRight: 8,
   },
 });
 

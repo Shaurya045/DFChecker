@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09E206331D7FBFB87DC1321A /* libPods-Dfchecker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8D88E0C79251C04594002E0 /* libPods-Dfchecker.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		1BBBA301CB69D3C491D022D6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		91D78B42A03D790172061407 /* libPods-Dfchecker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 624C1D325E325073268879EB /* libPods-Dfchecker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,12 +19,12 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Dfchecker/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Dfchecker/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Dfchecker/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		624C1D325E325073268879EB /* libPods-Dfchecker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Dfchecker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C5B32AC34E989BA8A3F3094 /* Pods-Dfchecker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dfchecker.debug.xcconfig"; path = "Target Support Files/Pods-Dfchecker/Pods-Dfchecker.debug.xcconfig"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Dfchecker/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Dfchecker/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B4E061CFF021247058F97BB2 /* Pods-Dfchecker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dfchecker.debug.xcconfig"; path = "Target Support Files/Pods-Dfchecker/Pods-Dfchecker.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F223C427F77830F47DB3E942 /* Pods-Dfchecker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dfchecker.release.xcconfig"; path = "Target Support Files/Pods-Dfchecker/Pods-Dfchecker.release.xcconfig"; sourceTree = "<group>"; };
+		F8D88E0C79251C04594002E0 /* libPods-Dfchecker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Dfchecker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB33871C3437A8DF044985C8 /* Pods-Dfchecker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dfchecker.release.xcconfig"; path = "Target Support Files/Pods-Dfchecker/Pods-Dfchecker.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91D78B42A03D790172061407 /* libPods-Dfchecker.a in Frameworks */,
+				09E206331D7FBFB87DC1321A /* libPods-Dfchecker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				624C1D325E325073268879EB /* libPods-Dfchecker.a */,
+				F8D88E0C79251C04594002E0 /* libPods-Dfchecker.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -92,8 +92,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B4E061CFF021247058F97BB2 /* Pods-Dfchecker.debug.xcconfig */,
-				F223C427F77830F47DB3E942 /* Pods-Dfchecker.release.xcconfig */,
+				6C5B32AC34E989BA8A3F3094 /* Pods-Dfchecker.debug.xcconfig */,
+				FB33871C3437A8DF044985C8 /* Pods-Dfchecker.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -105,14 +105,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Dfchecker" */;
 			buildPhases = (
-				10A4AAAABB8CFDAF71E81CA6 /* [CP] Check Pods Manifest.lock */,
+				A11A90126958DC98CF9678F8 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				7BA5B0872DC6280A0007E39B /* Set NODE_BINARY */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				3E2FE5EAE9618C7FE742426A /* [CP] Embed Pods Frameworks */,
-				697B46AF7E2515ABC331F7EA /* [CP] Copy Pods Resources */,
+				E6BEAEF23A759721162F2D9F /* [CP] Embed Pods Frameworks */,
+				B25E3EC64F70102BB7AE702D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -184,7 +184,25 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		10A4AAAABB8CFDAF71E81CA6 /* [CP] Check Pods Manifest.lock */ = {
+		7BA5B0872DC6280A0007E39B /* Set NODE_BINARY */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Set NODE_BINARY";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport NODE_BINARY=$(/opt/homebrew/bin/node)\n";
+		};
+		A11A90126958DC98CF9678F8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -206,24 +224,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3E2FE5EAE9618C7FE742426A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		697B46AF7E2515ABC331F7EA /* [CP] Copy Pods Resources */ = {
+		B25E3EC64F70102BB7AE702D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -240,23 +241,22 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7BA5B0872DC6280A0007E39B /* Set NODE_BINARY */ = {
+		E6BEAEF23A759721162F2D9F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
-			name = "Set NODE_BINARY";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport NODE_BINARY=$(/opt/homebrew/bin/node)\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dfchecker/Pods-Dfchecker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -274,34 +274,33 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B4E061CFF021247058F97BB2 /* Pods-Dfchecker.debug.xcconfig */;
+			baseConfigurationReference = 6C5B32AC34E989BA8A3F3094 /* Pods-Dfchecker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = TW9B9DYGUW;
+				DEVELOPMENT_TEAM = TW9B9DYGUW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Dfchecker/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "DF Checker";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 1.0;
 				NODE_BINARY = /opt/homebrew/bin/node;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.footdiabetic;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.storepubdf;
 				PRODUCT_NAME = Dfchecker;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = footdiabeticprovisioningprofile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -310,33 +309,32 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F223C427F77830F47DB3E942 /* Pods-Dfchecker.release.xcconfig */;
+			baseConfigurationReference = FB33871C3437A8DF044985C8 /* Pods-Dfchecker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = TW9B9DYGUW;
+				DEVELOPMENT_TEAM = TW9B9DYGUW;
 				INFOPLIST_FILE = Dfchecker/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "DF Checker";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 1.0;
 				NODE_BINARY = /opt/homebrew/bin/node;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.footdiabetic;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.storepubdf;
 				PRODUCT_NAME = Dfchecker;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = footdiabeticprovisioningprofile;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

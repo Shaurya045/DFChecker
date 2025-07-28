@@ -10,6 +10,15 @@ import React from 'react';
 import {colors} from '../utils/colors';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useTranslation} from 'react-i18next';
+import CitationsButton from './CitationsButton';
+
+interface SensationQuestionProps {
+  answers: Record<string, any>;
+  handleAnswer: (id: string, value: any) => void;
+  setCurrentStep: (step: string) => void;
+  popUp: boolean;
+  setPopUp: (value: boolean) => void;
+};
 
 const SensationQuestion = ({
   answers,
@@ -17,7 +26,7 @@ const SensationQuestion = ({
   setCurrentStep,
   popUp,
   setPopUp,
-}) => {
+}: SensationQuestionProps) => {
   const {t} = useTranslation();
   const questions = [
     {
@@ -186,6 +195,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 40,
+  },
+  citationsButton: {
+    marginBottom: 15,
+    alignSelf: 'flex-end',
   },
   titleBox: {
     width: '100%',

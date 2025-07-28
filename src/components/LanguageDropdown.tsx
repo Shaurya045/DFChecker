@@ -105,7 +105,7 @@ const LanguageDropdown = () => {
         <Text style={styles.buttonText}>{currentLanguage.name}</Text>
         <Icon
           name={visible ? 'arrow-drop-up' : 'arrow-drop-down'}
-          size={24}
+          size={18}
           color="black"
         />
       </TouchableOpacity>
@@ -122,16 +122,18 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: 'white',
+    minHeight: 32,
+    minWidth: 80,
   },
   buttonText: {
-    marginRight: 8,
-    fontSize: 16,
+    marginRight: 4,
+    fontSize: 14,
   },
   overlay: {
     flex: 1,

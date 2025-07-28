@@ -9,6 +9,7 @@ import {
 import React, {useState} from 'react';
 import {colors} from '../utils/colors';
 import {useTranslation} from 'react-i18next';
+import CitationsButton from './CitationsButton';
 
 type MonofilamentAnswers = {
   [key: string]: {
@@ -297,6 +298,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     width: 160,
+  },
+  citationsButton: {
+    marginBottom: 15,
+    alignSelf: 'flex-end',
   },
   nextButtonText: {
     color: 'white',

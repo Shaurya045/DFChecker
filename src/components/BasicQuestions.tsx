@@ -10,6 +10,8 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
+import { isTablet, scaleFontSize, getContentMaxWidth, padding, getResponsiveWidth, getResponsiveHeight } from '../utils/deviceUtils';
+import { wp, hp } from '../utils/responsive';
 import {TextInput} from 'react-native-paper';
 import {colors} from '../utils/colors';
 import MediaPopup from './MediaPopUp';
@@ -17,8 +19,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {url} from '../utils/constants';
 import {useTranslation} from 'react-i18next';
-
-const {height, width} = Dimensions.get('window');
 
 interface BasicQuestionsProps {
   answers: Record<string, any>;
@@ -42,6 +42,25 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
     right: any | null;
   }>({left: null, right: null});
   const {t} = useTranslation();
+  
+  // Get responsive dimensions with dynamic updates
+  const [dimensions, setDimensions] = useState({
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  });
+
+  useEffect(() => {
+    // Listen for orientation changes
+    const subscription = Dimensions.addEventListener('change', ({window}) => {
+      setDimensions({
+        width: window.width,
+        height: window.height,
+      });
+    });
+    
+    // Cleanup
+    return () => subscription?.remove();
+  }, []);
 
   const initialQuestions = [
     {
@@ -363,23 +382,8 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
 
   return (
     <>
-      <View
-        style={{
-          width: '100%',
-          backgroundColor: colors.primary,
-          borderRadius: 10,
-          marginBottom: 30,
-        }}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 20,
-            fontWeight: 'semibold',
-            textAlign: 'center',
-            padding: 8,
-          }}>
-          {t('BasicQes.title')}
-        </Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>{t('BasicQes.title')}</Text>
       </View>
       {initialQuestions.map(renderQuestion)}
 
@@ -410,7 +414,7 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
           <View style={styles.imgContainer}>
             {footImage.left && (
               <View style={styles.imageContainer}>
-                <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
+                <Text style={styles.footImageLabel}>
                   {t('BasicQes.text1')}:
                 </Text>
                 <Image
@@ -427,7 +431,7 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
 
             {footImage.right && (
               <View style={styles.imageContainer}>
-                <Text style={{marginBottom: 5, fontSize: 14, fontWeight: 500}}>
+                <Text style={styles.footImageLabel}>
                   {t('BasicQes.text2')}:
                 </Text>
                 <Image
@@ -476,36 +480,56 @@ const BasicQuestions: React.FC<BasicQuestionsProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(2),
     backgroundColor: '#f5f5f5',
   },
+  headerContainer: {
+    width: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: wp(2.5),
+    marginBottom: hp(3),
+  },
+  headerText: {
+    color: 'white',
+    fontSize: scaleFontSize(20),
+    fontWeight: '600',
+    textAlign: 'center',
+    padding: hp(1),
+  },
   title: {
-    fontSize: 24,
+    fontSize: scaleFontSize(24),
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: hp(2.5),
     textAlign: 'center',
   },
   questionContainer: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: hp(2.5),
     justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: getContentMaxWidth(),
+    width: '100%',
   },
   question: {
-    fontSize: 17,
-    marginBottom: 10,
-    maxWidth: '60%',
+    fontSize: scaleFontSize(17),
+    marginBottom: hp(1),
+    maxWidth: isTablet() ? '65%' : '60%',
     textAlign: 'left',
+    flexShrink: 1,
   },
   buttonGroup: {
     flexDirection: 'row',
-    gap: 20,
+    justifyContent: 'flex-end',
+    gap: wp(4),
+    minWidth: wp(20),
   },
   button: {
     backgroundColor: '#e0e0e0',
     padding: 0,
-    borderRadius: '50%',
-    width: 30,
-    height: 30,
+    borderRadius: wp(10),
+    width: wp(isTablet() ? 7 : 8),
+    height: wp(isTablet() ? 7 : 8),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -516,68 +540,85 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     color: 'black',
     flexWrap: 'wrap',
     textAlign: 'center',
   },
   input: {
-    height: 40,
-    width: '40%',
+    height: hp(isTablet() ? 6 : 5),
+    width: isTablet() ? wp(35) : wp(40),
     borderColor: 'gray',
     borderWidth: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: wp(2),
+    fontSize: scaleFontSize(14),
+    minWidth: wp(20),
   },
   cameraContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 20,
-    width: width-40,
-    marginRight: 20,
+    marginBottom: hp(2.5),
+    width: '100%',
+    alignSelf: 'center',
+    maxWidth: getContentMaxWidth(),
   },
   cameraButton: {
     backgroundColor: '#2196F3',
-    padding: 10,
-    borderRadius: 5,
+    padding: wp(2.5),
+    borderRadius: wp(1),
     width: '45%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imgContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 10,
-    width: width-40,
+    alignItems: 'center',
+    gap: wp(3),
+    width: '100%',
+    maxWidth: getContentMaxWidth(),
   },
   imageContainer: {
-    marginBottom: 5,
+    marginBottom: hp(1),
     alignItems: 'center',
   },
+  footImageLabel: {
+    marginBottom: hp(0.5),
+    fontSize: scaleFontSize(14),
+    fontWeight: '500',
+  },
   footImage: {
-    width: 150,
-    height: 150,
+    width: isTablet() ? wp(25) : wp(40),
+    height: isTablet() ? wp(25) : wp(40),
     resizeMode: 'contain',
+    borderRadius: wp(1),
   },
   nextButton: {
     backgroundColor: colors.primary,
-    padding: 15,
-    borderRadius: 5,
+    padding: hp(2),
+    borderRadius: wp(1),
     alignItems: 'center',
-    marginTop: 20,
+    justifyContent: 'center',
+    marginTop: hp(2.5),
+    maxWidth: getContentMaxWidth(),
+    width: '100%',
   },
   nextButtonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: scaleFontSize(18),
     fontWeight: 'bold',
   },
   instructionBox: {
-    marginTop: 5,
-    marginBottom: 20,
-    paddingHorizontal: -200,
+    marginTop: hp(1),
+    marginBottom: hp(2),
+    width: '100%',
+    maxWidth: getContentMaxWidth(),
   },
   instructionText: {
-    fontSize: 16,
+    fontSize: scaleFontSize(16),
     fontWeight: '400',
     color: '#555',
-    marginBottom: 5,
+    marginBottom: hp(0.8),
   },
   boldText: {
     fontWeight: 'bold',
