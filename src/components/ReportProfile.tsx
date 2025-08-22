@@ -15,6 +15,7 @@ import Share from 'react-native-share';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../AuthContext';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import CitationsButton from './CitationsButton';
 
 type ReportProfileProps = {
   route: {
@@ -212,6 +213,10 @@ const ReportProfile = ({ route, navigation }: ReportProfileProps) => {
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>{t('Detail.title1')}</Text>
       </View>
+      
+      <View style={styles.citationsContainer}>
+        <CitationsButton category="recommendations" style={styles.citationsButton} isDoctor={isDoctor} />
+      </View>
       {isDoctor && (
         <View style={styles.patientInfoCardNew}>
           <Text style={styles.patientInfoInlineName}>
@@ -380,6 +385,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+  },
+  citationsContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 15,
+  },
+  citationsButton: {
+    marginBottom: 10,
   },
   backButton: {
     alignSelf: 'flex-start',

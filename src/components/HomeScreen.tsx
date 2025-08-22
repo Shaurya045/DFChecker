@@ -23,10 +23,7 @@ import LanguageDropdown from './LanguageDropdown';
 import Icon from 'react-native-vector-icons/AntDesign';
 import notifee, {AndroidImportance, TriggerType} from '@notifee/react-native';
 import { wp, hp } from '../utils/responsive';
-import type { requestTrackingPermission as requestTrackingPermissionType } from '../utils/trackingPermission';
-
-// Properly import the tracking permission function
-const { requestTrackingPermission } = require('../utils/trackingPermission');
+import { requestTrackingPermission, getTrackingStatus, APP_TRACKS_USERS } from '../utils/trackingPermission';
 
 // Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -99,14 +96,23 @@ const HomeScreen = ({navigation}: HomeProps) => {
   const [trackingPermissionRequested, setTrackingPermissionRequested] = useState(false);
 
   const requestAppTrackingPermission = async () => {
-    // Only request on iOS and only once per session
+    // Only check tracking status on iOS and only once per session
     if (Platform.OS === 'ios' && !trackingPermissionRequested) {
       setTrackingPermissionRequested(true);
       try {
-        const trackingStatus = await requestTrackingPermission();
-        console.log('Tracking permission status:', trackingStatus);
+        // Check current tracking status
+        const currentStatus = await getTrackingStatus();
+        console.log('Current tracking status:', currentStatus);
+        
+        // Only request permission if the app actually tracks users
+        if (APP_TRACKS_USERS) {
+          const trackingStatus = await requestTrackingPermission();
+          console.log('Tracking permission granted:', trackingStatus);
+        } else {
+          console.log('App does not track users - no permission request needed');
+        }
       } catch (error) {
-        console.error('Error requesting tracking permission:', error);
+        console.error('Error handling tracking permission:', error);
       }
     }
   };

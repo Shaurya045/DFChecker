@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
 import { useEffect } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { requestTrackingPermission } from './utils/trackingPermission';
 
 // Screens
 import LoginScreen from './components/LoginScreen';
@@ -106,6 +107,20 @@ function App(): React.JSX.Element {
     setTimeout(() => {
       SplashScreen.hide();
     }, 2000);
+
+    // Request App Tracking Transparency permission
+    const requestTracking = async () => {
+      try {
+        // Add a delay to ensure the app is fully loaded before requesting permission
+        setTimeout(async () => {
+          await requestTrackingPermission();
+        }, 2000);
+      } catch (error) {
+        console.log('Error requesting tracking permission:', error);
+      }
+    };
+
+    requestTracking();
   }, []);
 
   return (

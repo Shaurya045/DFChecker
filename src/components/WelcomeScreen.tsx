@@ -11,6 +11,7 @@ import {
   Dimensions,
   Linking,
   I18nManager,
+  Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
@@ -20,8 +21,23 @@ import {colors} from '../utils/colors';
 import {useTranslation} from 'react-i18next';
 import LanguageDropdown from './LanguageDropdown';
 import { wp, hp } from '../utils/responsive';
+import { requestTrackingPermission } from '../utils/trackingPermission';
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const isIpad = Platform.OS === 'ios' && Math.min(screenWidth, screenHeight) >= 768;
+const isLargeIpad = Platform.OS === 'ios' && Math.min(screenWidth, screenHeight) >= 1024; // 13-inch iPad detection
+
+// ===== INFO CARD POSITION CONFIGURATION =====
+// Change these values to adjust the info card position on different devices
+// Available inputs: Any number (positive or negative)
+// Positive values move the card DOWN, Negative values move the card UP
+// Examples: 5 (down), -5 (up), 0 (no change)
+const INFO_CARD_POSITION = {
+  largeIpad: -2,    // Position for 13-inch iPad and larger
+  ipad: -8,         // Position for 9.7-inch to 12.9-inch iPad
+  mobile: -10       // Position for iPhone and smaller devices
+};
+// ===========================================
 
 type WelcomeProps = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
@@ -38,6 +54,20 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
   const floatAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    // Request App Tracking Transparency permission
+    const requestTracking = async () => {
+      try {
+        await requestTrackingPermission();
+      } catch (error) {
+        console.log('Error requesting tracking permission:', error);
+      }
+    };
+
+    // Request tracking permission after a short delay to ensure app is fully loaded
+    const trackingTimer = setTimeout(() => {
+      requestTracking();
+    }, 1000);
+
     // Sequence entrance animations
     Animated.stagger(250, [
       Animated.timing(langAnim, {
@@ -76,6 +106,11 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
         }),
       ])
     ).start();
+
+    // Cleanup timer on unmount
+    return () => {
+      clearTimeout(trackingTimer);
+    };
   }, [langAnim, logoAnim, buttonAnim, floatAnim]);
 
   // Button press animation
@@ -104,27 +139,37 @@ const WelcomeScreen = ({navigation}: WelcomeProps) => {
     >
       <SafeAreaView style={styles.container}>
         {/* Language Selector - Top Right */}
-        <Animated.View
-          style={[
-            styles.languageContainer,
-            {
-              opacity: langAnim,
-              transform: [
-                {
-                  translateY: langAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-20, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <View style={styles.languageWrapper}>
-            <Text style={styles.languageLabel}>🌐</Text>
-            <LanguageDropdown />
+        {/* On iPad, show language selector in its own row above the heading */}
+        {isIpad ? (
+          <View style={{ width: '100%', alignItems: 'flex-end', marginBottom: hp('2%') }}>
+            <View style={styles.languageWrapper}>
+              <Text style={styles.languageLabel}>🌐</Text>
+              <LanguageDropdown />
+            </View>
           </View>
-        </Animated.View>
+        ) : (
+          <Animated.View
+            style={[
+              styles.languageContainer,
+              {
+                opacity: langAnim,
+                transform: [
+                  {
+                    translateY: langAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [-20, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <View style={styles.languageWrapper}>
+              <Text style={styles.languageLabel}>🌐</Text>
+              <LanguageDropdown />
+            </View>
+          </Animated.View>
+        )}
 
         <View style={styles.headingRow}>
           <LinearGradient
@@ -227,6 +272,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+    width: '100%',
+    maxWidth: isLargeIpad ? 1000 : isIpad ? 800 : '100%',
+    alignSelf: 'center',
+    paddingHorizontal: isLargeIpad ? wp('8%') : isIpad ? wp('6%') : wp('4%'),
+    paddingTop: isLargeIpad ? hp('6%') : isIpad ? hp('4%') : hp('2%'),
+    paddingBottom: isLargeIpad ? hp('6%') : isIpad ? hp('4%') : hp('2%'),
   },
   languageText: {
     fontSize: 24,
@@ -235,16 +286,18 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   image: {
-    height: hp('30%'),
-    width: wp('50%'),
-    marginBottom: hp('4%'),
+    height: isLargeIpad ? hp('18%') : isIpad ? hp('2%') : hp('30%'),
+    width: isLargeIpad ? wp('25%') : isIpad ? wp('30%') : wp('50%'),
+    marginBottom: isLargeIpad ? hp('3%') : isIpad ? hp('4%') : hp('4%'),
+    marginTop: isLargeIpad ? hp('2%') : isIpad ? hp('0%') : hp('0%'),
+    resizeMode: 'contain',
   },
   tagline: {
-    fontSize: wp('4%'),
+    fontSize: isLargeIpad ? wp('3.8%') : isIpad ? wp('3.5%') : wp('4%'),
     color: colors.secondary,
     textAlign: 'center',
-    marginBottom: hp('2%'),
-    marginTop: -hp('1%'),
+    marginBottom: isLargeIpad ? hp('3%') : isIpad ? hp('2%') : hp('2%'),
+    marginTop: isLargeIpad ? hp('1%') : isIpad ? -hp('1%') : -hp('1%'),
     fontWeight: '500',
   },
   featuresRow: {
@@ -252,23 +305,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginBottom: hp('3%'),
-    gap: wp('2%'),
+    marginBottom: isLargeIpad ? hp('5%') : isIpad ? hp('3%') : hp('3%'),
+    gap: isLargeIpad ? wp('3.5%') : isIpad ? wp('3%') : wp('2%'),
+    width: isLargeIpad ? '88%' : isIpad ? '90%' : '100%',
+    maxWidth: isLargeIpad ? 750 : isIpad ? 700 : undefined,
   },
   featureItem: {
-    fontSize: wp('3.2%'),
+    fontSize: isLargeIpad ? wp('2.6%') : isIpad ? wp('2.8%') : wp('3.2%'),
     color: colors.primary,
-    marginHorizontal: wp('1.5%'),
+    marginHorizontal: isLargeIpad ? wp('1.5%') : isIpad ? wp('2%') : wp('1.5%'),
     backgroundColor: '#EAF6FB',
     borderRadius: wp('3%'),
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.5%'),
+    paddingHorizontal: isLargeIpad ? wp('2.5%') : isIpad ? wp('3%') : wp('2.5%'),
+    paddingVertical: isLargeIpad ? hp('0.6%') : isIpad ? hp('0.8%') : hp('0.5%'),
     overflow: 'hidden',
   },
   buttonWrapper: {
     borderRadius: wp('7%'),
-    marginTop: hp('1.5%'),
-    width: wp('60%'),
+    marginTop: isLargeIpad ? hp('4%') : isIpad ? hp('1.5%') : hp('1.5%'),
+    width: isLargeIpad ? wp('42%') : isIpad ? wp('40%') : wp('60%'),
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
@@ -278,10 +333,10 @@ const styles = StyleSheet.create({
     flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '70%',
+    width: '100%',
     borderRadius: wp('7%'),
     paddingVertical: 0,
-    minHeight: hp('7%'),
+    minHeight: isLargeIpad ? hp('6.5%') : isIpad ? hp('6%') : hp('7%'),
     shadowColor: colors.secondary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -292,7 +347,7 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: colors.white,
-    fontSize: wp('5%'),
+    fontSize: isLargeIpad ? wp('4.8%') : isIpad ? wp('4.5%') : wp('5%'),
     fontWeight: '600',
     letterSpacing: 1,
     marginRight: I18nManager.isRTL ? 0 : 0,
@@ -303,7 +358,7 @@ const styles = StyleSheet.create({
   },
   loginIcon: {
     color: colors.white,
-    fontSize: wp('5.5%'),
+    fontSize: isLargeIpad ? wp('5.2%') : isIpad ? wp('5%') : wp('5.5%'),
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 0,
@@ -313,17 +368,17 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: hp('10%'),
-    marginTop: hp('1.5%'),
+    marginBottom: isLargeIpad ? hp('6%') : isIpad ? hp('6%') : hp('10%'),
+    marginTop: isLargeIpad ? hp('2%') : isIpad ? hp('-1.5%') : hp('-0.5%'),
     alignSelf: 'center',
-    maxWidth: '100%',
+    maxWidth: isLargeIpad ? '100%' : isIpad ? '100%' : '100%',
     width: '100%',
-    paddingHorizontal: wp('5%'),
+    paddingHorizontal: isLargeIpad ? wp('1%') : isIpad ? wp('2%') : wp('5%'),
   },
   gradientTextWrapper: {
-    borderRadius: wp('4.5%'),
-    paddingHorizontal: 0,
-    paddingVertical: hp('1%'),
+    borderRadius: wp('14.5%'),
+    paddingHorizontal: isLargeIpad ? wp('0.5%') : isIpad ? wp('1%') : 0,
+    paddingVertical: isLargeIpad ? hp('2%') : isIpad ? hp('2.5%') : hp('1%'),
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.18,
@@ -335,7 +390,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcomeHeading: {
-    fontSize: wp('6.5%'),
+    fontSize: isLargeIpad ? wp('4.5%') : isIpad ? wp('4.2%') : wp('6.5%'),
     fontWeight: 'bold',
     textAlign: 'center',
     letterSpacing: 1,
@@ -343,27 +398,29 @@ const styles = StyleSheet.create({
     textShadowColor: colors.secondary,
     textShadowOffset: { width: 3, height: 2 },
     textShadowRadius: 8,
-    marginBottom: hp('2%'),
-    marginTop: 0,
+    marginBottom: isLargeIpad ? hp('3%') : isIpad ? hp('4%') : hp('4%'),
+    marginTop: isLargeIpad ? -8 : isIpad ? -12 : -12,
     flexShrink: 1,
     flexWrap: 'wrap',
-    lineHeight: wp('8%'),
-    paddingHorizontal: wp('5%'),
+    lineHeight: isLargeIpad ? wp('7.5%') : isIpad ? wp('7%') : wp('8%'),
+    paddingHorizontal: isLargeIpad ? wp('5.5%') : isIpad ? wp('5%') : wp('5%'),
   },
   languageContainer: {
     position: 'absolute',
-    top: hp('7%'),
-    right: wp('4%'),
+    top: isLargeIpad ? hp('2%') : isIpad ? hp('2.5%') : hp('6%'),
+    right: isLargeIpad ? wp('6%') : isIpad ? wp('6%') : wp('4%'),
     zIndex: 10,
-    maxWidth: '40%',
+    maxWidth: isLargeIpad ? 300 : isIpad ? 280 : 180,
+    minWidth: 120,
+    alignSelf: 'flex-end',
   },
   languageWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: wp('5%'),
-    paddingHorizontal: wp('2.5%'),
-    paddingVertical: hp('0.7%'),
+    paddingHorizontal: isLargeIpad ? wp('2%') : isIpad ? wp('2.5%') : wp('2.5%'),
+    paddingVertical: isLargeIpad ? hp('0.5%') : isIpad ? hp('0.7%') : hp('0.7%'),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -374,20 +431,20 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   languageLabel: {
-    fontSize: wp('3.5%'),
-    marginRight: wp('1%'),
+    fontSize: isLargeIpad ? wp('3%') : isIpad ? wp('3.5%') : wp('3.5%'),
+    marginRight: isLargeIpad ? wp('0.8%') : isIpad ? wp('1%') : wp('1%'),
   },
   infoCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F6FAFD',
     borderRadius: wp('4.5%'),
-    paddingVertical: hp('1.7%'),
-    paddingHorizontal: wp('4.5%'),
-    marginBottom: hp('2%'),
-    marginTop: -hp('10%'),
+    paddingVertical: isLargeIpad ? hp('0.5%') : isIpad ? hp('2.5%') : hp('1.7%'),
+    paddingHorizontal: isLargeIpad ? wp('7%') : isIpad ? wp('6%') : wp('4.5%'),
+    marginBottom: isLargeIpad ? hp('4%') : isIpad ? hp('2%') : hp('2%'),
+    marginTop: isLargeIpad ? hp(INFO_CARD_POSITION.largeIpad + '%') : isIpad ? hp(INFO_CARD_POSITION.ipad + '%') : hp(INFO_CARD_POSITION.mobile + '%'),
     alignSelf: 'center',
-    maxWidth: '90%',
+    maxWidth: isLargeIpad ? '100%' : isIpad ? '65%' : '90%',
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -397,27 +454,27 @@ const styles = StyleSheet.create({
   infoIconWrapper: {
     backgroundColor: '#e3f0fb',
     borderRadius: wp('4%'),
-    width: wp('11%'),
-    height: wp('11%'),
+    width: isLargeIpad ? wp('9%') : isIpad ? wp('10%') : wp('11%'),
+    height: isLargeIpad ? wp('9%') : isIpad ? wp('10%') : wp('11%'),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: wp('3.5%'),
+    marginRight: isLargeIpad ? wp('4%') : isIpad ? wp('4.5%') : wp('3.5%'),
   },
   infoIcon: {
-    fontSize: wp('7%'),
+    fontSize: isLargeIpad ? wp('6%') : isIpad ? wp('6.5%') : wp('7%'),
     color: '#1976d2',
   },
   infoTextWrapper: {
     flex: 1,
   },
   infoTitle: {
-    fontSize: wp('4%'),
+    fontSize: isLargeIpad ? wp('4%') : isIpad ? wp('3.8%') : wp('4%'),
     fontWeight: '700',
     color: colors.primary,
     marginBottom: wp('0.5%'),
   },
   infoSubtitle: {
-    fontSize: wp('3.2%'),
+    fontSize: isLargeIpad ? wp('3.2%') : isIpad ? wp('3%') : wp('3.2%'),
     color: '#444',
     fontWeight: '400',
   },

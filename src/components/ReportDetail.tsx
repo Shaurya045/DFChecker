@@ -19,6 +19,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../AuthContext';
+import CitationsButton from './CitationsButton';
 
 type ReportDetailProps = NativeStackScreenProps<RootStackParamList, 'ReportDetail'>;
 
@@ -295,6 +296,10 @@ const ReportDetail = ({ route, navigation }: ReportDetailProps) => {
       <View style={styles.titleBox}>
         <Text style={styles.titleTxt}>{t('Detail.title1')}</Text>
       </View>
+      
+      <View style={styles.citationsContainer}>
+        <CitationsButton category="recommendations" style={styles.citationsButton} isDoctor={isDoctor} />
+      </View>
       {isDoctor && (
         <View style={styles.patientInfoCardNew}>
           <Text style={styles.patientInfoInlineName}>
@@ -462,6 +467,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+  },
+  citationsContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 15,
+  },
+  citationsButton: {
+    marginBottom: 10,
   },
   backButton: {
     alignSelf: 'flex-start',

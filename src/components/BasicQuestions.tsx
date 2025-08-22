@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: scaleFontSize(16),
     color: 'black',
-    flexWrap: 'wrap',
+    fontWeight: '500',
     textAlign: 'center',
   },
   input: {

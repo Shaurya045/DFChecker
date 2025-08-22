@@ -8,12 +8,17 @@ import {
   ScrollView,
   Linking,
   SafeAreaView,
+  Platform,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { colors } from '../utils/colors';
 import { formatCitationsForDisplay } from '../utils/citations';
 import { useTranslation } from 'react-i18next';
 import { wp, hp } from '../utils/responsive';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const isIpad = Platform.OS === 'ios' && Math.min(screenWidth, screenHeight) >= 768;
 
 interface CitationsModalProps {
   isVisible: boolean;
@@ -93,9 +98,9 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     borderRadius: 10,
-    width: '90%',
-    height: '80%',
-    padding: 20,
+    width: isIpad ? '70%' : '90%',
+    height: isIpad ? '70%' : '80%',
+    padding: isIpad ? 30 : 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -109,13 +114,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: isIpad ? 25 : 20,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    paddingBottom: 10,
+    paddingBottom: isIpad ? 15 : 10,
   },
   headerText: {
-    fontSize: wp(5),
+    fontSize: isIpad ? wp('3.5%') : wp('5%'),
     fontWeight: 'bold',
     color: colors.primary,
   },
@@ -126,26 +131,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   explanationText: {
-    fontSize: wp(4),
-    marginBottom: 20,
-    lineHeight: 22,
+    fontSize: isIpad ? wp('2.2%') : wp('4%'),
+    marginBottom: isIpad ? 25 : 20,
+    lineHeight: isIpad ? 20 : 22,
   },
   citationItem: {
-    marginBottom: 20,
-    padding: 15,
+    marginBottom: isIpad ? 25 : 20,
+    padding: isIpad ? 20 : 15,
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: colors.primary,
   },
   citationTitle: {
-    fontSize: wp(4),
+    fontSize: isIpad ? wp('3%') : wp('4%'),
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: isIpad ? 8 : 5,
   },
   citationDescription: {
-    fontSize: wp(3.5),
-    marginBottom: 10,
+    fontSize: isIpad ? wp('2.5%') : wp('3.5%'),
+    marginBottom: isIpad ? 15 : 10,
     color: '#555',
   },
   linkButton: {
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
   linkText: {
     color: colors.primary,
     marginRight: 5,
-    fontSize: 14,
+    fontSize: isIpad ? 12 : 14,
     fontWeight: '500',
   },
   primarySourceButton: {
@@ -167,14 +172,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   footer: {
-    marginTop: 20,
-    marginBottom: 30,
-    padding: 10,
+    marginTop: isIpad ? 25 : 20,
+    marginBottom: isIpad ? 35 : 30,
+    padding: isIpad ? 15 : 10,
     backgroundColor: '#f0f0f0',
     borderRadius: 5,
   },
   footerText: {
-    fontSize: wp(3.5),
+    fontSize: isIpad ? wp('2.5%') : wp('3.5%'),
     fontStyle: 'italic',
     color: '#666',
     textAlign: 'center',
